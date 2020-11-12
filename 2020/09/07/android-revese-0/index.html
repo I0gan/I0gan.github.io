@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Android 逆向入门 | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android Re 入门必备工具:IDA : 反编译.so文件 AndroidKiller: 反编译apk文件及再次编译为apk jd-gui  : 将.jar文件反编译为java代码 dex2jar: 反编译.dex文件 apktool: 能够反编译及回编译apk 夜神模拟器: 运行apk文件 例题 1 [easy-so]下载 来源:攻防世界 使用夜神模拟器运行该apk文件, 发现需要输入fl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 逆向入门">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/09/07/android-revese-0/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="Android Re 入门必备工具:IDA : 反编译.so文件 AndroidKiller: 反编译apk文件及再次编译为apk jd-gui  : 将.jar文件反编译为java代码 dex2jar: 反编译.dex文件 apktool: 能够反编译及回编译apk 夜神模拟器: 运行apk文件 例题 1 [easy-so]下载 来源:攻防世界 使用夜神模拟器运行该apk文件, 发现需要输入fl">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-09-07T08:36:01.000Z">
+<meta property="article:modified_time" content="2020-10-25T04:00:07.800Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android-revese-0" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/07/android-revese-0/" class="article-date">
+  <time datetime="2020-09-07T08:36:01.000Z" itemprop="datePublished">2020-09-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/reverse/">reverse</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android 逆向入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Android-Re-入门"><a href="#Android-Re-入门" class="headerlink" title="Android Re 入门"></a>Android Re 入门</h1><h2 id="必备工具"><a href="#必备工具" class="headerlink" title="必备工具:"></a>必备工具:</h2><p>IDA : 反编译.so文件</p>
+<p>AndroidKiller: 反编译apk文件及再次编译为apk</p>
+<p>jd-gui  : 将.jar文件反编译为java代码</p>
+<p>dex2jar: 反编译.dex文件</p>
+<p>apktool: 能够反编译及回编译apk</p>
+<p>夜神模拟器: 运行apk文件</p>
+<h2 id="例题-1-easy-so"><a href="#例题-1-easy-so" class="headerlink" title="例题 1 [easy-so]"></a>例题 1 [easy-so]</h2><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/456c1dab04b24036ba1d6e32a08dc882.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<p>使用夜神模拟器运行该apk文件, 发现需要输入flag</p>
+<p>zip解压apk文件, 用 dex2jar反编译 classes.dex文件得到classes-dex2jar.jar,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d2j-dex2jar.bat classes.dex</span><br></pre></td></tr></table></figure>
+
+<p> 再用jd-gui打开classes-dex2jar.jar反编译为java代码.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle paramBundle)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(paramBundle);</span><br><span class="line">    setContentView(<span class="number">2131296283</span>);</span><br><span class="line">    ((Button)findViewById(<span class="number">2131165218</span>)).setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View param1View)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (cyberpeace.CheckString(((EditText)MainActivity.<span class="keyword">this</span>.findViewById(<span class="number">2131165233</span>)).getText().toString()) == <span class="number">1</span>) &#123;</span><br><span class="line">              Toast.makeText((Context)MainActivity.<span class="keyword">this</span>, <span class="string">&quot;, 1).show();</span></span><br><span class="line"><span class="string">              return;</span></span><br><span class="line"><span class="string">            &#125; </span></span><br><span class="line"><span class="string">            Toast.makeText((Context)MainActivity.this, &quot;</span>, <span class="number">1</span>).show();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里可以发现, cyberpeace加载了’cyberpeace’动态库, CheckString函数是native层的, 这个函数的实现就在libcyberpeace.so文件中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package com.testjava.jack.pingan2;</span><br><span class="line"></span><br><span class="line">public class cyberpeace &#123;</span><br><span class="line">  static &#123;</span><br><span class="line">    System.loadLibrary(&quot;cyberpeace&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public static native int CheckString(String paramString);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用ida打开lib/x86/libcyberpeace.so文件, 找到 _BOOL4 __cdecl Java_com_testjava_jack_pingan2_cyberpeace_CheckString(int a1, int a2, int a3)函数, 该函数实现如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">_BOOL4 __cdecl Java_com_testjava_jack_pingan2_cyberpeace_CheckString(int a1, int a2, int a3)</span><br><span class="line">&#123;</span><br><span class="line">  const char *get_str; &#x2F;&#x2F; ST1C_4</span><br><span class="line">  size_t len; &#x2F;&#x2F; edi</span><br><span class="line">  char *str; &#x2F;&#x2F; esi</span><br><span class="line">  size_t i; &#x2F;&#x2F; edi</span><br><span class="line">  char v7; &#x2F;&#x2F; al</span><br><span class="line">  char v8; &#x2F;&#x2F; al</span><br><span class="line">  size_t v9; &#x2F;&#x2F; edi</span><br><span class="line">  char v10; &#x2F;&#x2F; al</span><br><span class="line"></span><br><span class="line">  get_str &#x3D; (const char *)(*(int (__cdecl **)(int, int, _DWORD))(*(_DWORD *)a1 + 676))(a1, a3, 0); &#x2F;&#x2F; 从java层获取所输入的字符串</span><br><span class="line">  len &#x3D; strlen(get_str);</span><br><span class="line">  str &#x3D; (char *)malloc(len + 1);</span><br><span class="line">  memset(&amp;str[len], 0, len !&#x3D; -1);</span><br><span class="line">  memcpy(str, get_str, len);</span><br><span class="line">  if ( strlen(str) &gt;&#x3D; 2 ) &#x2F;&#x2F; 加密1</span><br><span class="line">  &#123;</span><br><span class="line">    i &#x3D; 0;</span><br><span class="line">    do</span><br><span class="line">    &#123;</span><br><span class="line">      v7 &#x3D; str[i];</span><br><span class="line">      str[i] &#x3D; str[i + 16];</span><br><span class="line">      str[i++ + 16] &#x3D; v7;</span><br><span class="line">    &#125;</span><br><span class="line">    while ( i &lt; strlen(str) &gt;&gt; 1 );</span><br><span class="line">  &#125;</span><br><span class="line">  &#x2F;&#x2F; 加密2</span><br><span class="line">  v8 &#x3D; *str;</span><br><span class="line">  if ( *str )</span><br><span class="line">  &#123;</span><br><span class="line">    *str &#x3D; str[1];</span><br><span class="line">    str[1] &#x3D; v8;</span><br><span class="line">    if ( strlen(str) &gt;&#x3D; 3 )</span><br><span class="line">    &#123;</span><br><span class="line">      v9 &#x3D; 2;</span><br><span class="line">      do</span><br><span class="line">      &#123;</span><br><span class="line">        v10 &#x3D; str[v9];</span><br><span class="line">        str[v9] &#x3D; str[v9 + 1];</span><br><span class="line">        str[v9 + 1] &#x3D; v10;</span><br><span class="line">        v9 +&#x3D; 2;</span><br><span class="line">      &#125;</span><br><span class="line">      while ( v9 &lt; strlen(str) );</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return strcmp(str, &quot;f72c5a36569418a20907b55be5bf95ad&quot;) &#x3D;&#x3D; 0; &#x2F;&#x2F; 与字符串作比较</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从以上发现, 对我们所输入的字符串进行了加密, 然后再与f72c5a36569418a20907b55be5bf95ad进行比较. 现在只需逆一下以上代码即可得到flag, exp代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">int main(void) &#123;</span><br><span class="line">	char str[] &#x3D; &quot;f72c5a36569418a20907b55be5bf95ad&quot;;</span><br><span class="line">	int i, v7, v8, v9, v10;</span><br><span class="line">	v8 &#x3D; *str;</span><br><span class="line">	if ( *str ) &#123;</span><br><span class="line">		*str &#x3D; str[1];</span><br><span class="line">		str[1] &#x3D; v8;</span><br><span class="line">		if ( strlen(str) &gt;&#x3D; 3 ) &#123;</span><br><span class="line">      		v9 &#x3D; 2;</span><br><span class="line">      		do &#123;</span><br><span class="line">        		v10 &#x3D; str[v9];</span><br><span class="line">        		str[v9] &#x3D; str[v9 + 1];</span><br><span class="line">        		str[v9 + 1] &#x3D; v10;</span><br><span class="line">        		v9 +&#x3D; 2;</span><br><span class="line">      		&#125; while ( v9 &lt; strlen(str) );</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	&#x2F;&#x2F; 交换 </span><br><span class="line">	if ( strlen(str) &gt;&#x3D; 2 )	&#123;</span><br><span class="line">   	 i &#x3D; 0;</span><br><span class="line">    	do &#123;</span><br><span class="line">      		v7 &#x3D; str[i];</span><br><span class="line">      		str[i] &#x3D; str[i + 16];</span><br><span class="line">     		str[i++ + 16] &#x3D; v7;</span><br><span class="line">   	 	&#125; while ( i &lt; strlen(str) &gt;&gt; 1 );</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;%s&quot;, str);</span><br><span class="line">  </span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>运行以上代码即可获取flag</p>
+<h1 id="例题-2-app2"><a href="#例题-2-app2" class="headerlink" title="例题 2 [app2]"></a>例题 2 [app2]</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/task/answer?type=mobile&number=6&grade=0&id=5086&page=1">下载</a></p>
+<p>来源:攻防世界</p>
+<p>对输入的账号和密码在SecondActivity类中进行加密判断, 而加密调用了native层的加密函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">protected void onCreate(Bundle paramBundle) &#123;</span><br><span class="line">    super.onCreate(paramBundle);</span><br><span class="line">    setContentView(2130903041);</span><br><span class="line">    Intent intent &#x3D; getIntent();</span><br><span class="line">    String str1 &#x3D; intent.getStringExtra(&quot;ili&quot;);</span><br><span class="line">    String str2 &#x3D; intent.getStringExtra(&quot;lil&quot;);</span><br><span class="line">    if (Encryto.doRawData(this, str1 + str2).equals(&quot;VEIzd&#x2F;V2UPYNdn&#x2F;bxH3Xig&#x3D;&#x3D;&quot;)) &#123;</span><br><span class="line">      intent.setAction(&quot;android.test.action.MoniterInstallService&quot;);</span><br><span class="line">      intent.setClass((Context)this, MoniterInstallService.class);</span><br><span class="line">      intent.putExtra(&quot;company&quot;, &quot;tencent&quot;);</span><br><span class="line">      intent.putExtra(&quot;name&quot;, &quot;hacker&quot;);</span><br><span class="line">      intent.putExtra(&quot;age&quot;, 18);</span><br><span class="line">      startActivity(intent);</span><br><span class="line">      startService(intent);</span><br><span class="line">    &#125; </span><br><span class="line">    SharedPreferences.Editor editor &#x3D; getSharedPreferences(&quot;test&quot;, 0).edit();</span><br><span class="line">    editor.putString(&quot;ilil&quot;, str1);</span><br><span class="line">    editor.putString(&quot;lili&quot;, str2);</span><br><span class="line">    editor.commit();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>IDA反编译doRawData函数, 因为a为对象, 选择a按下y 键 然后输入 JNIEnv*就可以显示对象的函数调用, 如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl doRawData(JNIEnv *a1, int a2, int a3, int a4)</span><br><span class="line">&#123;</span><br><span class="line">  char *v4; &#x2F;&#x2F; esi</span><br><span class="line">  const char *v5; &#x2F;&#x2F; ST10_4</span><br><span class="line">  int result; &#x2F;&#x2F; eax</span><br><span class="line">  char *v7; &#x2F;&#x2F; esi</span><br><span class="line">  jstring (*v8)(JNIEnv *, const jchar *, jsize); &#x2F;&#x2F; ST10_4</span><br><span class="line">  size_t v9; &#x2F;&#x2F; eax</span><br><span class="line">  int v10; &#x2F;&#x2F; [esp+4h] [ebp-28h]</span><br><span class="line">  int v11; &#x2F;&#x2F; [esp+8h] [ebp-24h]</span><br><span class="line">  int v12; &#x2F;&#x2F; [esp+Ch] [ebp-20h]</span><br><span class="line">  int v13; &#x2F;&#x2F; [esp+10h] [ebp-1Ch]</span><br><span class="line">  char v14; &#x2F;&#x2F; [esp+14h] [ebp-18h]</span><br><span class="line">  unsigned int v15; &#x2F;&#x2F; [esp+18h] [ebp-14h]</span><br><span class="line"></span><br><span class="line">  v15 &#x3D; __readgsdword(0x14u);</span><br><span class="line">  if ( checkSignature((int)a1, a2, a3) &#x3D;&#x3D; 1 )</span><br><span class="line">  &#123;</span><br><span class="line">    v14 &#x3D; 0;</span><br><span class="line">    v13 &#x3D; 0x3D3D7965;</span><br><span class="line">    v12 &#x3D; 0x6B747365;</span><br><span class="line">    v11 &#x3D; 0x74617369;</span><br><span class="line">    v10 &#x3D; 0x73696874;</span><br><span class="line">    v4 &#x3D; (char *)(*a1)-&gt;GetStringUTFChars(a1, (jstring)a4, 0);</span><br><span class="line">    v5 &#x3D; (const char *)AES_128_ECB_PKCS5Padding_Encrypt(v4, (int)&amp;v10);</span><br><span class="line">    (*a1)-&gt;ReleaseStringUTFChars(a1, (jstring)a4, v4);</span><br><span class="line">    result &#x3D; (int)(*a1)-&gt;NewStringUTF(a1, v5);</span><br><span class="line">  &#125;</span><br><span class="line">  else</span><br><span class="line">  &#123;</span><br><span class="line">    v7 &#x3D; UNSIGNATURE[0];</span><br><span class="line">    v8 &#x3D; (*a1)-&gt;NewString;</span><br><span class="line">    v9 &#x3D; strlen(UNSIGNATURE[0]);</span><br><span class="line">    result &#x3D; (int)v8(a1, (const jchar *)v7, v9);</span><br><span class="line">  &#125;</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以发现, 加密方式为aes加密, key 为 v10中的内容.为thisisatestkey==</p>
+<p>对VEIzd/V2UPYNdn/bxH3Xig== 解密为aimagetencent, 发现提交flag错误, 重新找另一个字符串,在FileDataActivity类中找到如下.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class FileDataActivity extends a &#123;</span><br><span class="line">  private TextView c;</span><br><span class="line">  </span><br><span class="line">  protected void onCreate(Bundle paramBundle) &#123;</span><br><span class="line">    super.onCreate(paramBundle);</span><br><span class="line">    setContentView(2130903042);</span><br><span class="line">    this.c &#x3D; (TextView)findViewById(2131165184);</span><br><span class="line">    this.c.setText(Encryto.decode(this, &quot;9YuQ2dk8CSaCe7DTAmaqAA&#x3D;&#x3D;&quot;));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用了decode函数, 而decode函数与doRawData实现一样, 直接与之前一样的AES ecb解密, 得到flag</p>
+<h1 id="Ph0en1x-100"><a href="#Ph0en1x-100" class="headerlink" title="Ph0en1x-100"></a>Ph0en1x-100</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/f6adc401d0eb472892a4ac4481f76a85.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<p>程序流程, 输入flag</p>
+<p>jd-gui反编译如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void onGoClick(View paramView)</span><br><span class="line"> &#123;</span><br><span class="line">   paramView &#x3D; this.etFlag.getText().toString();</span><br><span class="line">   if (getSecret(getFlag()).equals(getSecret(encrypt(paramView)))) &#123;</span><br><span class="line">     Toast.makeText(this, &quot;Success&quot;, 1).show();</span><br><span class="line">   &#125;</span><br><span class="line">   for (;;)</span><br><span class="line">   &#123;</span><br><span class="line">     return;</span><br><span class="line">     Toast.makeText(this, &quot;Failed&quot;, 1).show();</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>getFlag函数与encrypt函数是native层</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static</span><br><span class="line">&#123;</span><br><span class="line">  System.loadLibrary(&quot;phcm&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public native String encrypt(String paramString);</span><br><span class="line"></span><br><span class="line">public native String getFlag();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>反编译libphcm.so文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl Java_com_ph0en1x_android_1crackme_MainActivity_encrypt(JNIEnv *a1, int a2, int a3)</span><br><span class="line">&#123;</span><br><span class="line">  size_t i; &#x2F;&#x2F; esi</span><br><span class="line">  const char *s; &#x2F;&#x2F; edi</span><br><span class="line"></span><br><span class="line">  i &#x3D; 0;</span><br><span class="line">  for ( s &#x3D; (*a1)-&gt;GetStringUTFChars(a1, (jstring)a3, 0); i &lt; strlen(s); --s[i++] )</span><br><span class="line">    ;</span><br><span class="line">  return (*a1)-&gt;NewStringUTF(a1, s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上加密就是对字符串中的每个字符-1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl Java_com_ph0en1x_android_1crackme_MainActivity_getFlag(JNIEnv *a1)</span><br><span class="line">&#123;</span><br><span class="line">  signed int v1; &#x2F;&#x2F; esi</span><br><span class="line">  char *v2; &#x2F;&#x2F; edi</span><br><span class="line">  char v3; &#x2F;&#x2F; al</span><br><span class="line">  int result; &#x2F;&#x2F; eax</span><br><span class="line">  int v5; &#x2F;&#x2F; [esp+26h] [ebp-46h]</span><br><span class="line">  int v6; &#x2F;&#x2F; [esp+2Ah] [ebp-42h]</span><br><span class="line">  int v7; &#x2F;&#x2F; [esp+2Eh] [ebp-3Eh]</span><br><span class="line">  __int16 v8; &#x2F;&#x2F; [esp+32h] [ebp-3Ah]</span><br><span class="line">  int v9; &#x2F;&#x2F; [esp+34h] [ebp-38h]</span><br><span class="line">  int v10; &#x2F;&#x2F; [esp+38h] [ebp-34h]</span><br><span class="line">  int v11; &#x2F;&#x2F; [esp+3Ch] [ebp-30h]</span><br><span class="line">  int v12; &#x2F;&#x2F; [esp+40h] [ebp-2Ch]</span><br><span class="line">  int v13; &#x2F;&#x2F; [esp+44h] [ebp-28h]</span><br><span class="line">  int v14; &#x2F;&#x2F; [esp+48h] [ebp-24h]</span><br><span class="line">  int v15; &#x2F;&#x2F; [esp+4Ch] [ebp-20h]</span><br><span class="line">  int v16; &#x2F;&#x2F; [esp+50h] [ebp-1Ch]</span><br><span class="line">  int v17; &#x2F;&#x2F; [esp+54h] [ebp-18h]</span><br><span class="line">  int v18; &#x2F;&#x2F; [esp+58h] [ebp-14h]</span><br><span class="line">  unsigned int v19; &#x2F;&#x2F; [esp+5Ch] [ebp-10h]</span><br><span class="line"></span><br><span class="line">  v1 &#x3D; 38;</span><br><span class="line">  v2 &#x3D; (char *)&amp;v18 + 2;</span><br><span class="line">  v9 &#x3D; 1279407662;</span><br><span class="line">  v10 &#x3D; 987807583;</span><br><span class="line">  v19 &#x3D; __readgsdword(0x14u);</span><br><span class="line">  v11 &#x3D; 1663091624;</span><br><span class="line">  v12 &#x3D; 482391945;</span><br><span class="line">  v13 &#x3D; 683820061;</span><br><span class="line">  v14 &#x3D; 235072895;</span><br><span class="line">  v15 &#x3D; 2559534685;</span><br><span class="line">  v16 &#x3D; 382777269;</span><br><span class="line">  v17 &#x3D; 4227367757;</span><br><span class="line">  v18 &#x3D; 4670209;</span><br><span class="line">  v5 &#x3D; 1819043144;</span><br><span class="line">  v6 &#x3D; 1750081647;</span><br><span class="line">  v7 &#x3D; 829318448;</span><br><span class="line">  v8 &#x3D; 120;</span><br><span class="line">  do</span><br><span class="line">  &#123;</span><br><span class="line">    v3 &#x3D; *v2--;</span><br><span class="line">    v2[1] &#x3D; (*((_BYTE *)&amp;v5 + v1-- % 13) ^ (v3 + 1 - *v2)) - 1;</span><br><span class="line">  &#125;</span><br><span class="line">  while ( v1 );</span><br><span class="line">  LOBYTE(v9) &#x3D; (v9 ^ 0x48) - 1;</span><br><span class="line">  result &#x3D; (int)(*a1)-&gt;NewStringUTF(a1, (const char *)&amp;v9);</span><br><span class="line">  if ( __readgsdword(0x14u) !&#x3D; v19 )</span><br><span class="line">    sub_4B0();</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个加密稍微有点复杂. 若想获取flag, 先对上面这给逆出来, 在对encrypt加密加密函数给再逆出来即可获得flag, 但是, 我写了一个c脚本, 上面这个有问题, 主要是LOBYTE(v9) = (v9 ^ 0x48) - 1;这个语句不好写.换另一种思路.动态调试(瞎弄半天, 啥也没弄出来), 再换另一种, 就是使用Android killer修改smali源码, 将其getFlag函数的字符串给打印出来, 只需将打印失败逻辑添加一下getFlag函数, 将getFlag字符串覆盖为打印失败的字符串, 复制上面调用getFlag的即可, 再更变一下变量, 如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.line 37</span><br><span class="line">   :cond_0</span><br><span class="line">   const-string v1, &quot;Failed&quot;</span><br><span class="line">   </span><br><span class="line">   invoke-virtual &#123;p0&#125;, Lcom&#x2F;ph0en1x&#x2F;android_crackme&#x2F;MainActivity;-&gt;getFlag()Ljava&#x2F;lang&#x2F;String;</span><br><span class="line"></span><br><span class="line">   move-result-object v1   &#x2F;&#x2F; getFlag()函数的返回值,(字符串)</span><br><span class="line">   </span><br><span class="line">   invoke-static &#123;p0, v1, v3&#125;, Landroid&#x2F;widget&#x2F;Toast;-&gt;makeText(Landroid&#x2F;content&#x2F;Context;Ljava&#x2F;lang&#x2F;CharSequence;I)Landroid&#x2F;widget&#x2F;Toast;</span><br><span class="line"></span><br><span class="line">   move-result-object v1</span><br><span class="line"></span><br><span class="line">   invoke-virtual &#123;v1&#125;, Landroid&#x2F;widget&#x2F;Toast;-&gt;show()V</span><br></pre></td></tr></table></figure>
+
+<p>然后点击Android-&gt;编译, 即可再次编译为apk文件, 安装再nox中运行, 随便输入就会出现ek<code>fz@q2^x/t^fn0mF^6/^rb</code>qanqntfg^E`hq|</p>
+<p>再次让每个字符+1就可得到flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">int main(void) &#123;</span><br><span class="line">	char flag[] &#x3D; &quot;ek&#96;fz@q2^x&#x2F;t^fn0mF^6&#x2F;^rb&#96;qanqntfg^E&#96;hq|&quot;;</span><br><span class="line">	for(int i &#x3D; 0; i &lt; strlen(flag); ++i) &#123;</span><br><span class="line">		putchar(++flag[i]);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="app1"><a href="#app1" class="headerlink" title="app1"></a>app1</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/b9af8dfef6b749d2819ef5be16c26a0d.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public void onClick(View paramView)</span><br><span class="line"> &#123;</span><br><span class="line">   for (;;)</span><br><span class="line">   &#123;</span><br><span class="line">     try</span><br><span class="line">     &#123;</span><br><span class="line">       str &#x3D; this.this$0.text.getText().toString();</span><br><span class="line">       PackageInfo localPackageInfo &#x3D; this.this$0.getPackageManager().getPackageInfo(&quot;com.example.yaphetshan.tencentgreat&quot;, 16384);</span><br><span class="line">       paramView &#x3D; localPackageInfo.versionName;</span><br><span class="line">       int i &#x3D; localPackageInfo.versionCode;</span><br><span class="line">       j &#x3D; 0;</span><br><span class="line">       if ((j &gt;&#x3D; str.length()) || (j &gt;&#x3D; paramView.length())) &#123;</span><br><span class="line">         continue;</span><br><span class="line">       &#125;</span><br><span class="line">       if (str.charAt(j) !&#x3D; (paramView.charAt(j) ^ i))</span><br><span class="line">       &#123;</span><br><span class="line">         Toast.makeText(this.this$0, &quot;再接再励~&quot;, 1).show();</span><br><span class="line">         return;</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     catch (PackageManager.NameNotFoundException paramView)</span><br><span class="line">     &#123;</span><br><span class="line">       String str;</span><br><span class="line">       int j;</span><br><span class="line">       Toast.makeText(this.this$0, &quot;不要玩小聪明&quot;, 1).show();</span><br><span class="line">       continue;</span><br><span class="line">     &#125;</span><br><span class="line">     j++;</span><br><span class="line">     continue;</span><br><span class="line">     if (str.length() !&#x3D; paramView.length()) &#123;</span><br><span class="line">       continue;</span><br><span class="line">     &#125;</span><br><span class="line">     Toast.makeText(this.this$0, &quot;恭喜开启芝麻之门&quot;, 1).show();</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在BuildConfig class中找到versionName和versionCode</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package com.example.yaphetshan.tencentgreat;</span><br><span class="line"></span><br><span class="line">public final class BuildConfig</span><br><span class="line">&#123;</span><br><span class="line">  public static final String APPLICATION_ID &#x3D; &quot;com.example.yaphetshan.tencentgreat&quot;;</span><br><span class="line">  public static final String BUILD_TYPE &#x3D; &quot;debug&quot;;</span><br><span class="line">  public static final boolean DEBUG &#x3D; Boolean.parseBoolean(&quot;true&quot;);</span><br><span class="line">  public static final String FLAVOR &#x3D; &quot;&quot;;</span><br><span class="line">  public static final int VERSION_CODE &#x3D; 15;</span><br><span class="line">  public static final String VERSION_NAME &#x3D; &quot;X&lt;cP[?PHNB&lt;P?aj&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>解密脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">int main(void) &#123;</span><br><span class="line">	char name[] &#x3D; &quot;X&lt;cP[?PHNB&lt;P?aj&quot;;</span><br><span class="line">	for(int i &#x3D; 0; i &lt; strlen(name); ++i)</span><br><span class="line">		putchar(name[i] ^15);</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="easyjni"><a href="#easyjni" class="headerlink" title="easyjni"></a>easyjni</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/eb760e6a10ea4dcab700a6b7db948488.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<p>反编译java如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class MainActivity$1</span><br><span class="line">  implements View.OnClickListener</span><br><span class="line">&#123;</span><br><span class="line">  MainActivity$1(MainActivity paramMainActivity, Context paramContext) &#123;&#125;</span><br><span class="line">  </span><br><span class="line">  public void onClick(View paramView)</span><br><span class="line">  &#123;</span><br><span class="line">    paramView &#x3D; (EditText)((MainActivity)this.a).findViewById(2131427445);</span><br><span class="line">    if (MainActivity.a(this.b, paramView.getText().toString())) &#123;</span><br><span class="line">      Toast.makeText(this.a, &quot;You are right!&quot;, 1).show();</span><br><span class="line">    &#125;</span><br><span class="line">    for (;;)</span><br><span class="line">    &#123;</span><br><span class="line">      return;</span><br><span class="line">      Toast.makeText(this.a, &quot;You are wrong! Bye~&quot;, 1).show();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity</span><br><span class="line">  extends c</span><br><span class="line">&#123;</span><br><span class="line">  static</span><br><span class="line">  &#123;</span><br><span class="line">    System.loadLibrary(&quot;native&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  private boolean a(String paramString)</span><br><span class="line">  &#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">      a locala &#x3D; new com&#x2F;a&#x2F;easyjni&#x2F;a;</span><br><span class="line">      locala.&lt;init&gt;();</span><br><span class="line">      bool &#x3D; ncheck(locala.a(paramString.getBytes()));</span><br><span class="line">      return bool;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception paramString)</span><br><span class="line">    &#123;</span><br><span class="line">      for (;;)</span><br><span class="line">      &#123;</span><br><span class="line">        boolean bool &#x3D; false;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  private native boolean ncheck(String paramString);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>从以上代码可以看到, 对输入的数据先进行base64加密, 然后调用native层的ncheck函数判断是否正确.</p>
+<p>ida打开libnative.so文件, 反编译ncheck函数如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">signed int __fastcall Java_com_a_easyjni_MainActivity_ncheck(JNIEnv *a1, int a2, int a3)</span><br><span class="line">&#123;</span><br><span class="line">  int v3; &#x2F;&#x2F; r8</span><br><span class="line">  JNIEnv *v4; &#x2F;&#x2F; r5</span><br><span class="line">  int v5; &#x2F;&#x2F; r8</span><br><span class="line">  const char *str; &#x2F;&#x2F; r6</span><br><span class="line">  int i; &#x2F;&#x2F; r0</span><br><span class="line">  char *v8; &#x2F;&#x2F; r2</span><br><span class="line">  char v9; &#x2F;&#x2F; r1</span><br><span class="line">  int v10; &#x2F;&#x2F; r0</span><br><span class="line">  bool v11; &#x2F;&#x2F; nf</span><br><span class="line">  unsigned __int8 v12; &#x2F;&#x2F; vf</span><br><span class="line">  int v13; &#x2F;&#x2F; r1</span><br><span class="line">  signed int result; &#x2F;&#x2F; r0</span><br><span class="line">  char en_str[32]; &#x2F;&#x2F; [sp+3h] [bp-35h]</span><br><span class="line">  char v16; &#x2F;&#x2F; [sp+23h] [bp-15h]</span><br><span class="line">  int v17; &#x2F;&#x2F; [sp+28h] [bp-10h]</span><br><span class="line"></span><br><span class="line">  v17 &#x3D; v3;</span><br><span class="line">  v4 &#x3D; a1;</span><br><span class="line">  v5 &#x3D; a3;</span><br><span class="line">  str &#x3D; (const char *)((int (__fastcall *)(JNIEnv *, int, _DWORD))(*a1)-&gt;GetStringUTFChars)(a1, a3, 0);</span><br><span class="line">  if ( strlen(str) &#x3D;&#x3D; 32 )</span><br><span class="line">  &#123;</span><br><span class="line">    i &#x3D; 0;</span><br><span class="line">    do</span><br><span class="line">    &#123;</span><br><span class="line">      v8 &#x3D; &amp;en_str[i];</span><br><span class="line">      en_str[i] &#x3D; str[i + 16];</span><br><span class="line">      v9 &#x3D; str[i++];</span><br><span class="line">      v8[16] &#x3D; v9;</span><br><span class="line">    &#125;</span><br><span class="line">    while ( i !&#x3D; 16 );</span><br><span class="line">    ((void (__fastcall *)(JNIEnv *, int, const char *))(*v4)-&gt;ReleaseStringUTFChars)(v4, v5, str);</span><br><span class="line">    v10 &#x3D; 0;</span><br><span class="line">    do</span><br><span class="line">    &#123;</span><br><span class="line">      v12 &#x3D; __OFSUB__(v10, 30);</span><br><span class="line">      v11 &#x3D; v10 - 30 &lt; 0;</span><br><span class="line">      v16 &#x3D; en_str[v10];</span><br><span class="line">      en_str[v10] &#x3D; en_str[v10 + 1];</span><br><span class="line">      en_str[v10 + 1] &#x3D; v16;</span><br><span class="line">      v10 +&#x3D; 2;</span><br><span class="line">    &#125;</span><br><span class="line">    while ( v11 ^ v12 );</span><br><span class="line">    v13 &#x3D; memcmp(en_str, &quot;MbT3sQgX039i3g&#x3D;&#x3D;AQOoMQFPskB1Bsc7&quot;, 0x20u);</span><br><span class="line">    result &#x3D; 0;</span><br><span class="line">    if ( !v13 )</span><br><span class="line">      result &#x3D; 1;</span><br><span class="line">  &#125;</span><br><span class="line">  else</span><br><span class="line">  &#123;</span><br><span class="line">    ((void (__fastcall *)(JNIEnv *, int, const char *))(*v4)-&gt;ReleaseStringUTFChars)(v4, v5, str);</span><br><span class="line">    result &#x3D; 0;</span><br><span class="line">  &#125;</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码经过了两次加密, 先进行str[i]与str[i + 16]的交换, 再进行str[i]与str[i + 1]进行交换.</p>
+<p>解密脚本如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void decode() &#123;</span><br><span class="line">        char code[] &#x3D; &quot;MbT3sQgX039i3g&#x3D;&#x3D;AQOoMQFPskB1Bsc7&quot;;</span><br><span class="line">        for(int i &#x3D; 0; i &lt; 32;  i +&#x3D; 2) &#123;</span><br><span class="line">                char ch &#x3D; code[i];</span><br><span class="line">                code[i] &#x3D; code[i + 1];</span><br><span class="line">                code[i + 1] &#x3D; ch;</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;printf(&quot;%s&quot;, code);</span><br><span class="line">        for(int i &#x3D; 0; i &lt; 16; i ++) &#123;</span><br><span class="line">                char ch &#x3D; code[i];</span><br><span class="line">                code[i] &#x3D; code[i + 16];</span><br><span class="line">                code[i + 16] &#x3D; ch;</span><br><span class="line">        &#125;</span><br><span class="line">        printf(&quot;%s&quot;, code);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">void show_arr() &#123;</span><br><span class="line">        char arr[] &#x3D; &#123; 105, 53, 106, 76, 87, 55, 83, 48, 71, 88, 54, 117, 102, 49, 99, 118, 51, 110, 121, 52, 113, 56, 101, 115, 50, 81, 43, 98, 100, 107, 89, 103, 75, 79, 73, 84, 47, 116, 65, 120, 85, 114, 70, 108, 86, 80, 122, 104, 109, 111, 119, 57, 66, 72, 67, 77, 68, 112, 69, 97, 74, 82, 90, 78, 0 &#125;;</span><br><span class="line">        printf(&quot;%s\n&quot;, arr);</span><br><span class="line">&#125;</span><br><span class="line">int main(void) &#123;</span><br><span class="line">        show_arr();</span><br><span class="line">        decode();</span><br><span class="line">        return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解密base64</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import base64</span><br><span class="line">import string</span><br><span class="line"></span><br><span class="line">str1 &#x3D; &quot;QAoOQMPFks1BsB7cbM3TQsXg30i9g3&#x3D;&#x3D;&quot;</span><br><span class="line"></span><br><span class="line">string1 &#x3D; &quot;i5jLW7S0GX6uf1cv3ny4q8es2Q+bdkYgKOIT&#x2F;tAxUrFlVPzhmow9BHCMDpEaJRZN&quot;</span><br><span class="line">string2 &#x3D; &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+&#x2F;&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print (b&#39;code: &#39; + base64.b64decode(str1.translate(str.maketrans(string1,string2))))</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="easy-apk"><a href="#easy-apk" class="headerlink" title="easy apk"></a>easy apk</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/989ca07c3f90426fa05406e4369901ff.apk">下载</a></p>
+<p>来源: 攻防世界</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class MainActivity$1</span><br><span class="line">  implements View.OnClickListener</span><br><span class="line">&#123;</span><br><span class="line">  MainActivity$1(MainActivity paramMainActivity) &#123;&#125;</span><br><span class="line">  </span><br><span class="line">  public void onClick(View paramView)</span><br><span class="line">  &#123;</span><br><span class="line">    paramView &#x3D; ((EditText)this.this$0.findViewById(2131427445)).getText().toString();</span><br><span class="line">    if (new Base64New().Base64Encode(paramView.getBytes()).equals(&quot;5rFf7E2K6rqN7Hpiyush7E6S5fJg6rsi5NBf6NGT5rs&#x3D;&quot;)) &#123;</span><br><span class="line">      Toast.makeText(this.this$0, &quot;验证通过!&quot;, 1).show();</span><br><span class="line">    &#125;</span><br><span class="line">    for (;;)</span><br><span class="line">    &#123;</span><br><span class="line">      return;</span><br><span class="line">      Toast.makeText(this.this$0, &quot;验证失败!&quot;, 1).show();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>base64加密如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class Base64New</span><br><span class="line">&#123;</span><br><span class="line">  private static final char[] Base64ByteToStr &#x3D; &#123; 118, 119, 120, 114, 115, 116, 117, 111, 112, 113, 51, 52, 53, 54, 55, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 121, 122, 48, 49, 50, 80, 81, 82, 83, 84, 75, 76, 77, 78, 79, 90, 97, 98, 99, 100, 85, 86, 87, 88, 89, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 56, 57, 43, 47 &#125;;</span><br><span class="line">  private static final int RANGE &#x3D; 255;</span><br><span class="line">  private static byte[] StrToBase64Byte &#x3D; new byte[&#39;?&#39;];</span><br><span class="line">  </span><br><span class="line">  public String Base64Encode(byte[] paramArrayOfByte)</span><br><span class="line">  &#123;</span><br><span class="line">    StringBuilder localStringBuilder &#x3D; new StringBuilder();</span><br><span class="line">    for (int i &#x3D; 0; i &lt;&#x3D; paramArrayOfByte.length - 1; i +&#x3D; 3)</span><br><span class="line">    &#123;</span><br><span class="line">      byte[] arrayOfByte &#x3D; new byte[4];</span><br><span class="line">      int j &#x3D; 0;</span><br><span class="line">      int k &#x3D; 0;</span><br><span class="line">      if (k &lt;&#x3D; 2)</span><br><span class="line">      &#123;</span><br><span class="line">        if (i + k &lt;&#x3D; paramArrayOfByte.length - 1) &#123;</span><br><span class="line">          arrayOfByte[k] &#x3D; ((byte)(byte)((paramArrayOfByte[(i + k)] &amp; 0xFF) &gt;&gt;&gt; k * 2 + 2 | j));</span><br><span class="line">        &#125;</span><br><span class="line">        for (j &#x3D; (byte)(((paramArrayOfByte[(i + k)] &amp; 0xFF) &lt;&lt; (2 - k) * 2 + 2 &amp; 0xFF) &gt;&gt;&gt; 2);; j &#x3D; 64)</span><br><span class="line">        &#123;</span><br><span class="line">          k++;</span><br><span class="line">          break;</span><br><span class="line">          arrayOfByte[k] &#x3D; ((byte)j);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      arrayOfByte[3] &#x3D; ((byte)j);</span><br><span class="line">      j &#x3D; 0;</span><br><span class="line">      if (j &lt;&#x3D; 3)</span><br><span class="line">      &#123;</span><br><span class="line">        if (arrayOfByte[j] &lt;&#x3D; 63) &#123;</span><br><span class="line">          localStringBuilder.append(Base64ByteToStr[arrayOfByte[j]]);</span><br><span class="line">        &#125;</span><br><span class="line">        for (;;)</span><br><span class="line">        &#123;</span><br><span class="line">          j++;</span><br><span class="line">          break;</span><br><span class="line">          localStringBuilder.append(&#39;&#x3D;&#39;);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return localStringBuilder.toString();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上加密是对输入进行了一个base64换表的加密</p>
+<p>解密脚本如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import base64</span><br><span class="line">import string</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">base_table &#x3D; [ 118, 119, 120, 114, 115, 116, 117, 111, 112, 113, 51, 52, 53, 54, 55, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 121, 122, 48, 49, 50, 80, 81, 82, 83, 84, 75, 76, 77, 78, 79, 90, 97, 98, 99, 100, 85, 86, 87, 88, 89, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 56, 57, 43, 47 ];</span><br><span class="line">string1 &#x3D; &#39;&#39;</span><br><span class="line">code &#x3D; &#39;5rFf7E2K6rqN7Hpiyush7E6S5fJg6rsi5NBf6NGT5rs&#x3D;&#39;</span><br><span class="line"></span><br><span class="line">for i in range(len(base_table)):</span><br><span class="line">    string1 +&#x3D; chr(base_table[i])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">string2 &#x3D; &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+&#x2F;&quot;</span><br><span class="line"></span><br><span class="line">print(base64.b64decode(code.translate(str.maketrans(string1,string2))))</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/09/07/android-revese-0/" data-id="ckhemv84g005bwdcm3pfh88nf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/" rel="tag">android</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/09/11/pwn-docker-env/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          pwn docker env build
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/09/06/android-debuger/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">调试安卓程序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

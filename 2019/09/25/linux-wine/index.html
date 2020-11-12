@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>linux-wine | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="wine安装与配置 安装wine32dpkg –add-architecture i386 &amp;&amp; apt-get update &amp;&amp; apt-get install wine32 准备字体为了让中文界面的Windows 应用程序在Wine里运行时能正确显示中文字，需要中文版Windows操作系统下面的字体：C:\WINDOWS\Fonts\simsun.ttc，复制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux-wine">
+<meta property="og:url" content="http://blog.i0gan.cn/2019/09/25/linux-wine/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="wine安装与配置 安装wine32dpkg –add-architecture i386 &amp;&amp; apt-get update &amp;&amp; apt-get install wine32 准备字体为了让中文界面的Windows 应用程序在Wine里运行时能正确显示中文字，需要中文版Windows操作系统下面的字体：C:\WINDOWS\Fonts\simsun.ttc，复制">
+<meta property="og:locale">
+<meta property="article:published_time" content="2019-09-25T03:41:52.000Z">
+<meta property="article:modified_time" content="2020-10-25T03:54:48.257Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux-wine" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/25/linux-wine/" class="article-date">
+  <time datetime="2019-09-25T03:41:52.000Z" itemprop="datePublished">2019-09-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      linux-wine
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="wine安装与配置"><a href="#wine安装与配置" class="headerlink" title="wine安装与配置"></a>wine安装与配置</h1><ol>
+<li>安装wine32<br>dpkg –add-architecture i386 &amp;&amp; apt-get update &amp;&amp; apt-get install wine32</li>
+<li>准备字体<br>为了让中文界面的Windows 应用程序在Wine里运行时能正确显示中文字，需要中文版Windows操作系统下面的字体：<br>C:\WINDOWS\Fonts\simsun.ttc，复制一份到Linux系统中/root/.wine/drive_c/windows/Fonts里面<br>[root@kashu Fonts]# pwd;ll<br>/root/.wine/drive_c/windows/Fonts</li>
+</ol>
+<p>-rw-r–r–. 1 root root 10512288 Sep 15 04:41 simsun.ttc<br>simfang.ttc 是许多 Windows 应用默认使用 simfang.ttc 字体。<br>3. 修改/root/.wine/system.reg（可以先cp /root/.wine/system.reg /root/.wine/system.reg.bak备份一下）<br>装好字体后，还要修改一下 Wine 的注册表设置，指定与字体相关的设置：<br>gedit /root/.wine/system.reg<br>（一定要使用 gedit 、vim或其他支持 gb2312/utf8 编码的编辑器修改这些文件，否则文件中的中文可能变乱码）<br>搜索： LogPixels<br>找到的行应该是：[System\CurrentControlSet\Hardware Profiles\Current\Software\Fonts]<br>将其中的：<br>“LogPixels”=dword:00000060<br>改为：<br>“LogPixels”=dword:00000070<br>搜索： FontSubstitutes<br>找到的行应该是：[Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]<br>将其中的：<br>“MS Shell Dlg”=”Tahoma”<br>“MS Shell Dlg 2″=”Tahoma”<br>改为：<br>“MS Shell Dlg”=”SimSun”<br>“MS Shell Dlg 2″=”SimSun”<br>4. 修改  /root/.wine/drive_c/windows/win.ini<br>gedit /root/.wine/drive_c/windows/win.ini<br>在文件末尾加入：<br>[Desktop]<br>menufontsize=13<br>messagefontsize=13<br>statusfontsize=13<br>IconTitleSize=13<br>5. 最关键的一步，把下面的代码保存为kashu.reg，然后直接在linux终端上执行regedit kashu.reg即可<br>      代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">REGEDIT4</span><br><span class="line">[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]</span><br><span class="line">&quot;Arial&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Arial CE,238&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Arial CYR,204&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Arial Greek,161&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Arial TUR,162&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Courier New&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Courier New CE,238&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Courier New CYR,204&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Courier New Greek,161&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Courier New TUR,162&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;FixedSys&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Helv&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Helvetica&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;MS Sans Serif&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;MS Shell Dlg&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;MS Shell Dlg 2&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;System&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Tahoma&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Times&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Times New Roman CE,238&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Times New Roman CYR,204&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Times New Roman Greek,161&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Times New Roman TUR,162&quot;&#x3D;&quot;simsun&quot;</span><br><span class="line">&quot;Tms Rmn&quot;&#x3D;&quot;simsun&quot;</span><br></pre></td></tr></table></figure>
+
+<p>6.配置中文之后,比如安装QQ,若想通过命令行启动QQ,那就通过别名来实现:<br>修改家目录下的.bashrc文件.<br>找到存在别名地方命令的位置</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2019/09/25/linux-wine/" data-id="ckhemv80p0013wdcm31720cht" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/03/16/weekly-report-0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          2020-03-16 周报
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/25/linux-usage/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">linux usage</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

