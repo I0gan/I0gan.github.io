@@ -1,0 +1,750 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Android 逆向入门 | I0gan</title><meta name="keywords" content="android"><meta name="author" content="i0gan"><meta name="copyright" content="i0gan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Android Re 入门必备工具:IDA : 反编译.so文件 AndroidKiller: 反编译apk文件及再次编译为apk jd-gui  : 将.jar文件反编译为java代码 dex2jar: 反编译.dex文件 apktool: 能够反编译及回编译apk 夜神模拟器: 运行apk文件 例题 1 [easy-so]下载 来源:攻防世界 使用夜神模拟器运行该apk文件, 发现需要输入fl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 逆向入门">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/09/07/android-revese-0/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="Android Re 入门必备工具:IDA : 反编译.so文件 AndroidKiller: 反编译apk文件及再次编译为apk jd-gui  : 将.jar文件反编译为java代码 dex2jar: 反编译.dex文件 apktool: 能够反编译及回编译apk 夜神模拟器: 运行apk文件 例题 1 [easy-so]下载 来源:攻防世界 使用夜神模拟器运行该apk文件, 发现需要输入fl">
+<meta property="og:locale">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2020-09-07T08:36:01.000Z">
+<meta property="article:modified_time" content="2020-10-25T04:00:07.800Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.i0gan.cn/2020/09/07/android-revese-0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-10-25 12:00:07'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">56</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">17</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">Android 逆向入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-09-07T08:36:01.000Z" title="Created 2020-09-07 16:36:01">2020-09-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-10-25T04:00:07.800Z" title="Updated 2020-10-25 12:00:07">2020-10-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/reverse/">reverse</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Android-Re-入门"><a href="#Android-Re-入门" class="headerlink" title="Android Re 入门"></a>Android Re 入门</h1><h2 id="必备工具"><a href="#必备工具" class="headerlink" title="必备工具:"></a>必备工具:</h2><p>IDA : 反编译.so文件</p>
+<p>AndroidKiller: 反编译apk文件及再次编译为apk</p>
+<p>jd-gui  : 将.jar文件反编译为java代码</p>
+<p>dex2jar: 反编译.dex文件</p>
+<p>apktool: 能够反编译及回编译apk</p>
+<p>夜神模拟器: 运行apk文件</p>
+<h2 id="例题-1-easy-so"><a href="#例题-1-easy-so" class="headerlink" title="例题 1 [easy-so]"></a>例题 1 [easy-so]</h2><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/456c1dab04b24036ba1d6e32a08dc882.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<p>使用夜神模拟器运行该apk文件, 发现需要输入flag</p>
+<p>zip解压apk文件, 用 dex2jar反编译 classes.dex文件得到classes-dex2jar.jar,</p>
+<pre><code>d2j-dex2jar.bat classes.dex</code></pre>
+<p> 再用jd-gui打开classes-dex2jar.jar反编译为java代码.</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+  <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>Bundle paramBundle<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>paramBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token number">2131296283</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">(</span><span class="token punctuation">(</span>Button<span class="token punctuation">)</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token number">2131165218</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">View<span class="token punctuation">.</span>OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+          <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span>View param1View<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>cyberpeace<span class="token punctuation">.</span><span class="token function">CheckString</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>EditText<span class="token punctuation">)</span>MainActivity<span class="token punctuation">.</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token number">2131165233</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getText</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+              Toast<span class="token punctuation">.</span><span class="token function">makeText</span><span class="token punctuation">(</span><span class="token punctuation">(</span>Context<span class="token punctuation">)</span>MainActivity<span class="token punctuation">.</span><span class="token keyword">this</span><span class="token punctuation">,</span> "<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token keyword">return</span><span class="token punctuation">;</span>
+            <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span> 
+            Toast<span class="token punctuation">.</span><span class="token function">makeText</span><span class="token punctuation">(</span><span class="token punctuation">(</span>Context<span class="token punctuation">)</span>MainActivity<span class="token punctuation">.</span><span class="token keyword">this</span><span class="token punctuation">,</span> "<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+        <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span></code></pre>
+<p>在这里可以发现, cyberpeace加载了’cyberpeace’动态库, CheckString函数是native层的, 这个函数的实现就在libcyberpeace.so文件中</p>
+<pre><code>package com.testjava.jack.pingan2;
+
+public class cyberpeace &#123;
+  static &#123;
+    System.loadLibrary(&quot;cyberpeace&quot;);
+  &#125;
+
+  public static native int CheckString(String paramString);
+&#125;
+</code></pre>
+<p>使用ida打开lib/x86/libcyberpeace.so文件, 找到 _BOOL4 __cdecl Java_com_testjava_jack_pingan2_cyberpeace_CheckString(int a1, int a2, int a3)函数, 该函数实现如下:</p>
+<pre><code>_BOOL4 __cdecl Java_com_testjava_jack_pingan2_cyberpeace_CheckString(int a1, int a2, int a3)
+&#123;
+  const char *get_str; // ST1C_4
+  size_t len; // edi
+  char *str; // esi
+  size_t i; // edi
+  char v7; // al
+  char v8; // al
+  size_t v9; // edi
+  char v10; // al
+
+  get_str = (const char *)(*(int (__cdecl **)(int, int, _DWORD))(*(_DWORD *)a1 + 676))(a1, a3, 0); // 从java层获取所输入的字符串
+  len = strlen(get_str);
+  str = (char *)malloc(len + 1);
+  memset(&amp;str[len], 0, len != -1);
+  memcpy(str, get_str, len);
+  if ( strlen(str) &gt;= 2 ) // 加密1
+  &#123;
+    i = 0;
+    do
+    &#123;
+      v7 = str[i];
+      str[i] = str[i + 16];
+      str[i++ + 16] = v7;
+    &#125;
+    while ( i &lt; strlen(str) &gt;&gt; 1 );
+  &#125;
+  // 加密2
+  v8 = *str;
+  if ( *str )
+  &#123;
+    *str = str[1];
+    str[1] = v8;
+    if ( strlen(str) &gt;= 3 )
+    &#123;
+      v9 = 2;
+      do
+      &#123;
+        v10 = str[v9];
+        str[v9] = str[v9 + 1];
+        str[v9 + 1] = v10;
+        v9 += 2;
+      &#125;
+      while ( v9 &lt; strlen(str) );
+    &#125;
+  &#125;
+  return strcmp(str, &quot;f72c5a36569418a20907b55be5bf95ad&quot;) == 0; // 与字符串作比较
+&#125;</code></pre>
+<p>从以上发现, 对我们所输入的字符串进行了加密, 然后再与f72c5a36569418a20907b55be5bf95ad进行比较. 现在只需逆一下以上代码即可得到flag, exp代码如下</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) &#123;
+    char str[] = &quot;f72c5a36569418a20907b55be5bf95ad&quot;;
+    int i, v7, v8, v9, v10;
+    v8 = *str;
+    if ( *str ) &#123;
+        *str = str[1];
+        str[1] = v8;
+        if ( strlen(str) &gt;= 3 ) &#123;
+              v9 = 2;
+              do &#123;
+                v10 = str[v9];
+                str[v9] = str[v9 + 1];
+                str[v9 + 1] = v10;
+                v9 += 2;
+              &#125; while ( v9 &lt; strlen(str) );
+        &#125;
+    &#125;
+
+    // 交换 
+    if ( strlen(str) &gt;= 2 )    &#123;
+        i = 0;
+        do &#123;
+              v7 = str[i];
+              str[i] = str[i + 16];
+             str[i++ + 16] = v7;
+            &#125; while ( i &lt; strlen(str) &gt;&gt; 1 );
+    &#125;
+    printf(&quot;%s&quot;, str);
+
+    return 0;
+&#125;
+</code></pre>
+<p>运行以上代码即可获取flag</p>
+<h1 id="例题-2-app2"><a href="#例题-2-app2" class="headerlink" title="例题 2 [app2]"></a>例题 2 [app2]</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/task/answer?type=mobile&number=6&grade=0&id=5086&page=1">下载</a></p>
+<p>来源:攻防世界</p>
+<p>对输入的账号和密码在SecondActivity类中进行加密判断, 而加密调用了native层的加密函数</p>
+<pre><code>protected void onCreate(Bundle paramBundle) &#123;
+    super.onCreate(paramBundle);
+    setContentView(2130903041);
+    Intent intent = getIntent();
+    String str1 = intent.getStringExtra(&quot;ili&quot;);
+    String str2 = intent.getStringExtra(&quot;lil&quot;);
+    if (Encryto.doRawData(this, str1 + str2).equals(&quot;VEIzd/V2UPYNdn/bxH3Xig==&quot;)) &#123;
+      intent.setAction(&quot;android.test.action.MoniterInstallService&quot;);
+      intent.setClass((Context)this, MoniterInstallService.class);
+      intent.putExtra(&quot;company&quot;, &quot;tencent&quot;);
+      intent.putExtra(&quot;name&quot;, &quot;hacker&quot;);
+      intent.putExtra(&quot;age&quot;, 18);
+      startActivity(intent);
+      startService(intent);
+    &#125; 
+    SharedPreferences.Editor editor = getSharedPreferences(&quot;test&quot;, 0).edit();
+    editor.putString(&quot;ilil&quot;, str1);
+    editor.putString(&quot;lili&quot;, str2);
+    editor.commit();
+  &#125;</code></pre>
+<p>IDA反编译doRawData函数, 因为a为对象, 选择a按下y 键 然后输入 JNIEnv*就可以显示对象的函数调用, 如下</p>
+<pre><code>int __cdecl doRawData(JNIEnv *a1, int a2, int a3, int a4)
+&#123;
+  char *v4; // esi
+  const char *v5; // ST10_4
+  int result; // eax
+  char *v7; // esi
+  jstring (*v8)(JNIEnv *, const jchar *, jsize); // ST10_4
+  size_t v9; // eax
+  int v10; // [esp+4h] [ebp-28h]
+  int v11; // [esp+8h] [ebp-24h]
+  int v12; // [esp+Ch] [ebp-20h]
+  int v13; // [esp+10h] [ebp-1Ch]
+  char v14; // [esp+14h] [ebp-18h]
+  unsigned int v15; // [esp+18h] [ebp-14h]
+
+  v15 = __readgsdword(0x14u);
+  if ( checkSignature((int)a1, a2, a3) == 1 )
+  &#123;
+    v14 = 0;
+    v13 = 0x3D3D7965;
+    v12 = 0x6B747365;
+    v11 = 0x74617369;
+    v10 = 0x73696874;
+    v4 = (char *)(*a1)-&gt;GetStringUTFChars(a1, (jstring)a4, 0);
+    v5 = (const char *)AES_128_ECB_PKCS5Padding_Encrypt(v4, (int)&amp;v10);
+    (*a1)-&gt;ReleaseStringUTFChars(a1, (jstring)a4, v4);
+    result = (int)(*a1)-&gt;NewStringUTF(a1, v5);
+  &#125;
+  else
+  &#123;
+    v7 = UNSIGNATURE[0];
+    v8 = (*a1)-&gt;NewString;
+    v9 = strlen(UNSIGNATURE[0]);
+    result = (int)v8(a1, (const jchar *)v7, v9);
+  &#125;
+  return result;
+&#125;</code></pre>
+<p>可以发现, 加密方式为aes加密, key 为 v10中的内容.为thisisatestkey==</p>
+<p>对VEIzd/V2UPYNdn/bxH3Xig== 解密为aimagetencent, 发现提交flag错误, 重新找另一个字符串,在FileDataActivity类中找到如下.</p>
+<pre><code>public class FileDataActivity extends a &#123;
+  private TextView c;
+
+  protected void onCreate(Bundle paramBundle) &#123;
+    super.onCreate(paramBundle);
+    setContentView(2130903042);
+    this.c = (TextView)findViewById(2131165184);
+    this.c.setText(Encryto.decode(this, &quot;9YuQ2dk8CSaCe7DTAmaqAA==&quot;));
+  &#125;
+&#125;</code></pre>
+<p>调用了decode函数, 而decode函数与doRawData实现一样, 直接与之前一样的AES ecb解密, 得到flag</p>
+<h1 id="Ph0en1x-100"><a href="#Ph0en1x-100" class="headerlink" title="Ph0en1x-100"></a>Ph0en1x-100</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/f6adc401d0eb472892a4ac4481f76a85.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<p>程序流程, 输入flag</p>
+<p>jd-gui反编译如下:</p>
+<pre><code> public void onGoClick(View paramView)
+  &#123;
+    paramView = this.etFlag.getText().toString();
+    if (getSecret(getFlag()).equals(getSecret(encrypt(paramView)))) &#123;
+      Toast.makeText(this, &quot;Success&quot;, 1).show();
+    &#125;
+    for (;;)
+    &#123;
+      return;
+      Toast.makeText(this, &quot;Failed&quot;, 1).show();
+    &#125;
+  &#125;</code></pre>
+<p>getFlag函数与encrypt函数是native层</p>
+<pre><code>  static
+  &#123;
+    System.loadLibrary(&quot;phcm&quot;);
+  &#125;
+
+  public native String encrypt(String paramString);
+
+  public native String getFlag();</code></pre>
+<p>反编译libphcm.so文件</p>
+<pre><code>int __cdecl Java_com_ph0en1x_android_1crackme_MainActivity_encrypt(JNIEnv *a1, int a2, int a3)
+&#123;
+  size_t i; // esi
+  const char *s; // edi
+
+  i = 0;
+  for ( s = (*a1)-&gt;GetStringUTFChars(a1, (jstring)a3, 0); i &lt; strlen(s); --s[i++] )
+    ;
+  return (*a1)-&gt;NewStringUTF(a1, s);
+&#125;</code></pre>
+<p>以上加密就是对字符串中的每个字符-1</p>
+<pre><code>int __cdecl Java_com_ph0en1x_android_1crackme_MainActivity_getFlag(JNIEnv *a1)
+&#123;
+  signed int v1; // esi
+  char *v2; // edi
+  char v3; // al
+  int result; // eax
+  int v5; // [esp+26h] [ebp-46h]
+  int v6; // [esp+2Ah] [ebp-42h]
+  int v7; // [esp+2Eh] [ebp-3Eh]
+  __int16 v8; // [esp+32h] [ebp-3Ah]
+  int v9; // [esp+34h] [ebp-38h]
+  int v10; // [esp+38h] [ebp-34h]
+  int v11; // [esp+3Ch] [ebp-30h]
+  int v12; // [esp+40h] [ebp-2Ch]
+  int v13; // [esp+44h] [ebp-28h]
+  int v14; // [esp+48h] [ebp-24h]
+  int v15; // [esp+4Ch] [ebp-20h]
+  int v16; // [esp+50h] [ebp-1Ch]
+  int v17; // [esp+54h] [ebp-18h]
+  int v18; // [esp+58h] [ebp-14h]
+  unsigned int v19; // [esp+5Ch] [ebp-10h]
+
+  v1 = 38;
+  v2 = (char *)&amp;v18 + 2;
+  v9 = 1279407662;
+  v10 = 987807583;
+  v19 = __readgsdword(0x14u);
+  v11 = 1663091624;
+  v12 = 482391945;
+  v13 = 683820061;
+  v14 = 235072895;
+  v15 = 2559534685;
+  v16 = 382777269;
+  v17 = 4227367757;
+  v18 = 4670209;
+  v5 = 1819043144;
+  v6 = 1750081647;
+  v7 = 829318448;
+  v8 = 120;
+  do
+  &#123;
+    v3 = *v2--;
+    v2[1] = (*((_BYTE *)&amp;v5 + v1-- % 13) ^ (v3 + 1 - *v2)) - 1;
+  &#125;
+  while ( v1 );
+  LOBYTE(v9) = (v9 ^ 0x48) - 1;
+  result = (int)(*a1)-&gt;NewStringUTF(a1, (const char *)&amp;v9);
+  if ( __readgsdword(0x14u) != v19 )
+    sub_4B0();
+  return result;
+&#125;</code></pre>
+<p>这个加密稍微有点复杂. 若想获取flag, 先对上面这给逆出来, 在对encrypt加密加密函数给再逆出来即可获得flag, 但是, 我写了一个c脚本, 上面这个有问题, 主要是LOBYTE(v9) = (v9 ^ 0x48) - 1;这个语句不好写.换另一种思路.动态调试(瞎弄半天, 啥也没弄出来), 再换另一种, 就是使用Android killer修改smali源码, 将其getFlag函数的字符串给打印出来, 只需将打印失败逻辑添加一下getFlag函数, 将getFlag字符串覆盖为打印失败的字符串, 复制上面调用getFlag的即可, 再更变一下变量, 如下</p>
+<pre><code> .line 37
+    :cond_0
+    const-string v1, &quot;Failed&quot;
+
+    invoke-virtual &#123;p0&#125;, Lcom/ph0en1x/android_crackme/MainActivity;-&gt;getFlag()Ljava/lang/String;
+
+    move-result-object v1   // getFlag()函数的返回值,(字符串)
+
+    invoke-static &#123;p0, v1, v3&#125;, Landroid/widget/Toast;-&gt;makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+    move-result-object v1
+
+    invoke-virtual &#123;v1&#125;, Landroid/widget/Toast;-&gt;show()V</code></pre>
+<p>然后点击Android-&gt;编译, 即可再次编译为apk文件, 安装再nox中运行, 随便输入就会出现ek<code>fz@q2^x/t^fn0mF^6/^rb</code>qanqntfg^E`hq|</p>
+<p>再次让每个字符+1就可得到flag</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) &#123;
+    char flag[] = &quot;ek`fz@q2^x/t^fn0mF^6/^rb`qanqntfg^E`hq|&quot;;
+    for(int i = 0; i &lt; strlen(flag); ++i) &#123;
+        putchar(++flag[i]);
+    &#125;
+
+    return 0;
+&#125;</code></pre>
+<h1 id="app1"><a href="#app1" class="headerlink" title="app1"></a>app1</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/b9af8dfef6b749d2819ef5be16c26a0d.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<pre><code> public void onClick(View paramView)
+  &#123;
+    for (;;)
+    &#123;
+      try
+      &#123;
+        str = this.this$0.text.getText().toString();
+        PackageInfo localPackageInfo = this.this$0.getPackageManager().getPackageInfo(&quot;com.example.yaphetshan.tencentgreat&quot;, 16384);
+        paramView = localPackageInfo.versionName;
+        int i = localPackageInfo.versionCode;
+        j = 0;
+        if ((j &gt;= str.length()) || (j &gt;= paramView.length())) &#123;
+          continue;
+        &#125;
+        if (str.charAt(j) != (paramView.charAt(j) ^ i))
+        &#123;
+          Toast.makeText(this.this$0, &quot;再接再励~&quot;, 1).show();
+          return;
+        &#125;
+      &#125;
+      catch (PackageManager.NameNotFoundException paramView)
+      &#123;
+        String str;
+        int j;
+        Toast.makeText(this.this$0, &quot;不要玩小聪明&quot;, 1).show();
+        continue;
+      &#125;
+      j++;
+      continue;
+      if (str.length() != paramView.length()) &#123;
+        continue;
+      &#125;
+      Toast.makeText(this.this$0, &quot;恭喜开启芝麻之门&quot;, 1).show();
+    &#125;
+  &#125;</code></pre>
+<p>在BuildConfig class中找到versionName和versionCode</p>
+<pre><code>package com.example.yaphetshan.tencentgreat;
+
+public final class BuildConfig
+&#123;
+  public static final String APPLICATION_ID = &quot;com.example.yaphetshan.tencentgreat&quot;;
+  public static final String BUILD_TYPE = &quot;debug&quot;;
+  public static final boolean DEBUG = Boolean.parseBoolean(&quot;true&quot;);
+  public static final String FLAVOR = &quot;&quot;;
+  public static final int VERSION_CODE = 15;
+  public static final String VERSION_NAME = &quot;X&lt;cP[?PHNB&lt;P?aj&quot;;
+&#125;
+</code></pre>
+<p>解密脚本</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+int main(void) &#123;
+    char name[] = &quot;X&lt;cP[?PHNB&lt;P?aj&quot;;
+    for(int i = 0; i &lt; strlen(name); ++i)
+        putchar(name[i] ^15);
+
+    return 0;
+&#125;
+</code></pre>
+<h1 id="easyjni"><a href="#easyjni" class="headerlink" title="easyjni"></a>easyjni</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/eb760e6a10ea4dcab700a6b7db948488.apk">下载</a></p>
+<p>来源:攻防世界</p>
+<p>反编译java如下:</p>
+<pre><code>class MainActivity$1
+  implements View.OnClickListener
+&#123;
+  MainActivity$1(MainActivity paramMainActivity, Context paramContext) &#123;&#125;
+
+  public void onClick(View paramView)
+  &#123;
+    paramView = (EditText)((MainActivity)this.a).findViewById(2131427445);
+    if (MainActivity.a(this.b, paramView.getText().toString())) &#123;
+      Toast.makeText(this.a, &quot;You are right!&quot;, 1).show();
+    &#125;
+    for (;;)
+    &#123;
+      return;
+      Toast.makeText(this.a, &quot;You are wrong! Bye~&quot;, 1).show();
+    &#125;
+  &#125;
+&#125;</code></pre>
+<pre><code>public class MainActivity
+  extends c
+&#123;
+  static
+  &#123;
+    System.loadLibrary(&quot;native&quot;);
+  &#125;
+
+  private boolean a(String paramString)
+  &#123;
+    try
+    &#123;
+      a locala = new com/a/easyjni/a;
+      locala.&lt;init&gt;();
+      bool = ncheck(locala.a(paramString.getBytes()));
+      return bool;
+    &#125;
+    catch (Exception paramString)
+    &#123;
+      for (;;)
+      &#123;
+        boolean bool = false;
+      &#125;
+    &#125;
+  &#125;
+
+  private native boolean ncheck(String paramString);</code></pre>
+<p>从以上代码可以看到, 对输入的数据先进行base64加密, 然后调用native层的ncheck函数判断是否正确.</p>
+<p>ida打开libnative.so文件, 反编译ncheck函数如下:</p>
+<pre><code>signed int __fastcall Java_com_a_easyjni_MainActivity_ncheck(JNIEnv *a1, int a2, int a3)
+&#123;
+  int v3; // r8
+  JNIEnv *v4; // r5
+  int v5; // r8
+  const char *str; // r6
+  int i; // r0
+  char *v8; // r2
+  char v9; // r1
+  int v10; // r0
+  bool v11; // nf
+  unsigned __int8 v12; // vf
+  int v13; // r1
+  signed int result; // r0
+  char en_str[32]; // [sp+3h] [bp-35h]
+  char v16; // [sp+23h] [bp-15h]
+  int v17; // [sp+28h] [bp-10h]
+
+  v17 = v3;
+  v4 = a1;
+  v5 = a3;
+  str = (const char *)((int (__fastcall *)(JNIEnv *, int, _DWORD))(*a1)-&gt;GetStringUTFChars)(a1, a3, 0);
+  if ( strlen(str) == 32 )
+  &#123;
+    i = 0;
+    do
+    &#123;
+      v8 = &amp;en_str[i];
+      en_str[i] = str[i + 16];
+      v9 = str[i++];
+      v8[16] = v9;
+    &#125;
+    while ( i != 16 );
+    ((void (__fastcall *)(JNIEnv *, int, const char *))(*v4)-&gt;ReleaseStringUTFChars)(v4, v5, str);
+    v10 = 0;
+    do
+    &#123;
+      v12 = __OFSUB__(v10, 30);
+      v11 = v10 - 30 &lt; 0;
+      v16 = en_str[v10];
+      en_str[v10] = en_str[v10 + 1];
+      en_str[v10 + 1] = v16;
+      v10 += 2;
+    &#125;
+    while ( v11 ^ v12 );
+    v13 = memcmp(en_str, &quot;MbT3sQgX039i3g==AQOoMQFPskB1Bsc7&quot;, 0x20u);
+    result = 0;
+    if ( !v13 )
+      result = 1;
+  &#125;
+  else
+  &#123;
+    ((void (__fastcall *)(JNIEnv *, int, const char *))(*v4)-&gt;ReleaseStringUTFChars)(v4, v5, str);
+    result = 0;
+  &#125;
+  return result;
+&#125;</code></pre>
+<p>以上代码经过了两次加密, 先进行str[i]与str[i + 16]的交换, 再进行str[i]与str[i + 1]进行交换.</p>
+<p>解密脚本如下:</p>
+<pre><code>#include &lt;stdio.h&gt;
+void decode() &#123;
+        char code[] = &quot;MbT3sQgX039i3g==AQOoMQFPskB1Bsc7&quot;;
+        for(int i = 0; i &lt; 32;  i += 2) &#123;
+                char ch = code[i];
+                code[i] = code[i + 1];
+                code[i + 1] = ch;
+        &#125;
+        //printf(&quot;%s&quot;, code);
+        for(int i = 0; i &lt; 16; i ++) &#123;
+                char ch = code[i];
+                code[i] = code[i + 16];
+                code[i + 16] = ch;
+        &#125;
+        printf(&quot;%s&quot;, code);
+
+&#125;
+void show_arr() &#123;
+        char arr[] = &#123; 105, 53, 106, 76, 87, 55, 83, 48, 71, 88, 54, 117, 102, 49, 99, 118, 51, 110, 121, 52, 113, 56, 101, 115, 50, 81, 43, 98, 100, 107, 89, 103, 75, 79, 73, 84, 47, 116, 65, 120, 85, 114, 70, 108, 86, 80, 122, 104, 109, 111, 119, 57, 66, 72, 67, 77, 68, 112, 69, 97, 74, 82, 90, 78, 0 &#125;;
+        printf(&quot;%s\n&quot;, arr);
+&#125;
+int main(void) &#123;
+        show_arr();
+        decode();
+        return 0;
+&#125;</code></pre>
+<p>解密base64</p>
+<pre><code>import base64
+import string
+
+str1 = &quot;QAoOQMPFks1BsB7cbM3TQsXg30i9g3==&quot;
+
+string1 = &quot;i5jLW7S0GX6uf1cv3ny4q8es2Q+bdkYgKOIT/tAxUrFlVPzhmow9BHCMDpEaJRZN&quot;
+string2 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;
+
+
+print (b&#39;code: &#39; + base64.b64decode(str1.translate(str.maketrans(string1,string2))))</code></pre>
+<h1 id="easy-apk"><a href="#easy-apk" class="headerlink" title="easy apk"></a>easy apk</h1><p><a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/media/task/attachments/989ca07c3f90426fa05406e4369901ff.apk">下载</a></p>
+<p>来源: 攻防世界</p>
+<pre><code>class MainActivity$1
+  implements View.OnClickListener
+&#123;
+  MainActivity$1(MainActivity paramMainActivity) &#123;&#125;
+
+  public void onClick(View paramView)
+  &#123;
+    paramView = ((EditText)this.this$0.findViewById(2131427445)).getText().toString();
+    if (new Base64New().Base64Encode(paramView.getBytes()).equals(&quot;5rFf7E2K6rqN7Hpiyush7E6S5fJg6rsi5NBf6NGT5rs=&quot;)) &#123;
+      Toast.makeText(this.this$0, &quot;验证通过!&quot;, 1).show();
+    &#125;
+    for (;;)
+    &#123;
+      return;
+      Toast.makeText(this.this$0, &quot;验证失败!&quot;, 1).show();
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>base64加密如下</p>
+<pre><code>public class Base64New
+&#123;
+  private static final char[] Base64ByteToStr = &#123; 118, 119, 120, 114, 115, 116, 117, 111, 112, 113, 51, 52, 53, 54, 55, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 121, 122, 48, 49, 50, 80, 81, 82, 83, 84, 75, 76, 77, 78, 79, 90, 97, 98, 99, 100, 85, 86, 87, 88, 89, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 56, 57, 43, 47 &#125;;
+  private static final int RANGE = 255;
+  private static byte[] StrToBase64Byte = new byte[&#39;?&#39;];
+
+  public String Base64Encode(byte[] paramArrayOfByte)
+  &#123;
+    StringBuilder localStringBuilder = new StringBuilder();
+    for (int i = 0; i &lt;= paramArrayOfByte.length - 1; i += 3)
+    &#123;
+      byte[] arrayOfByte = new byte[4];
+      int j = 0;
+      int k = 0;
+      if (k &lt;= 2)
+      &#123;
+        if (i + k &lt;= paramArrayOfByte.length - 1) &#123;
+          arrayOfByte[k] = ((byte)(byte)((paramArrayOfByte[(i + k)] &amp; 0xFF) &gt;&gt;&gt; k * 2 + 2 | j));
+        &#125;
+        for (j = (byte)(((paramArrayOfByte[(i + k)] &amp; 0xFF) &lt;&lt; (2 - k) * 2 + 2 &amp; 0xFF) &gt;&gt;&gt; 2);; j = 64)
+        &#123;
+          k++;
+          break;
+          arrayOfByte[k] = ((byte)j);
+        &#125;
+      &#125;
+      arrayOfByte[3] = ((byte)j);
+      j = 0;
+      if (j &lt;= 3)
+      &#123;
+        if (arrayOfByte[j] &lt;= 63) &#123;
+          localStringBuilder.append(Base64ByteToStr[arrayOfByte[j]]);
+        &#125;
+        for (;;)
+        &#123;
+          j++;
+          break;
+          localStringBuilder.append(&#39;=&#39;);
+        &#125;
+      &#125;
+    &#125;
+    return localStringBuilder.toString();
+  &#125;
+&#125;</code></pre>
+<p>以上加密是对输入进行了一个base64换表的加密</p>
+<p>解密脚本如下</p>
+<pre><code>import base64
+import string
+
+
+base_table = [ 118, 119, 120, 114, 115, 116, 117, 111, 112, 113, 51, 52, 53, 54, 55, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 121, 122, 48, 49, 50, 80, 81, 82, 83, 84, 75, 76, 77, 78, 79, 90, 97, 98, 99, 100, 85, 86, 87, 88, 89, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 56, 57, 43, 47 ];
+string1 = &#39;&#39;
+code = &#39;5rFf7E2K6rqN7Hpiyush7E6S5fJg6rsi5NBf6NGT5rs=&#39;
+
+for i in range(len(base_table)):
+    string1 += chr(base_table[i])
+
+
+string2 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;
+
+print(base64.b64decode(code.translate(str.maketrans(string1,string2))))</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">i0gan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://blog.i0gan.cn/2020/09/07/android-revese-0/">http://blog.i0gan.cn/2020/09/07/android-revese-0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/android/">android</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/09/11/pwn-docker-env/"><img class="prev-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">pwn docker env build</div></div></a></div><div class="next-post pull-right"><a href="/2020/09/06/android-debuger/"><img class="next-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">调试安卓程序</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/09/06/android-debuger/" title="调试安卓程序"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-06</div><div class="title">调试安卓程序</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">i0gan</div><div class="author-info__description">Even if a man has reached the top, he still needs to improve himself</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">56</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">17</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Android-Re-%E5%85%A5%E9%97%A8"><span class="toc-number">1.</span> <span class="toc-text">Android Re 入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%85%E5%A4%87%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.</span> <span class="toc-text">必备工具:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E9%A2%98-1-easy-so"><span class="toc-number">1.2.</span> <span class="toc-text">例题 1 [easy-so]</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BE%8B%E9%A2%98-2-app2"><span class="toc-number">2.</span> <span class="toc-text">例题 2 [app2]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Ph0en1x-100"><span class="toc-number">3.</span> <span class="toc-text">Ph0en1x-100</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#app1"><span class="toc-number">4.</span> <span class="toc-text">app1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#easyjni"><span class="toc-number">5.</span> <span class="toc-text">easyjni</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#easy-apk"><span class="toc-number">6.</span> <span class="toc-text">easy apk</span></a></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/11/08/tiesan-2020/" title="tiesan-2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tiesan-2020"/></a><div class="content"><a class="title" href="/2020/11/08/tiesan-2020/" title="tiesan-2020">tiesan-2020</a><time datetime="2020-11-08T14:04:48.000Z" title="Created 2020-11-08 22:04:48">2020-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/08/wp-other/" title="wp for other"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp for other"/></a><div class="content"><a class="title" href="/2020/11/08/wp-other/" title="wp for other">wp for other</a><time datetime="2020-11-08T12:25:49.000Z" title="Created 2020-11-08 20:25:49">2020-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/06/wp-nssc-2020/" title="wp-nssc-2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp-nssc-2020"/></a><div class="content"><a class="title" href="/2020/11/06/wp-nssc-2020/" title="wp-nssc-2020">wp-nssc-2020</a><time datetime="2020-11-06T13:46:12.000Z" title="Created 2020-11-06 21:46:12">2020-11-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/01/weekly-report-3/" title="weekly-report-3"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="weekly-report-3"/></a><div class="content"><a class="title" href="/2020/11/01/weekly-report-3/" title="weekly-report-3">weekly-report-3</a><time datetime="2020-11-01T15:30:30.000Z" title="Created 2020-11-01 23:30:30">2020-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/01/wp-xhb-2020/" title="湖湘杯2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="湖湘杯2020"/></a><div class="content"><a class="title" href="/2020/11/01/wp-xhb-2020/" title="湖湘杯2020">湖湘杯2020</a><time datetime="2020-11-01T15:05:08.000Z" title="Created 2020-11-01 23:05:08">2020-11-01</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By i0gan</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

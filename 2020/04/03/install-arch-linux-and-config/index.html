@@ -1,0 +1,526 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Install archlinux and configure | I0gan</title><meta name="keywords" content="linux"><meta name="author" content="i0gan"><meta name="copyright" content="i0gan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Install ArchLinux and configure (EFL)InstallPlatform : 小新pro13 [EFI]制作Archlinux U盘启动器.开机进入Linux 连接网络:#这里采用连接wifi的形式 rfkill unblock all (解除内核对设备的锁定) ip link set wlan0 up iw dev wlan0 scan | less iw dev">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Install archlinux and configure">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/04/03/install-arch-linux-and-config/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="Install ArchLinux and configure (EFL)InstallPlatform : 小新pro13 [EFI]制作Archlinux U盘启动器.开机进入Linux 连接网络:#这里采用连接wifi的形式 rfkill unblock all (解除内核对设备的锁定) ip link set wlan0 up iw dev wlan0 scan | less iw dev">
+<meta property="og:locale">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2020-04-03T05:30:09.000Z">
+<meta property="article:modified_time" content="2020-09-14T12:50:55.000Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.i0gan.cn/2020/04/03/install-arch-linux-and-config/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-09-14 20:50:55'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">56</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">17</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">Install archlinux and configure</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-04-03T05:30:09.000Z" title="Created 2020-04-03 13:30:09">2020-04-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-09-14T12:50:55.000Z" title="Updated 2020-09-14 20:50:55">2020-09-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/linux/">linux</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Install-ArchLinux-and-configure-EFL"><a href="#Install-ArchLinux-and-configure-EFL" class="headerlink" title="Install ArchLinux and configure (EFL)"></a>Install ArchLinux and configure (EFL)</h1><h2 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h2><p>Platform : 小新pro13 [EFI]<br>制作Archlinux U盘启动器.开机进入Linux</p>
+<h3 id="连接网络"><a href="#连接网络" class="headerlink" title="连接网络:"></a>连接网络:</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#这里采用连接wifi的形式</span>
+rfkill unblock all <span class="token punctuation">(</span>解除内核对设备的锁定<span class="token punctuation">)</span>
+ip <span class="token function">link</span> <span class="token keyword">set</span> wlan0 up
+iw dev wlan0 scan <span class="token operator">|</span> <span class="token function">less</span>
+iw dev wlan0 connect <span class="token punctuation">[</span>名称<span class="token punctuation">]</span> key 0:<span class="token punctuation">[</span>密码<span class="token punctuation">]</span>
+
+dhclient <span class="token comment" spellcheck="true"># 获取ip 或者dhcpcd</span>
+<span class="token function">ping</span> baidu.com <span class="token comment" spellcheck="true"># 测试网络</span></code></pre>
+<h4 id="查看是否支持uefi"><a href="#查看是否支持uefi" class="headerlink" title="查看是否支持uefi"></a>查看是否支持uefi</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">ls</span> /sys/firmware/efi/</code></pre>
+<h4 id="对时"><a href="#对时" class="headerlink" title="对时:"></a>对时:</h4><pre class=" language-bash"><code class="language-bash">timedatectl set-ntp <span class="token boolean">true</span></code></pre>
+<h4 id="分区"><a href="#分区" class="headerlink" title="分区:"></a>分区:</h4><p>分两个区,一个根目录 /,另一个是开机系统的/boot/efi<br>执行 fdisk -l 或者 lsblk 查看硬盘设备名<br>执行 fdisk /dev/sda 开始分区, dev/sda 是硬盘设备名</p>
+<p>磁盘类型参数:<br>-o dos<br>-g gpt</p>
+<h4 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h4><pre class=" language-bash"><code class="language-bash">/boot/efi分区不能ext4格式:
+mkfs.ext4 /dev/nvme0n1p5
+mkfs.vfat -F32  /dev/nvme0n1p6</code></pre>
+<h4 id="挂载"><a href="#挂载" class="headerlink" title="挂载:"></a>挂载:</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">mount</span> /dev/nvme0n1p5 /mnt
+<span class="token function">mkdir</span> -p /mnt/boot/efi
+<span class="token function">mount</span> /dev/nvme0n1p6 /mnt/boot/efi</code></pre>
+<h4 id="修改镜像地址"><a href="#修改镜像地址" class="headerlink" title="修改镜像地址:"></a>修改镜像地址:</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">cp</span> /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+vim /etc/pacman.d/mirrorlist</code></pre>
+<h4 id="安装基础包"><a href="#安装基础包" class="headerlink" title="安装基础包:"></a>安装基础包:</h4><pre class=" language-bash"><code class="language-bash">pacman -Sy <span class="token comment" spellcheck="true">#同步</span>
+pacstrap /mnt base  base-devel linux linux-firmware
+<span class="token comment" spellcheck="true"># linux 是Linux内核</span></code></pre>
+<h4 id="生成-genfstab"><a href="#生成-genfstab" class="headerlink" title="生成 genfstab:"></a>生成 genfstab:</h4><pre class=" language-bash"><code class="language-bash">genfstab -U /mnt <span class="token operator">>></span> /mnt/etc/fstab</code></pre>
+<h4 id="进入新系统"><a href="#进入新系统" class="headerlink" title="进入新系统:"></a>进入新系统:</h4><pre class=" language-bash"><code class="language-bash">arch-chroot /mnt /bin/bash</code></pre>
+<h4 id="设置时区"><a href="#设置时区" class="headerlink" title="设置时区"></a>设置时区</h4><p>设置为国内上海时区</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">ln</span> -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime</code></pre>
+<h4 id="同步硬件时钟"><a href="#同步硬件时钟" class="headerlink" title="同步硬件时钟"></a>同步硬件时钟</h4><pre class=" language-bash"><code class="language-bash">hwclock --systohc <span class="token comment" spellcheck="true"># 也可以[--utc]</span></code></pre>
+<h4 id="设置语言"><a href="#设置语言" class="headerlink" title="设置语言"></a>设置语言</h4><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#编辑 /etc/locale.gen 取消注释</span>
+vim /etc/locale.gen
+<span class="token comment" spellcheck="true">#取消下面两行的注释后保存</span>
+<span class="token comment" spellcheck="true">#en_US.UTF-8 UTF-8</span>
+<span class="token comment" spellcheck="true">#zh_CN.UTF-8 UTF-8</span>
+<span class="token comment" spellcheck="true">#zh_CN.GB18030 GB18030</span>
+<span class="token comment" spellcheck="true">#zh_CN.GBK GBK</span>
+<span class="token comment" spellcheck="true">#zh_CN GB2312</span>
+<span class="token comment" spellcheck="true">#zh_HK.UTF-8 UTF-8</span>
+<span class="token comment" spellcheck="true">#zh_HK BIG5-HKSCS</span>
+<span class="token comment" spellcheck="true">#生成语言</span>
+locale-gen
+<span class="token comment" spellcheck="true">#编辑 /etc/locale.conf设置默认语言为英文</span>
+LANG<span class="token operator">=</span>en_US.UTF-8</code></pre>
+<h4 id="设置主机名"><a href="#设置主机名" class="headerlink" title="设置主机名"></a>设置主机名</h4><p>vim /etc/hostname<br>把主机名写进去, 我这里写入的是 arch<br>还要记得修改 /etc/hosts 文件<br>127.0.0.1        arch</p>
+<h4 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">passwd</span> root</code></pre>
+<h4 id="安装网络包"><a href="#安装网络包" class="headerlink" title="安装网络包:"></a>安装网络包:</h4><pre class=" language-bash"><code class="language-bash">pacman -S networkmanager dhcpcd</code></pre>
+<h4 id="安装-openssh"><a href="#安装-openssh" class="headerlink" title="安装 openssh"></a>安装 openssh</h4><pre class=" language-bash"><code class="language-bash">pacman -Sy openssh
+<span class="token comment" spellcheck="true">#写入服务: systemctl enable sshd</span>
+<span class="token comment" spellcheck="true">#启动服务: systemctl start sshd.service</span></code></pre>
+<h4 id="设置自动连接网络（有线）"><a href="#设置自动连接网络（有线）" class="headerlink" title="设置自动连接网络（有线）"></a>设置自动连接网络（有线）</h4><pre class=" language-bash"><code class="language-bash">systemctl <span class="token function">enable</span> dhcpcd
+systemctl start  dhcpcd.service</code></pre>
+<h4 id="安装GRUB"><a href="#安装GRUB" class="headerlink" title="安装GRUB"></a>安装GRUB</h4><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 安装基本包</span>
+<span class="token function">mkdir</span> /boot/efi/EFI/boot
+pacman -S grub-efi-x86_64
+pacman -S efibootmgr
+pacman -S os-prober
+<span class="token comment" spellcheck="true"># 安装grub到磁盘上</span>
+grub-install --efi-directory<span class="token operator">=</span>/boot/efi --bootloader-id<span class="token operator">=</span>grub
+<span class="token function">cp</span> /boot/efi/EFI/grub/grubx64.efi /boot/efi/EFI/boot/bootx64.efi
+grub-mkconfig -o /boot/grub/grub.cfg</code></pre>
+<h4 id="umount分区并重启机器"><a href="#umount分区并重启机器" class="headerlink" title="umount分区并重启机器"></a>umount分区并重启机器</h4><pre class=" language-bash"><code class="language-bash"><span class="token keyword">exit</span>
+<span class="token function">umount</span> /mnt/boot/efi
+<span class="token function">umount</span> /mnt
+<span class="token function">reboot</span></code></pre>
+<h3 id="安装图形话界面"><a href="#安装图形话界面" class="headerlink" title="安装图形话界面"></a>安装图形话界面</h3><h4 id="开机后启动网络服务"><a href="#开机后启动网络服务" class="headerlink" title="开机后启动网络服务"></a>开机后启动网络服务</h4><pre class=" language-bash"><code class="language-bash">systemctl start NetworkManager.service</code></pre>
+<h4 id="启动wpa-supplicant服务"><a href="#启动wpa-supplicant服务" class="headerlink" title="启动wpa_supplicant服务"></a>启动wpa_supplicant服务</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> systemctl start wpa_supplicant.service
+<span class="token comment" spellcheck="true"># 查看 wifi 列表：</span>
+nmcli dev wifi list
+<span class="token comment" spellcheck="true"># 连接wifi</span>
+nmcli device wifi connect <span class="token punctuation">[</span>wifi name<span class="token punctuation">]</span> password <span class="token punctuation">[</span>wifi password<span class="token punctuation">]</span></code></pre>
+<h4 id="安装基本网络命令包"><a href="#安装基本网络命令包" class="headerlink" title="安装基本网络命令包"></a>安装基本网络命令包</h4><pre class=" language-bash"><code class="language-bash">pacman -S net-tools dnsutils inetutils iproute2</code></pre>
+<h4 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h4><p>[[Install|安装]软件包 mesa，它提供 DRI 和 3D 加速<br>若需要x86_64下的32位支持,可以从 multilib 安装 lib32-mesa.<br>要使用 Xorg 2D 加速 DDX 驱动，请安装软件包 xf86-video-ati.<br>加速视频解码 由 mesa-vdpau 和 lib32-mesa-vdpau 包提供支持</p>
+<h5 id="硬件接口服务"><a href="#硬件接口服务" class="headerlink" title="硬件接口服务"></a>硬件接口服务</h5><p>参考 xorg-server</p>
+<pre class=" language-bash"><code class="language-bash">pacman -S xorg-server</code></pre>
+<h5 id="安装驱动"><a href="#安装驱动" class="headerlink" title="安装驱动"></a>安装驱动</h5><pre class=" language-bash"><code class="language-bash">pacman -S xf86-video-ati
+<span class="token comment" spellcheck="true">#xf86-video-intel intel显卡驱动</span>
+<span class="token comment" spellcheck="true">#xf86-video-ati  AMD显卡驱动</span></code></pre>
+<h4 id="安装输入设备"><a href="#安装输入设备" class="headerlink" title="安装输入设备"></a>安装输入设备</h4><pre class=" language-bash"><code class="language-bash">pacman -S xf86-input-libinput // <span class="token punctuation">(</span>xorg-server已经默认安装<span class="token punctuation">)</span></code></pre>
+<h4 id="安装触摸板驱动"><a href="#安装触摸板驱动" class="headerlink" title="安装触摸板驱动"></a>安装触摸板驱动</h4><pre class=" language-bash"><code class="language-bash">pacman -S xf86-input-synaptics</code></pre>
+<h4 id="安装显示管理器"><a href="#安装显示管理器" class="headerlink" title="安装显示管理器"></a>安装显示管理器</h4><pre class=" language-bash"><code class="language-bash">pacman -S sddm sddm-kcm</code></pre>
+<h4 id="设置SDDM服务"><a href="#设置SDDM服务" class="headerlink" title="设置SDDM服务"></a>设置SDDM服务</h4><pre class=" language-bash"><code class="language-bash">systemctl <span class="token function">enable</span> sddm</code></pre>
+<h4 id="安装kde桌面"><a href="#安装kde桌面" class="headerlink" title="安装kde桌面"></a>安装kde桌面</h4><pre class=" language-bash"><code class="language-bash">pacman -S plasma-desktop</code></pre>
+<h4 id="安装基本的软件"><a href="#安装基本的软件" class="headerlink" title="安装基本的软件"></a>安装基本的软件</h4><pre class=" language-bash"><code class="language-bash">pacman -S kdebase
+<span class="token comment" spellcheck="true">#包括  dolphin kate kdialog keditbookmarks kfind helpcenter onqueror # konsole kwrite</span></code></pre>
+<h4 id="安装中文字体"><a href="#安装中文字体" class="headerlink" title="安装中文字体"></a>安装中文字体</h4><pre class=" language-bash"><code class="language-bash">pacman -S ttf-dejavu ttf-liberation wqy-microhei
+wqy-microhei <span class="token comment" spellcheck="true">#温泉驿体</span></code></pre>
+<h4 id="安装声音软件包"><a href="#安装声音软件包" class="headerlink" title="安装声音软件包"></a>安装声音软件包</h4><pre class=" language-bash"><code class="language-bash">pacman -S alsa-utils pulseaudio pulseaudio-alsa</code></pre>
+<h4 id="安装ntfs磁盘的支持"><a href="#安装ntfs磁盘的支持" class="headerlink" title="安装ntfs磁盘的支持"></a>安装ntfs磁盘的支持</h4><pre class=" language-bash"><code class="language-bash">pacman -S ntfs-3g</code></pre>
+<h4 id="安装中文输入法"><a href="#安装中文输入法" class="headerlink" title="安装中文输入法"></a>安装中文输入法</h4><pre class=" language-bash"><code class="language-bash">pacman -S fcitx fcitx-rime fcitx-im kcm-fcitx fcitx-googlepinyin</code></pre>
+<h4 id="安装网络工具"><a href="#安装网络工具" class="headerlink" title="安装网络工具"></a>安装网络工具</h4><pre class=" language-bash"><code class="language-bash">pacman -S plasma-nm
+<span class="token comment" spellcheck="true"># 系统托盘网络管理工具</span></code></pre>
+<h4 id="设置pacman彩色输出"><a href="#设置pacman彩色输出" class="headerlink" title="设置pacman彩色输出"></a>设置pacman彩色输出</h4><p>打开/etc/pacman.conf文件<br>找到被注释的#Color<br>改为Color,pacman就会输出彩色信息方便查看</p>
+<h4 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h4><pre class=" language-bash"><code class="language-bash">pacman -S arc-kde</code></pre>
+<h4 id="首次用户目录生成"><a href="#首次用户目录生成" class="headerlink" title="首次用户目录生成"></a>首次用户目录生成</h4><p>安装 xdg-user-dirs</p>
+<pre class=" language-bash"><code class="language-bash">pacman -S xdg-user-dirs
+xdg-user-dirs-update <span class="token comment" spellcheck="true">#跟新用户目录</span>
+<span class="token comment" spellcheck="true">#若不慎删除了某个默认用户文件夹，使用如下命令强制重新生成家目录文件夹</span>
+<span class="token comment" spellcheck="true">#xdg-user-dirs-update --force</span>
+<span class="token comment" spellcheck="true"># 该命令只对当前用户起作用</span></code></pre>
+<h4 id="安装图标"><a href="#安装图标" class="headerlink" title="安装图标"></a>安装图标</h4><pre class=" language-bash"><code class="language-bash">pacman -S papirus-icon-theme</code></pre>
+<h4 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h4><p>务必添加一个 用户 ，否则后面sddm显示管理器登录的时候无法登录，sddm不会列出root用户</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">useradd</span> -m -g <span class="token function">users</span> -s /bin/bash 用户名
+<span class="token function">passwd</span> 用户名
+<span class="token comment" spellcheck="true">#为刚才添加的用户设置密码</span>
+vim /etc/sudoers
+<span class="token comment" spellcheck="true">#在 root ALL=(ALL) ALL 下面添加</span>
+<span class="token comment" spellcheck="true">#用户名 ALL=(ALL) ALL</span>
+<span class="token comment" spellcheck="true">#为你刚才创建的用户 添加sudo权限</span></code></pre>
+<h4 id="调节亮度"><a href="#调节亮度" class="headerlink" title="调节亮度:"></a>调节亮度:</h4><p>查看亮度最大值:</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#只能root</span>
+<span class="token function">cat</span> /sys/class/backlight/amdgpu_bl0/max_brightness
+<span class="token keyword">echo</span> 100 <span class="token operator">></span> /sys/class/backlight/amdgpu_bl0/brightness</code></pre>
+<h4 id="终端显示电量"><a href="#终端显示电量" class="headerlink" title="终端显示电量:"></a>终端显示电量:</h4><pre class=" language-bash"><code class="language-bash">pacman -S acpi</code></pre>
+<h4 id="设置grub主题"><a href="#设置grub主题" class="headerlink" title="设置grub主题"></a>设置grub主题</h4><h5 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h5><p>可以到 gnome-look 选择喜欢的主题下载</p>
+<h5 id="解压缩主题包"><a href="#解压缩主题包" class="headerlink" title="解压缩主题包"></a>解压缩主题包</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">tar</span> -xf 主题包名</code></pre>
+<h5 id="复制到主题目录"><a href="#复制到主题目录" class="headerlink" title="复制到主题目录"></a>复制到主题目录</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">cp</span> -r 主题包名 /boot/grub/themes/</code></pre>
+<h5 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> vim /etc/grub.d/00_header</code></pre>
+<h5 id="添加如下内容："><a href="#添加如下内容：" class="headerlink" title="添加如下内容："></a>添加如下内容：</h5><pre class=" language-bash"><code class="language-bash">GRUB_THEME<span class="token operator">=</span><span class="token string">"/boot/grub/themes/主题包名/theme.txt"</span>
+GRUB_GFXMODE<span class="token operator">=</span><span class="token string">"1920x1200x32"</span></code></pre>
+<h5 id="更新配置文件"><a href="#更新配置文件" class="headerlink" title="更新配置文件"></a>更新配置文件</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> grub-mkconfig -o /boot/grub/grub.cfg</code></pre>
+<h2 id="Instal-daily-software"><a href="#Instal-daily-software" class="headerlink" title="Instal daily software"></a>Instal daily software</h2><h4 id="配置源"><a href="#配置源" class="headerlink" title="配置源"></a>配置源</h4><pre class=" language-bash"><code class="language-bash">打开/etc/pacman.conf，在末尾加上
+<span class="token comment" spellcheck="true">#[archlinuxcn]</span>
+<span class="token comment" spellcheck="true">#SigLevel = Optional TrustAll</span>
+<span class="token comment" spellcheck="true">#Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch</span>
+<span class="token comment" spellcheck="true">#或者使用清华的镜像源</span>
+<span class="token comment" spellcheck="true">#[archlinuxcn]</span>
+<span class="token comment" spellcheck="true">#SigLevel = Optional TrustAll</span>
+<span class="token comment" spellcheck="true">#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch</span>
+
+<span class="token comment" spellcheck="true">#安装key-ring</span>
+<span class="token function">sudo</span> pacman -S archlinuxcn-keyring
+更新软件仓库
+<span class="token function">sudo</span> pacman -Sy</code></pre>
+<h4 id="安装网易云音乐"><a href="#安装网易云音乐" class="headerlink" title="安装网易云音乐."></a>安装网易云音乐.</h4><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S netease-cloud-music</code></pre>
+<h4 id="安装搜狗拼音输入法"><a href="#安装搜狗拼音输入法" class="headerlink" title="安装搜狗拼音输入法"></a>安装搜狗拼音输入法</h4><h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><p>由于搜狗拼音输入法依赖于Fcitx，在安装搜狗拼音输入法之前，需要先行安装Fcitx，在终端窗口下直接输入：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S fcitx</code></pre>
+<p>即可完成安装，需要注意的是，仅仅安装这一项是不够的，这样在安装完成之后，Fcitx基本上是处于不可用的状态，我们还需要安装以下几个包：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S fcitx-configtool
+<span class="token function">sudo</span> pacman -S fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5
+<span class="token function">sudo</span> pacman -S fcitx-sogoupinyin
+<span class="token comment" spellcheck="true"># 安装配置工具</span>
+<span class="token function">sudo</span> pacman -S fcitx-configtool</code></pre>
+<h5 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h5><p>安装完之后我们还不可以直接使用，还需要进行一定的配置，用文本编辑器打开~/.xprofile，没有就新建，在其末尾添加以下几行：<br>export GTK_IM_MODULE=fcitx<br>export QT_IM_MODULE=fcitx<br>export XMODIFIERS=”@im=fcitx”<br>然后注销后重新登录，或者重启后重新登录</p>
+<h4 id="安装-TIM"><a href="#安装-TIM" class="headerlink" title="安装 TIM:"></a>安装 TIM:</h4><p>所以首先要打开multilab软件源. 打开/etc/pacman.conf, 找到[multilab]<br>sudo vim /etc/pacman.conf<br>[multilib]<br>Include = /etc/pacman.d/mirrorlist</p>
+<h5 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S deepin.com.qq.office</code></pre>
+<h5 id="解决打不开问题"><a href="#解决打不开问题" class="headerlink" title="解决打不开问题:"></a>解决打不开问题:</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S gnome-settings-daemon
+<span class="token function">nohup</span> /usr/lib/gsd-xsettings <span class="token operator">></span> /dev/null 2<span class="token operator">></span><span class="token operator">&amp;</span>1 <span class="token operator">&amp;</span></code></pre>
+<h5 id="解决不能输入中文"><a href="#解决不能输入中文" class="headerlink" title="解决不能输入中文"></a>解决不能输入中文</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> vim /opt/deepinwine/apps/run.sh
+<span class="token comment" spellcheck="true"># add:</span>
+<span class="token function">export</span> GTK_IM_MODULE<span class="token operator">=</span>fcitx
+<span class="token function">export</span> QT_IM_MODULE<span class="token operator">=</span>fcitx
+<span class="token function">export</span> XMODIFIERS<span class="token operator">=</span><span class="token string">"@im=fcitx"</span></code></pre>
+<h4 id="安装wine"><a href="#安装wine" class="headerlink" title="安装wine"></a>安装wine</h4><p>所以首先要打开multilab软件源. 打开/etc/pacman.conf, 找到[multilab]<br>[multilib]<br>Include = /etc/pacman.d/mirrorlist</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S wine wine_gecko wine-mono winetricks</code></pre>
+<h4 id="安装virtualBox"><a href="#安装virtualBox" class="headerlink" title="安装virtualBox"></a>安装virtualBox</h4><h5 id="安装linux-headers"><a href="#安装linux-headers" class="headerlink" title="安装linux-headers"></a>安装linux-headers</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S linux-headers</code></pre>
+<h5 id="确认linux内核的版本"><a href="#确认linux内核的版本" class="headerlink" title="确认linux内核的版本"></a>确认linux内核的版本</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">uname</span> -r</code></pre>
+<p>如果和header的版本不一致，需要更新内核,否则的话会在安装virtualbox的时候报错“missing kernal module tree .解决办法根系内核: sudo pacman -S linux,.然后安装virtualbox，安装默认选项不选，我们选2，也就是virtualbox-host-modules-arch</p>
+<h5 id="安装-2"><a href="#安装-2" class="headerlink" title="安装"></a>安装</h5><pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -Sy virtualbox
+<span class="token function">sudo</span> pacman -S virtualbox-guest-iso <span class="token comment" spellcheck="true">#附加功能</span></code></pre>
+<h5 id="如何让虚拟机屏幕分辨率可以自由调整"><a href="#如何让虚拟机屏幕分辨率可以自由调整" class="headerlink" title="如何让虚拟机屏幕分辨率可以自由调整"></a>如何让虚拟机屏幕分辨率可以自由调整</h5><p>在安装好虚拟机系统并进入之后，我们需下载一个VBoxGuestAdditions.iso(设备-&gt;安装增强功能)，然后如果是ubuntu19.10，会提示你输入密码安装，安装后即可自动调整，别的系统应该与此类似</p>
+<h5 id="共享文件夹"><a href="#共享文件夹" class="headerlink" title="共享文件夹:"></a>共享文件夹:</h5><p>先在设置共享文件夹, 然或进入虚拟系统中挂在.<br>此处我选择在/mnt下创建一个“share”目录，将刚刚的“share”目录与“share”目录关联起来</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> /mnt
+<span class="token function">sudo</span> <span class="token function">mkdir</span> share
+<span class="token comment" spellcheck="true"># 将“share”目录与“share”目录进行关联：</span>
+<span class="token function">sudo</span> <span class="token function">mount</span> -t vboxsf share /mnt/share</code></pre>
+<h5 id="安装-有道词典"><a href="#安装-有道词典" class="headerlink" title="安装 有道词典:"></a>安装 有道词典:</h5><p>到官网下载二进制包<br>安装依赖:</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> pacman -S tesseract-data-eng
+<span class="token function">sudo</span> pacman -S tesseract-data-chi_tra
+<span class="token function">sudo</span> pacman -S tesseract-data-chi_sim
+<span class="token comment" spellcheck="true">#然后通过报错找相关的依赖包</span></code></pre>
+<h4 id="常用软件"><a href="#常用软件" class="headerlink" title="常用软件"></a>常用软件</h4><p>ksystemlog     //查看日志<br>ark            //压缩文件管理<br>kget           //文件下载<br>kcalc          //计算器<br>kcolorchooser  //取色配色工具<br>print-manager  //打印机管理<br>spectacle      // 截屏工具<br>latte-dock     //类似于mac<br>gimp           //作图工具<br>typora         //写markdown</p>
+<p>mpv — video player<br>Onboard —Virtual keyboard<br>okular   —PDF  viewer<br>vokoscrenn —Screen recorder<br>VirtualBox<br>scrot     —screen sniping<br>fcitx<br>nomacs  —Photos viewer<br>calc — cmd calclator<br>bc —calc<br>neofetch   —sysinfo</p>
+<p>Security:<br>net-tools (ifconfig)<br>netdiscover (ip scan)<br>dirp (web scan)<br>kdenlive</p>
+<h4 id="其他软件"><a href="#其他软件" class="headerlink" title="其他软件"></a>其他软件</h4><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#clang 大名鼎鼎的LLVM Clang C语言编译器</span>
+<span class="token function">sudo</span> pacman -Sy clang
+
+<span class="token comment" spellcheck="true">#gdb 也就是gcc的调试工具</span>
+<span class="token function">sudo</span> pacman -Sy gdb
+
+<span class="token comment" spellcheck="true">#cmake C语言构建工具</span>
+<span class="token function">sudo</span> pacman -Sy cmake
+
+<span class="token comment" spellcheck="true">#pip  python的模块工具</span>
+<span class="token function">sudo</span> pacman -Sy python-pip
+
+<span class="token comment" spellcheck="true">#kchmviewer  chm查看工具</span>
+<span class="token function">sudo</span> pacman -Sy kchmviewer
+
+6.krita和gimp是类似的作图工具，和windows下的ps是一样的
+<span class="token function">sudo</span> pacman -Sy krita
+
+7.gimp 不多介绍和ps一样
+<span class="token function">sudo</span> pacman -Sy gimp
+
+8.obs-studio 录屏推流软件
+<span class="token function">sudo</span> pacman -Sy obs-studio
+
+10.libreoffice 中文版本
+<span class="token function">sudo</span> pacman -Sy libreoffice-fresh
+<span class="token function">sudo</span> pacman -Sy libreoffice-fresh-zh-cn
+
+11.jdk 默认最新的
+<span class="token function">sudo</span> pacman -Sy jdk
+
+<span class="token comment" spellcheck="true">#当你安装多个jdk的时候设置环境变量会提醒你</span>
+<span class="token comment" spellcheck="true">#Default Java environment is already set to 'java-12-jdk'</span>
+<span class="token comment" spellcheck="true">#See 'archlinux-java help' to change it</span>
+<span class="token comment" spellcheck="true">#所以说我们只需要运行archlinux-java help这个命令就可以看到相关切换的设置了,一键切换jdk不再是梦</span>
+
+<span class="token comment" spellcheck="true">#go 默认最新</span>
+<span class="token function">sudo</span> pacman -Sy go
+
+<span class="token comment" spellcheck="true">#wps 金山办公软件</span>
+<span class="token function">sudo</span> pacman -Sy wps-office
+<span class="token function">sudo</span> pacman -Sy ttf-wps-fonts
+yay -Sy wps-office-mime
+yay -Sy wps-office-mui-zh-cn
+
+<span class="token comment" spellcheck="true">#freemind 思维导图</span>
+<span class="token function">sudo</span> pacan -Sy freemind
+
+<span class="token comment" spellcheck="true">#xmind-zen 思维导图</span>
+yay -Sy xmind-zen<span class="token punctuation">(</span>如非必要不要安装这个<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#filezilla 远程ftp工具</span>
+<span class="token function">sudo</span> pacman -Sy filezilla
+
+<span class="token comment" spellcheck="true">#drawio 类似UML之类的作图工具</span>
+<span class="token function">sudo</span> pacman -Sy drawio-desktop-bin
+
+<span class="token comment" spellcheck="true">#uget 下载管理器</span>
+<span class="token function">sudo</span> pacman -Sy uget
+
+<span class="token comment" spellcheck="true">#网易云音乐</span>
+<span class="token function">sudo</span> pacman -Sy netease-cloud-music
+
+<span class="token comment" spellcheck="true">#谷歌浏览器</span>
+<span class="token function">sudo</span> pacman -Sy google-chrome
+
+<span class="token comment" spellcheck="true">#TIM</span>
+<span class="token function">sudo</span> pacman -Sy deepin.com.qq.office
+
+<span class="token comment" spellcheck="true">#vlc播放器</span>
+<span class="token function">sudo</span> pacman -Sy vlc
+
+<span class="token comment" spellcheck="true">#mplayer命令行播放器</span>
+<span class="token function">sudo</span> pacman -Sy mplayer
+
+<span class="token comment" spellcheck="true">#smplayer 图像界面的播放器</span>
+<span class="token function">sudo</span> pacman -Sy smplayer
+
+<span class="token comment" spellcheck="true">#gpick 屏幕取色工具</span>
+<span class="token function">sudo</span> pacman -Sy gpick
+
+<span class="token comment" spellcheck="true">#htop 资源进程管理器 top命令的升级版</span>
+<span class="token function">sudo</span> pacman -Sy <span class="token function">htop</span>
+
+<span class="token comment" spellcheck="true">#Evolution 邮箱 强烈推荐</span>
+<span class="token function">sudo</span> pacman -Sy evolution
+
+<span class="token comment" spellcheck="true">#QQ</span>
+<span class="token function">sudo</span> pacman -Sy deepin.com.qq.im<span class="token punctuation">(</span>qq的bug较多<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#微信</span>
+yay -Sy deepin-wine-wechat
+
+<span class="token comment" spellcheck="true">#百度网盘</span>
+<span class="token function">sudo</span> pacman -Sy baidunetdisk
+
+<span class="token comment" spellcheck="true">#teamviewer 远程控制</span>
+<span class="token function">sudo</span> pacman -Sy teamviewer
+
+<span class="token comment" spellcheck="true">#screenfetch 系统信息查看工具</span>
+<span class="token function">sudo</span> pacman -Sy screenfetch
+
+<span class="token comment" spellcheck="true">#neofetch同screenfetch</span>
+<span class="token function">sudo</span> pacman -Sy neofetch
+
+<span class="token comment" spellcheck="true">#lolcat 文本查看 也就是cat命令的升级版</span>
+<span class="token function">sudo</span> pacman -Sy lolcat
+
+<span class="token comment" spellcheck="true">#可以配合screefetch使用</span>
+<span class="token comment" spellcheck="true">#比如 screenfetch | lolcat，这条命令可以看到非常炫酷的效果</span>
+
+<span class="token comment" spellcheck="true">#数据库安装mariadb</span>
+<span class="token comment" spellcheck="true">#因为很多linux发行版都放弃了对mysql的支持（原因自行百度）转而支持mariadb（mysql的另一个分支），Archlinux就是其中之一，mariadb具有和mysql一模一样的操作命令，所以完全不用考虑迁移兼容的问题</span>
+
+<span class="token comment" spellcheck="true">#注意ArchLinux安装mysql是不可行的，不要试图安装mysql，那是不成功的</span>
+    <span class="token comment" spellcheck="true">#安装mariadb</span>
+    <span class="token function">sudo</span> pacman -Sy mariadb
+    <span class="token comment" spellcheck="true">#配置mariadb命令，创建数据库都在/var/lib/mysql/目录下面</span>
+    <span class="token function">sudo</span> mysql_install_db --user<span class="token operator">=</span>mysql --basedir<span class="token operator">=</span>/usr --datadir<span class="token operator">=</span>/var/lib/mysql
+    <span class="token comment" spellcheck="true">#开启mariadb 服务</span>
+    systemctl start mariadb
+    <span class="token comment" spellcheck="true">#初始化密码，期间有让你设置密码的选项，设置你自己的密码就行了，然后根据自己理解y/n就可，因为很多后面可以再修改 sudo /usr/bin/mysql_secure_installation</span>
+    <span class="token comment" spellcheck="true">#登录mariadb 和mysql命令是一样的</span>
+    mysql -u root -p
+
+    <span class="token comment" spellcheck="true">#设置开机自启动服务</span>
+    systemctl start mariadb <span class="token comment" spellcheck="true">#手动启动</span>
+    systemctl <span class="token function">enable</span> mariadb <span class="token comment" spellcheck="true">#开机自启动</span>
+    systemctl disable mariadb <span class="token comment" spellcheck="true">#关闭自启动</span>
+
+<span class="token comment" spellcheck="true">#Intellij IDEA</span>
+<span class="token function">sudo</span> pacman -Sy intellij-idea-ultimate-edition
+
+<span class="token comment" spellcheck="true">#WebStorm 前端</span>
+<span class="token function">sudo</span> pacman -Sy webstorm
+
+<span class="token comment" spellcheck="true">#DataGrip 数据库</span>
+yay -Sy datagrip
+
+<span class="token comment" spellcheck="true">#GoLand go</span>
+<span class="token function">sudo</span> pacman -Sy goland
+
+<span class="token comment" spellcheck="true">#PyCharm python</span>
+<span class="token function">sudo</span> pacman -Sy pycharm-professional
+
+<span class="token comment" spellcheck="true">#CLion</span>
+<span class="token function">sudo</span> pacman -Sy clion
+
+<span class="token comment" spellcheck="true">#baidupcs 百度网盘命令行版本(推荐)</span>
+<span class="token function">sudo</span> pacman -Sy baidupcs-go-bin
+<span class="token comment" spellcheck="true">#输入baidupcs启动</span>
+
+<span class="token comment" spellcheck="true">#gitter 开发者聊天交流社区软件</span>
+<span class="token function">sudo</span> pacman -Sy gitter
+
+<span class="token comment" spellcheck="true">#opera 浏览器(未安装，感兴趣可以看看)</span>
+
+<span class="token function">sudo</span> pacman -Sy opera
+
+<span class="token comment" spellcheck="true">#米聊  小米的社交聊天工具</span>
+yay -Sy mitalk
+
+<span class="token comment" spellcheck="true">#vscode 微软的代码编辑器</span>
+<span class="token function">sudo</span> pacman -Sy code
+
+<span class="token comment" spellcheck="true">#atom  github为程序员打造的编辑器</span>
+<span class="token function">sudo</span> pacman -Sy atom
+
+<span class="token comment" spellcheck="true">#360压缩软件</span>
+yay -Sy 360zip
+
+<span class="token comment" spellcheck="true">#360浏览器</span>
+yay -Sy browser360
+
+<span class="token comment" spellcheck="true">#微信（未安装）</span>
+yay -Sy electronic-wechat
+
+<span class="token comment" spellcheck="true">#磁盘管理工具</span>
+<span class="token function">sudo</span> pacman -S gparted
+
+<span class="token comment" spellcheck="true">#影视处理</span>
+yay -Sy davinci-resolve
+<span class="token comment" spellcheck="true">#为免费版本，34为studio版本可能功能更全但要付费</span>
+
+<span class="token comment" spellcheck="true">#声音设置相关</span>
+<span class="token function">sudo</span> pacman -Sy pavucontrol
+
+</code></pre>
+<h3 id="Backup-And-Recovery"><a href="#Backup-And-Recovery" class="headerlink" title="Backup And Recovery"></a>Backup And Recovery</h3><h4 id="Backup"><a href="#Backup" class="headerlink" title="Backup"></a>Backup</h4><p>gzip压缩</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">su</span>
+<span class="token function">cd</span> /
+<span class="token function">tar</span> cvpzf myarchbp.tgz --exclude<span class="token operator">=</span>/proc --exclude<span class="token operator">=</span>/sys --exclude<span class="token operator">=</span>/lost+found \
+--exclude<span class="token operator">=</span>/mnt --exclude<span class="token operator">=</span>/media --exclude<span class="token operator">=</span>/myarchbp.tgz /</code></pre>
+<p>在档案文件名”backup.gz”和要备份的目录名”/“之间给出了备份时必须排除在外的目录,<br>有些目录是无用的,例如”/proc”,”/lost+ found”,”/sys”,当然,”backup.gz”这个档案文<br>件本身必须排除在外,否则你可能会得到一些超出常理的结果.如果不把”/mnt”排 除在外,<br>那么挂载在”/mnt”上的其它分区也会被备份.另外需要确认一下”/media”上没有挂载任何东西<br>例如光盘,移动硬盘,如果有挂载东西.必须把 /media也排除在外</p>
+<p>在备份命令结束时你可能会看到这样一个提示:”tar: Error exit delayed from previous errors”<br>多数情况下可以忽略它.</p>
+<h4 id="Recovery"><a href="#Recovery" class="headerlink" title="Recovery:"></a>Recovery:</h4><p>U盘启动挂载复制之后</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> /
+<span class="token function">tar</span> xvpfz backup.tgz -C /
+
+<span class="token comment" spellcheck="true">#创建目录:</span>
+<span class="token function">mkdir</span> proc
+<span class="token function">mkdir</span> lost+found
+<span class="token function">mkdir</span> mnt
+<span class="token function">mkdir</span> sys
+<span class="token function">mkdir</span> -p media/disk</code></pre>
+<h3 id="pacman常用参数"><a href="#pacman常用参数" class="headerlink" title="pacman常用参数"></a>pacman常用参数</h3><p>更新<br>pacman -Sy<br>更新软件库(类似apt-get update)<br>pacman -Syy<br>强制更新软件库<br>pacman -Su<br>更新软件(类似apt-get upgrade)<br>pacman -Syu<br>更新软件库并更新软件<br>pacman -Syyu<br>强制更新软件库并更新软件<br>查询<br>pacman -Ss [name]<br>查询[name]软件<br>pacman -Q<br>列出所有本地已安装的软件包括系统软件<br>pacman -Qe<br>列出所有本地自己已安装的软件详细信息<br>pacman -Qeq<br>列出所有本地自己已安装的软件(只有软件名，没有版本号)<br>pacman -Qs [name]<br>查询已安装的[name]软件信息<br>pacman -Qdt<br>查询没有被任何软件依赖的依赖软件详细信息(没有任何作用)<br>pacman -Qdtq<br>查询没有被任何软件依赖的依赖软件(只有软件名)<br>安装<br>pacman -S [name]<br>安装[name]软件<br>清除缓存<br>pacman -Sc<br>清除安装包缓存(一般在/var/cache/pacman/pkg/下)<br>卸载<br>pacman -R [name]<br>卸载[name]软件<br>pacman -Rs [name]<br>卸载[name]软件以及依赖软件<br>pacman -Rns [name]<br>卸载[name]软件以及依赖软件以及全局配置文件<br>pacman -R $(pacman -Qdtq)<br>卸载所有没有被任何软件依赖的依赖软件</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">i0gan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://blog.i0gan.cn/2020/04/03/install-arch-linux-and-config/">http://blog.i0gan.cn/2020/04/03/install-arch-linux-and-config/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/04/04/wp-echoback/"><img class="prev-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">wp echoback</div></div></a></div><div class="next-post pull-right"><a href="/2020/04/03/wp-one-gadget/"><img class="next-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">wp one gadget</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/10/10/linux-config-startup-script/" title="linux-config-startup-script"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-10-10</div><div class="title">linux-config-startup-script</div></div></a></div><div><a href="/2020/09/11/linux-install-bluetooth/" title="linux-install-bluetooth"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-11</div><div class="title">linux-install-bluetooth</div></div></a></div><div><a href="/2020/03/25/linux-vim-config/" title="linux-vim-config"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-25</div><div class="title">linux-vim-config</div></div></a></div><div><a href="/2019/09/25/linux-wine/" title="linux-wine"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-09-25</div><div class="title">linux-wine</div></div></a></div><div><a href="/2019/09/25/linux-usage/" title="linux usage"><img class="cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-09-25</div><div class="title">linux usage</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">i0gan</div><div class="author-info__description">Even if a man has reached the top, he still needs to improve himself</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">56</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">17</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Install-ArchLinux-and-configure-EFL"><span class="toc-number">1.</span> <span class="toc-text">Install ArchLinux and configure (EFL)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install"><span class="toc-number">1.1.</span> <span class="toc-text">Install</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%BD%91%E7%BB%9C"><span class="toc-number">1.1.1.</span> <span class="toc-text">连接网络:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81uefi"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">查看是否支持uefi</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E6%97%B6"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">对时:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E5%8C%BA"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">分区:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">格式化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD"><span class="toc-number">1.1.1.5.</span> <span class="toc-text">挂载:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%95%9C%E5%83%8F%E5%9C%B0%E5%9D%80"><span class="toc-number">1.1.1.6.</span> <span class="toc-text">修改镜像地址:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%9F%BA%E7%A1%80%E5%8C%85"><span class="toc-number">1.1.1.7.</span> <span class="toc-text">安装基础包:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90-genfstab"><span class="toc-number">1.1.1.8.</span> <span class="toc-text">生成 genfstab:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E6%96%B0%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.1.1.9.</span> <span class="toc-text">进入新系统:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%97%B6%E5%8C%BA"><span class="toc-number">1.1.1.10.</span> <span class="toc-text">设置时区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E7%A1%AC%E4%BB%B6%E6%97%B6%E9%92%9F"><span class="toc-number">1.1.1.11.</span> <span class="toc-text">同步硬件时钟</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E8%AF%AD%E8%A8%80"><span class="toc-number">1.1.1.12.</span> <span class="toc-text">设置语言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-number">1.1.1.13.</span> <span class="toc-text">设置主机名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81"><span class="toc-number">1.1.1.14.</span> <span class="toc-text">设置密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%BD%91%E7%BB%9C%E5%8C%85"><span class="toc-number">1.1.1.15.</span> <span class="toc-text">安装网络包:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-openssh"><span class="toc-number">1.1.1.16.</span> <span class="toc-text">安装 openssh</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5%E7%BD%91%E7%BB%9C%EF%BC%88%E6%9C%89%E7%BA%BF%EF%BC%89"><span class="toc-number">1.1.1.17.</span> <span class="toc-text">设置自动连接网络（有线）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85GRUB"><span class="toc-number">1.1.1.18.</span> <span class="toc-text">安装GRUB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#umount%E5%88%86%E5%8C%BA%E5%B9%B6%E9%87%8D%E5%90%AF%E6%9C%BA%E5%99%A8"><span class="toc-number">1.1.1.19.</span> <span class="toc-text">umount分区并重启机器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%9B%BE%E5%BD%A2%E8%AF%9D%E7%95%8C%E9%9D%A2"><span class="toc-number">1.1.2.</span> <span class="toc-text">安装图形话界面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E6%9C%BA%E5%90%8E%E5%90%AF%E5%8A%A8%E7%BD%91%E7%BB%9C%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">开机后启动网络服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8wpa-supplicant%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">启动wpa_supplicant服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%9F%BA%E6%9C%AC%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4%E5%8C%85"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">安装基本网络命令包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">安装显卡驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E6%8E%A5%E5%8F%A3%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.2.4.1.</span> <span class="toc-text">硬件接口服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8"><span class="toc-number">1.1.2.4.2.</span> <span class="toc-text">安装驱动</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E8%BE%93%E5%85%A5%E8%AE%BE%E5%A4%87"><span class="toc-number">1.1.2.5.</span> <span class="toc-text">安装输入设备</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E8%A7%A6%E6%91%B8%E6%9D%BF%E9%A9%B1%E5%8A%A8"><span class="toc-number">1.1.2.6.</span> <span class="toc-text">安装触摸板驱动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%98%BE%E7%A4%BA%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">1.1.2.7.</span> <span class="toc-text">安装显示管理器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AESDDM%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.1.2.8.</span> <span class="toc-text">设置SDDM服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85kde%E6%A1%8C%E9%9D%A2"><span class="toc-number">1.1.2.9.</span> <span class="toc-text">安装kde桌面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%9F%BA%E6%9C%AC%E7%9A%84%E8%BD%AF%E4%BB%B6"><span class="toc-number">1.1.2.10.</span> <span class="toc-text">安装基本的软件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E5%AD%97%E4%BD%93"><span class="toc-number">1.1.2.11.</span> <span class="toc-text">安装中文字体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%A3%B0%E9%9F%B3%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="toc-number">1.1.2.12.</span> <span class="toc-text">安装声音软件包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85ntfs%E7%A3%81%E7%9B%98%E7%9A%84%E6%94%AF%E6%8C%81"><span class="toc-number">1.1.2.13.</span> <span class="toc-text">安装ntfs磁盘的支持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-number">1.1.2.14.</span> <span class="toc-text">安装中文输入法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%BD%91%E7%BB%9C%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.2.15.</span> <span class="toc-text">安装网络工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEpacman%E5%BD%A9%E8%89%B2%E8%BE%93%E5%87%BA"><span class="toc-number">1.1.2.16.</span> <span class="toc-text">设置pacman彩色输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98"><span class="toc-number">1.1.2.17.</span> <span class="toc-text">安装主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A6%96%E6%AC%A1%E7%94%A8%E6%88%B7%E7%9B%AE%E5%BD%95%E7%94%9F%E6%88%90"><span class="toc-number">1.1.2.18.</span> <span class="toc-text">首次用户目录生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%9B%BE%E6%A0%87"><span class="toc-number">1.1.2.19.</span> <span class="toc-text">安装图标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7"><span class="toc-number">1.1.2.20.</span> <span class="toc-text">添加用户</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E8%8A%82%E4%BA%AE%E5%BA%A6"><span class="toc-number">1.1.2.21.</span> <span class="toc-text">调节亮度:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E6%98%BE%E7%A4%BA%E7%94%B5%E9%87%8F"><span class="toc-number">1.1.2.22.</span> <span class="toc-text">终端显示电量:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEgrub%E4%B8%BB%E9%A2%98"><span class="toc-number">1.1.2.23.</span> <span class="toc-text">设置grub主题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E4%B8%BB%E9%A2%98"><span class="toc-number">1.1.2.23.1.</span> <span class="toc-text">下载主题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9%E4%B8%BB%E9%A2%98%E5%8C%85"><span class="toc-number">1.1.2.23.2.</span> <span class="toc-text">解压缩主题包</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E5%88%B0%E4%B8%BB%E9%A2%98%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.2.23.3.</span> <span class="toc-text">复制到主题目录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.2.23.4.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%A6%82%E4%B8%8B%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="toc-number">1.1.2.23.5.</span> <span class="toc-text">添加如下内容：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.2.23.6.</span> <span class="toc-text">更新配置文件</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Instal-daily-software"><span class="toc-number">1.2.</span> <span class="toc-text">Instal daily software</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%BA%90"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">配置源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">安装网易云音乐.</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%90%9C%E7%8B%97%E6%8B%BC%E9%9F%B3%E8%BE%93%E5%85%A5%E6%B3%95"><span class="toc-number">1.2.0.3.</span> <span class="toc-text">安装搜狗拼音输入法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.0.3.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.0.3.2.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-TIM"><span class="toc-number">1.2.0.4.</span> <span class="toc-text">安装 TIM:</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-1"><span class="toc-number">1.2.0.4.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%89%93%E4%B8%8D%E5%BC%80%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.0.4.2.</span> <span class="toc-text">解决打不开问题:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E4%B8%8D%E8%83%BD%E8%BE%93%E5%85%A5%E4%B8%AD%E6%96%87"><span class="toc-number">1.2.0.4.3.</span> <span class="toc-text">解决不能输入中文</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85wine"><span class="toc-number">1.2.0.5.</span> <span class="toc-text">安装wine</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85virtualBox"><span class="toc-number">1.2.0.6.</span> <span class="toc-text">安装virtualBox</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85linux-headers"><span class="toc-number">1.2.0.6.1.</span> <span class="toc-text">安装linux-headers</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%A1%AE%E8%AE%A4linux%E5%86%85%E6%A0%B8%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-number">1.2.0.6.2.</span> <span class="toc-text">确认linux内核的版本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-2"><span class="toc-number">1.2.0.6.3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%AE%A9%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%B1%8F%E5%B9%95%E5%88%86%E8%BE%A8%E7%8E%87%E5%8F%AF%E4%BB%A5%E8%87%AA%E7%94%B1%E8%B0%83%E6%95%B4"><span class="toc-number">1.2.0.6.4.</span> <span class="toc-text">如何让虚拟机屏幕分辨率可以自由调整</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.2.0.6.5.</span> <span class="toc-text">共享文件夹:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-%E6%9C%89%E9%81%93%E8%AF%8D%E5%85%B8"><span class="toc-number">1.2.0.6.6.</span> <span class="toc-text">安装 有道词典:</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6"><span class="toc-number">1.2.0.7.</span> <span class="toc-text">常用软件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E8%BD%AF%E4%BB%B6"><span class="toc-number">1.2.0.8.</span> <span class="toc-text">其他软件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Backup-And-Recovery"><span class="toc-number">1.2.1.</span> <span class="toc-text">Backup And Recovery</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Backup"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">Backup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Recovery"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">Recovery:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pacman%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">pacman常用参数</span></a></li></ol></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/11/08/tiesan-2020/" title="tiesan-2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tiesan-2020"/></a><div class="content"><a class="title" href="/2020/11/08/tiesan-2020/" title="tiesan-2020">tiesan-2020</a><time datetime="2020-11-08T14:04:48.000Z" title="Created 2020-11-08 22:04:48">2020-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/08/wp-other/" title="wp for other"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp for other"/></a><div class="content"><a class="title" href="/2020/11/08/wp-other/" title="wp for other">wp for other</a><time datetime="2020-11-08T12:25:49.000Z" title="Created 2020-11-08 20:25:49">2020-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/06/wp-nssc-2020/" title="wp-nssc-2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp-nssc-2020"/></a><div class="content"><a class="title" href="/2020/11/06/wp-nssc-2020/" title="wp-nssc-2020">wp-nssc-2020</a><time datetime="2020-11-06T13:46:12.000Z" title="Created 2020-11-06 21:46:12">2020-11-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/01/weekly-report-3/" title="weekly-report-3"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="weekly-report-3"/></a><div class="content"><a class="title" href="/2020/11/01/weekly-report-3/" title="weekly-report-3">weekly-report-3</a><time datetime="2020-11-01T15:30:30.000Z" title="Created 2020-11-01 23:30:30">2020-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/01/wp-xhb-2020/" title="湖湘杯2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="湖湘杯2020"/></a><div class="content"><a class="title" href="/2020/11/01/wp-xhb-2020/" title="湖湘杯2020">湖湘杯2020</a><time datetime="2020-11-01T15:05:08.000Z" title="Created 2020-11-01 23:05:08">2020-11-01</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By i0gan</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

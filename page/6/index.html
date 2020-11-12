@@ -1,0 +1,283 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>I0gan - I0gan's blog</title><meta name="author" content="i0gan"><meta name="copyright" content="i0gan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="Even if a man has reached the top, he still needs to improve himself">
+<meta property="og:type" content="website">
+<meta property="og:title" content="I0gan">
+<meta property="og:url" content="http://blog.i0gan.cn/page/6/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="Even if a man has reached the top, he still needs to improve himself">
+<meta property="og:locale">
+<meta property="og:image" content="http://blog.i0gan.cn/null">
+<meta property="article:author" content="i0gan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.i0gan.cn/null"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.i0gan.cn/page/6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2020-11-12 17:56:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">56</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">17</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div></div></div><hr/></div></div><div id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site-title">I0gan</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/04/04/wp-echoback/" title="wp echoback">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp echoback"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/04/04/wp-echoback/" title="wp echoback">wp echoback</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-04T05:00:44.000Z" title="Created 2020-04-04 13:00:44">2020-04-04</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/pwn/">pwn</a></span></div><div class="content">echoback题目来源: World of Attack &amp; Defense
+checksec    Arch:     amd64-64-little
+    RELRO:    Full RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+vulunsigned __int64 __fastcall sub_B80(_BYTE *a1)
+&amp;#123;
+  size_t nbytes; // [rsp+1Ch] [rbp-14h] long int
+  unsigned __int64 v3; // [rsp+28h] [rbp-8h]
+
+  v3 = __readfsqword(0x28u);
+  memset((char *)&amp;nbytes + 4, 0, 8uLL);
+  printf("length:", 0LL);
+  _isoc99_scanf("%d", &amp;nbytes);
+  getchar();
+  if ( (nby ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/04/03/install-arch-linux-and-config/" title="Install archlinux and configure">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Install archlinux and configure"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/04/03/install-arch-linux-and-config/" title="Install archlinux and configure">Install archlinux and configure</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-03T05:30:09.000Z" title="Created 2020-04-03 13:30:09">2020-04-03</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/linux/">linux</a></span></div><div class="content">Install ArchLinux and configure (EFL)InstallPlatform : 小新pro13 [EFI]制作Archlinux U盘启动器.开机进入Linux
+连接网络:#这里采用连接wifi的形式
+rfkill unblock all (解除内核对设备的锁定)
+ip link set wlan0 up
+iw dev wlan0 scan | less
+iw dev wlan0 connect [名称] key 0:[密码]
+
+dhclient # 获取ip 或者dhcpcd
+ping baidu.com # 测试网络
+查看是否支持uefils /sys/firmware/efi/
+对时:timedatectl set-ntp true
+分区:分两个区,一个根目录 /,另一个是开机系统的/boot/efi执行 fdisk -l 或者 lsblk 查看硬盘设备名执行 fdisk /dev/sda 开始分区, dev/sda 是硬盘设备名
+磁盘类型参数:-o dos-g gpt
+格式化/boot/efi分区不能ext4格式:
+mkfs.ext4 /dev/n ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/04/03/wp-one-gadget/" title="wp one gadget">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp one gadget"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/04/03/wp-one-gadget/" title="wp one gadget">wp one gadget</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-03T04:10:35.000Z" title="Created 2020-04-03 12:10:35">2020-04-03</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/pwn/">pwn</a></span></div><div class="content">One Gadgetone-gadget 是glibc里调用execve(&#39;/bin/sh&#39;, NULL, NULL)的一段非常有用的gadget。在我们能够控制ip（也就是pc）的时候，用one-gadget来做RCE（远程代码执行）非常方便，比如有时候我们能够做一个任意函数执行，但是做不到控制第一个参数，这样就没办法调用system(&quot;sh&quot;)，这个时候one gadget就可以搞定了
+使用one_gadget工具进行获取oen_gadget
+one_gadget工具安装:
+github: https://github.com/david942j/one_gadget
+sudo apt install ruby
+sudo apt install gem
+sudo gem install one_gadget
+通过ida查看伪代码
+  void (*v4)(void); // [rsp+8h] [rbp-18h]
+  void (*v5)(void); // [rsp+10h] [rbp-10h]
+  unsigned __int64 v6; // ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/04/03/wp-%E9%AB%98%E6%A0%A1%E6%88%98%E5%BD%B9/" title="wp 高校战疫">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp 高校战疫"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/04/03/wp-%E9%AB%98%E6%A0%A1%E6%88%98%E5%BD%B9/" title="wp 高校战疫">wp 高校战疫</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-03T04:02:31.000Z" title="Created 2020-04-03 12:02:31">2020-04-03</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/pwn/">pwn</a></span></div><div class="content">高校战疫 Pwneasyheap难度3 / 10
+保护    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x400000)
+概述没有开启EIP,有四个功能add, delete, edit, exit.
+vul  for ( i = 0; ptr[i]; ++i );
+  if ( i > 2 )
+    return puts("Too many items!");
+  ptr[i] = malloc(0x10uLL); //先开辟头部
+  puts("How long is this message?");
+  nbytes = inputNum();
+  if ( nbytes > 1024 ) //添加的大小大于1024时没有释放所管理的头部chunk
+    return puts("Too much size!");
+这个体的漏洞点在先进行开辟内存, 然后再比较大 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/04/03/wp-supermarket/" title="wp supermarket">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp supermarket"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/04/03/wp-supermarket/" title="wp supermarket">wp supermarket</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-03T03:54:26.000Z" title="Created 2020-04-03 11:54:26">2020-04-03</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/pwn/">pwn</a></span></div><div class="content">SuperMaket漏洞点:添加和删除基本上没有十分严密, 找不到漏洞, 输入的长度且必须是n - 1, 不存在 off by one.然而在修改description的时候,当新的大小与以前大小不同时, 就会realloc重新分配内存.但没有跟新list数组中的指针.若重新分配大的话, 就造成use after free.
+简要说一下 realloc函数吧:
+extern void *realloc(void *mem_address, unsigned int newsize);
+realloc会根据newsize大小来判断怎样分配新的内存, 并却将原来的数据拷贝到新分配的内存中.
+realloc包含了 malloc, free, memcpy三个函数功能, 若新的大小过大的时候, 且在相邻chunk没有空间可分配, 这时候,系统就会去找一个空间够的地方来开辟内存, 这时候就可能涉及到这三个函数的功能. malloc新的内存, mcmcpy拷贝数据, free掉以前的chunk.
+漏洞代码:for ( size = 0; size  256; size = inputNum() ) ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/04/03/wp-fmt-greeting/" title="wp fmt-greeting">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp fmt-greeting"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/04/03/wp-fmt-greeting/" title="wp fmt-greeting">wp fmt-greeting</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-04-02T17:21:48.000Z" title="Created 2020-04-03 01:21:48">2020-04-03</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/pwn/">pwn</a></span></div><div class="content">greeting-150保护    Arch:     i386-32-little
+    RELRO:    No RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+漏洞字符串漏洞
+源代码
+  char s; // [esp+1Ch] [ebp-84h]
+  char v5; // [esp+5Ch] [ebp-44h]
+  unsigned int v6; // [esp+9Ch] [ebp-4h]
+
+  v6 = __readgsdword(0x14u);
+  printf("Please tell me your name... ");
+  if ( !getnline(&v5, 0x40) )
+    return puts("Don't ignore me ;( ");
+  sprintf(&s, "Nice to meet you, %s :)\n", &v5);
+  return printf(&s); #字符串漏洞
+利用由于程序中只有一 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/03/28/weekly-report-1/" title="2020-03-28 周报">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2020-03-28 周报"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/03/28/weekly-report-1/" title="2020-03-28 周报">2020-03-28 周报</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-03-28T10:24:50.000Z" title="Created 2020-03-28 18:24:50">2020-03-28</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/summary/">summary</a></span></div><div class="content">2020-03-28 周报这周在干什么?百变不离其宗,正在学习heap的各种套路目前先对堆进行一点总结, 也是刚入门.这个星期昨天才开始搞…. _…..可悲可悲….
+先说一下各种常见的hook吧 (堆中常见).__malloc_hook这是一个函数指针变量，指向的是：
+void * function(size_t size, void * caller) 
+其中caller是表示在栈中调用malloc的函数的时候的函数地址，%p可以打印出他的地址
+
+__free_hook 同样这个也是一个函数指针变量，指向的是：
+
+void function(void * ptr, void * caller)
+
+__realloc_hook 这也是指向一个函数指针变量，指向的是:
+
+void * function(void * ptr ,size_t size, void * caller)
+__memalign_hook 这个函数是指向的一个函数指针，不过是： aligned_alloc, memalign, posix_memalign and valloc
+__malloc_initializ ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/03/25/linux-vim-config/" title="linux-vim-config">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux-vim-config"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/03/25/linux-vim-config/" title="linux-vim-config">linux-vim-config</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-03-25T03:43:46.000Z" title="Created 2020-03-25 11:43:46">2020-03-25</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/linux/">linux</a></span></div><div class="content">vim config&quot;Author: I0gan
+
+colorscheme koehler &quot;主题
+set cursorline &quot;设置横线
+
+syntax on &quot;语法高亮
+set autowrite &quot;自动保存
+set ruler     &quot;设置尺子
+set noeb      &quot;去掉输入错误提示音
+set tabstop=4 &quot;设置缩进为4
+
+&quot;自动缩进
+set autoindent
+
+&quot;set cindent
+&quot;统一缩进为4
+set ts=4
+set softtabstop=4
+set shiftwidth=4
+
+
+set number &quot;显示行号
+&quot;set ignorecase &quot;搜索时忽略大小写
+
+&quot;搜索时逐字高亮
+set hlsearch  
+set incsearch 
+set enc=utf-8 &quot;设置编码
+
+&quot;设置鼠标可以在任何地方都使用
+set mouse=a 
+set selection=exc ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/03/16/weekly-report-0/" title="2020-03-16 周报">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2020-03-16 周报"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/03/16/weekly-report-0/" title="2020-03-16 周报">2020-03-16 周报</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2020-03-16T10:24:50.000Z" title="Created 2020-03-16 18:24:50">2020-03-16</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/summary/">summary</a></span></div><div class="content">最近在干什么?前一个星期, 接到了一个外包(第一个),项目要求是这样的.项目要求:开发即时通讯软件, 客户端采用Qt, 服务端不限
+
+客户端和服务端都在Linux系统下运行
+拥有比较日常化的UI (不要过于丰富,也不要太简单)
+使用数据库储存用户信息
+在网络传输这块采用加密,保证安全传输
+实现注册账号,登录账号, 修改用户信息, 用户信息包含昵称,账号,头像等, 添加好友, 删除好友,同步好友信息
+好友之间能发送消息, 且能发送文件
+实现群消息机制
+群里拥有有群人员列表
+保证服务端与客户端能够长期稳定运行,
+完成日期在2020-03-15之前(2020-03-08开始)
+
+简单的一些介绍:客户端与服务端采用二进制加密传输,在用户登录之后, 与QQ类似, 会拥有TCP长连接用于用于与数据库的交互操作, 采用udp进行发送消息,服务端,使用多进程后台运行, 能采用命令的方式停止服务, 多线程方式进行tcp并发处理.子线程,udp消息转发, 群发,处理发送文件请求,使用链表储存在线用户, 并记录用户的网络地址信息…..顺便透露一下外快吧^_^(1k+);
+来一个简单的运行机制吧:实际比较复杂 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/5/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/null" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">i0gan</div><div class="author-info__description">Even if a man has reached the top, he still needs to improve himself</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">56</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">17</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/11/08/tiesan-2020/" title="tiesan-2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tiesan-2020"/></a><div class="content"><a class="title" href="/2020/11/08/tiesan-2020/" title="tiesan-2020">tiesan-2020</a><time datetime="2020-11-08T14:04:48.000Z" title="Created 2020-11-08 22:04:48">2020-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/08/wp-other/" title="wp for other"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp for other"/></a><div class="content"><a class="title" href="/2020/11/08/wp-other/" title="wp for other">wp for other</a><time datetime="2020-11-08T12:25:49.000Z" title="Created 2020-11-08 20:25:49">2020-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/06/wp-nssc-2020/" title="wp-nssc-2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="wp-nssc-2020"/></a><div class="content"><a class="title" href="/2020/11/06/wp-nssc-2020/" title="wp-nssc-2020">wp-nssc-2020</a><time datetime="2020-11-06T13:46:12.000Z" title="Created 2020-11-06 21:46:12">2020-11-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/01/weekly-report-3/" title="weekly-report-3"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="weekly-report-3"/></a><div class="content"><a class="title" href="/2020/11/01/weekly-report-3/" title="weekly-report-3">weekly-report-3</a><time datetime="2020-11-01T15:30:30.000Z" title="Created 2020-11-01 23:30:30">2020-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/01/wp-xhb-2020/" title="湖湘杯2020"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="湖湘杯2020"/></a><div class="content"><a class="title" href="/2020/11/01/wp-xhb-2020/" title="湖湘杯2020">湖湘杯2020</a><time datetime="2020-11-01T15:05:08.000Z" title="Created 2020-11-01 23:05:08">2020-11-01</time></div></div></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fas fa-folder-open"></i><span>Categories</span></div><ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/dev/"><span class="card-category-list-name">dev</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/docker/"><span class="card-category-list-name">docker</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/exploit/"><span class="card-category-list-name">exploit</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/golang/"><span class="card-category-list-name">golang</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/hexo/"><span class="card-category-list-name">hexo</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/life/"><span class="card-category-list-name">life</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/linux/"><span class="card-category-list-name">linux</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/pwn/"><span class="card-category-list-name">pwn</span><span class="card-category-list-count">34</span></a></li>
+            <li class="card-category-list-item more is-center"><a class="card-category-list-link-more" href="/categories/">
+                <span>More</span><i class="fas fa-angle-right"></i></a></li>
+            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/android/" style="font-size: 1.2em; color: #999da3">android</a> <a href="/tags/awd/" style="font-size: 1.1em; color: #999">awd</a> <a href="/tags/dev/" style="font-size: 1.1em; color: #999">dev</a> <a href="/tags/docker/" style="font-size: 1.2em; color: #999da3">docker</a> <a href="/tags/golang/" style="font-size: 1.1em; color: #999">golang</a> <a href="/tags/hexo/" style="font-size: 1.2em; color: #999da3">hexo</a> <a href="/tags/kernel/" style="font-size: 1.2em; color: #999da3">kernel</a> <a href="/tags/life/" style="font-size: 1.3em; color: #99a1ac">life</a> <a href="/tags/linux/" style="font-size: 1.4em; color: #99a5b6">linux</a> <a href="/tags/metasploit/" style="font-size: 1.1em; color: #999">metasploit</a> <a href="/tags/pwn/" style="font-size: 1.2em; color: #999da3">pwn</a> <a href="/tags/pwn-env/" style="font-size: 1.1em; color: #999">pwn-env</a> <a href="/tags/reverse/" style="font-size: 1.1em; color: #999">reverse</a> <a href="/tags/vul/" style="font-size: 1.1em; color: #999">vul</a> <a href="/tags/weekly-summary/" style="font-size: 1.2em; color: #999da3">weekly summary</a> <a href="/tags/windows/" style="font-size: 1.1em; color: #999">windows</a> <a href="/tags/wp/" style="font-size: 1.5em; color: #99a9bf">wp</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/11/"><span class="card-archive-list-date">November 2020</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/10/"><span class="card-archive-list-date">October 2020</span><span class="card-archive-list-count">10</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/09/"><span class="card-archive-list-date">September 2020</span><span class="card-archive-list-count">16</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/06/"><span class="card-archive-list-date">June 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">May 2020</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">April 2020</span><span class="card-archive-list-count">13</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/03/"><span class="card-archive-list-date">March 2020</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/09/"><span class="card-archive-list-date">September 2019</span><span class="card-archive-list-count">2</span></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">56</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">Last Push :</div><div class="item-count" id="last-push-date" data-lastPushDate="2020-11-12T09:56:13.403Z"></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By i0gan</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
