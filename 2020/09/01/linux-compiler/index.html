@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>linux-complier | I0gan</title><meta name="keywords" content="dev"><meta name="author" content="i0gan"><meta name="copyright" content="i0gan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="GCC编译过程a.c -&gt;预处理-&gt; a.i -&gt;汇编-&gt; a.s -&gt;编译-&gt; a.o -&gt;链接-&gt; a.outgcc -E -o a.i a.c (预处理)gcc -S -o a.s a.i (编译)gcc -c -o a.o a.s (汇编)gcc -o a.out a.o  (链接) 后辍文件详解:&lt; .c &gt; C语言源码文件&amp;l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux-complier">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/09/01/linux-compiler/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="GCC编译过程a.c -&gt;预处理-&gt; a.i -&gt;汇编-&gt; a.s -&gt;编译-&gt; a.o -&gt;链接-&gt; a.outgcc -E -o a.i a.c (预处理)gcc -S -o a.s a.i (编译)gcc -c -o a.o a.s (汇编)gcc -o a.out a.o  (链接) 后辍文件详解:&lt; .c &gt; C语言源码文件&amp;l">
+<meta property="og:locale">
+<meta property="og:image" content="http://blog.i0gan.cn/img/text_bg.jpg">
+<meta property="article:published_time" content="2020-09-01T03:45:16.000Z">
+<meta property="article:modified_time" content="2020-10-25T04:33:58.072Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="dev">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.i0gan.cn/img/text_bg.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.i0gan.cn/2020/09/01/linux-compiler/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-10-25 12:33:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/header.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">18</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">13</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text_bg.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">linux-complier</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-09-01T03:45:16.000Z" title="Created 2020-09-01 11:45:16">2020-09-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-10-25T04:33:58.072Z" title="Updated 2020-10-25 12:33:58">2020-10-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/dev/">dev</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h2><h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>a.c -&gt;预处理-&gt; a.i -&gt;汇编-&gt; a.s -&gt;编译-&gt; a.o -&gt;链接-&gt; a.out<br>gcc -E -o a.i a.c (预处理)<br>gcc -S -o a.s a.i (编译)<br>gcc -c -o a.o a.s (汇编)<br>gcc -o a.out a.o  (链接)</p>
+<p>后辍文件详解:<br>&lt; .c &gt; C语言源码文件<br>&lt; .a &gt; 目标文件构成的库文件<br>&lt; .C / .cc /.cxx &gt; C++ 源码文件<br>&lt; .h &gt; 头文件<br>&lt; .o &gt; 编译后的目标文件<br>&lt; .s &gt; 是汇编语言源代码文件</p>
+<p>编译选项:<br>&lt; -o file_name &gt;  指定输出文件<br>&lt; -O &gt;  对程序进行优化编译,链接<br>&lt; -O2 &gt; 对程序进行更好的优化编译,链接<br>&lt; -O3 &gt; 最佳优化<br>&lt; -g &gt;  对程序加入调试 (gdb 调试)<br>&lt; -I dir_name &gt;  将所指出的目录作为编译器寻找头文件的路径<br>&lt; -Wall &gt; 生成所有警告信息<br>&lt; -w &gt;    不生成任何警告信息</p>
+<p>&lt;  -D/-DMACRO &gt; 定义MACRO宏，等效于在程序中使用#define MACRO</p>
+<p>(应用场景:可以控制debug的输出)</p>
+<h2 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h2><p>layout asm —汇编界面<br>b *addr<br>        查看内存命<br>可以使用examine命令(简写是x)来查看内存地址中的值。x命令的语法如下所示：<br>x/&lt;n/f/u&gt; <addr><br>n、f、u是可选的参数。<br>n是一个正整数，表示需要显示的内存单元的个数，也就是说从当前地址向后显示几个内存单元的内容，一个内存单元的大小由后面的u定义。<br>f 表示显示的格式，参见下面。如果地址所指的是字符串，那么格式可以是s，如果地十是指令地址，那么格式可以是i。<br>u 表示从当前地址往后请求的字节数，如果不指定的话，GDB默认是4个bytes。u参数可以用下面的字符来代替，b表示单字节，h表示双字节，w表示四字 节，g表示八字节。<br>当我们指定了字节长度后，GDB会从指内存定的内存地址开始，读写指定字节，并把其当作一个值取出来。<br><addr>表示一个内存地址。<br>注意：严格区分n和u的关系，n表示单元个数，u表示每个单元的大小。<br>n/f/u三个参数可以一起使用。例如：<br>命令：x/3uh 0x54320 表示，从内存地址0x54320读取内容，h表示以双字节为一个单位，3表示输出三个单位，u表示按十六进制显示。<br>输出格式<br>一般来说，GDB会根据变量的类型输出变量的值。但你也可以自定义GDB的输出的格式。<br>例如，你想输出一个整数的十六进制，或是二进制来查看这个整型变量的中的位的情况。<br>要做到这样，你可以使用GDB的数据显示格式：</p>
+<p>x 按十六进制格式显示变量。<br>d 按十进制格式显示变量。<br>u 按十六进制格式显示无符号整型。<br>o 按八进制格式显示变量。<br>t 按二进制格式显示变量。<br>a 按十六进制格式显示变量。<br>c 按字符格式显示变量。</p>
+<p>f 按浮点数格式显示变量。</p>
+<h3 id="静态库"><a href="#静态库" class="headerlink" title="静态库"></a>静态库</h3><p>  1.命名规则:<br>    lib+库名+.a<br>  2.制作静态库:<br>     生成对应的.o文件  .c—&gt; .o     (gcc -c a.c b.c c.c ….)<br>      将生成的.a文件打包 ar rcs 生成静态库名 lib1.o lib2.o ….. (ar src liblogan.a ./*.o)<br>  3.发布和使用静态库:<br>    1发布静态库: 把头文件移动到include里,把.a文件移动到lib里<br>    2头文件<br>  4.使用接口:<br>    1源文件里导入头文件,gcc main.c -I ./include lib/lib.a (后面导入lib文件)  (把main.c 放第一位)<br>      2正式用法: gcc main.c -Iinclude -L lib -l logan -o run  (logan 去头去尾: liblogan.a)<br>    -I 指定头文件路径    (可以无空格)<br>    -L 指定lib目录<br>    -l 指定lib目录下的lib文件<br>  5.查看静态库文件:<br>    nm lib.a  (nm 还可以查看.out .o)<br>    nm 里<br>    T 代表代码区<br>    B b D W t r<br>  6.缺点:<br>    1若使用静态库里的某一个函数,则编译时会将整个.o文件连接到可执行文件中,占用空间(以.o文件为单位)<br>    2库文件发生改变,需重新编译<br>  7.优点:<br>    1发布程序的时候，不需要提供对应的库</p>
+<p>​    2Load程序的时候，速度快</p>
+<h3 id="共享库"><a href="#共享库" class="headerlink" title="共享库"></a>共享库</h3><p>  1.命名规则:<br>    lib+库名+.so<br>  2.制作共享库:<br>    1生成与位置无关的.o  (gcc -fPIC -c <em>.c)<br>    2将.o打包成共享库(动态库) (gcc -shared -o liblogan.so ./</em>.o)<br>  3.发布和使用共享库:<br>    1发布共享库: 把.so文件移动到lib里<br>    2使用共享库:<br>       在编译目标代码时只需导入动态链接库就可以使用(单个)<br>       一*  gcc main.c  lib/libprint.so -o run</p>
+<p>使用:(gcc main.c -L lib -l print -o run)会导致在运行时无法链接<br>需使用以下方法进行链接</p>
+<pre><code>1*使用环境变量来导入lib.so
+echo $LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=./lib (临时测试用)
+
+2*修改配置文件来实现永久修改:(永久)(不常用)
+vim ~/.bashrc
+找到 LD_LIBRARY_PATH=...然后进行修改
+
+3*修改动态链接器的配置文件实现链接lib(永久)
+     1-&gt;找到动态链接器的配置文件
+    sudo vim /etc/ld.so.conf
+     2-&gt;动态路径些到ld.so.conf里
+     3-&gt;更新  sudo ldconfig -v
+3查看可执行程序的链接库: ldd file  (print share object dependencis)
+4动态库的优缺点:
+    优点:
+    体积小
+    更新不需重新编译程序,实现了模块化(函数接口不变的情况下)
+    缺点:
+    需要把动态库提供给用户
+    加载速度相对较慢</code></pre>
+<hr>
+<h2 id="gdb调试"><a href="#gdb调试" class="headerlink" title="gdb调试"></a>gdb调试</h2><pre><code>命令:
+l ----list 查看源码
+  l 10 查看10行
+  查看其他文件:
+  l a.c:20 表示查看 a.c文件里的20的行内容
+  l a.c:function_name 查看 a.c文件里fun函数
+
+b ----breakpoint 下断点
+break----------&gt;
+条件断点:
+b 15 if i==15 表示在15行变量i=15时停下
+查看断点信息:
+i b-------information of break
+info break----&gt;
+d----删除断点
+info break
+
+p ----print 打印
+print------&gt;
+
+ptype----查看变量类型
+
+diplay----display----追踪变量(循环里可运用)
+undisplay----去掉追踪变量的值
+用之前需获取变量ID
+使用 info display 获取
+然后 undisplay var_ID
+
+r ----run运行
+start------&gt;
+vmmap ----查看内存分布
+n----单布调试(绕过函数体)
+c----继续执行(遇到断点停下)
+s----(单步)(可进入函数体)
+u----跳出单次循环
+finish----跳出当前进入的函数</code></pre>
+<h2 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h2><h3 id="Makefile规则"><a href="#Makefile规则" class="headerlink" title="Makefile规则"></a>Makefile规则</h3><pre><code>TARGET....: DEPENDEDS...
+COMMAND
+...
+...
+在执行动作命令之前会判断所DEPENDEDS条件是满足,若不满足,则执行依赖项
+clean规则会执行 -$(RM)$(TARGET)$(OBJS)命令
+clean用于清除中间生成文件
+
+注意:COMMAND之前必须有TAB键，不能使用空格来代替
+
+make命令执行的时候会根据文件的时间搓来判断是否执行相关的命令</code></pre>
+<h3 id="匹配模式"><a href="#匹配模式" class="headerlink" title="匹配模式"></a>匹配模式</h3><p>例:</p>
+<pre><code>    main.o:main.c add/add.h sub/sub.h
+        gcc -c -o main.o main.c -Iadd -Isub</code></pre>
+<p>简便方法实现相同功能:</p>
+<pre><code>    main.o:%o:%c
+        gcc -c$&lt; -o $@</code></pre>
+<p>%o:%c表示将TARGET域的.o拓展名替换为.c,即main.o 替换为main.c.<br>$&lt;表示依赖项的结果,即main.c<br>$@表示TARGET域的名称,即 main.o</p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数:"></a>函数:</h3><p>$(wildcard ./*.c)  —获取./下的所有.c文件<br>$(patsubst %.o,%.c,a.o) —将.o替换为.c</p>
+<p>!在命令前加’-‘,若命令执行失败,则忽略该命令,继续往下执行.</p>
+<h3 id="若在当前目录下存在一个’clean’文件-则就无法使用make-clean来实现清除的目的"><a href="#若在当前目录下存在一个’clean’文件-则就无法使用make-clean来实现清除的目的" class="headerlink" title="若在当前目录下存在一个’clean’文件,则就无法使用make clean来实现清除的目的"></a>若在当前目录下存在一个’clean’文件,则就无法使用make clean来实现清除的目的</h3><p>需要在Makefile中声明伪目标.<br>具体实现:</p>
+<pre><code>.PHONY:clean
+    clean:</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">i0gan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://blog.i0gan.cn/2020/09/01/linux-compiler/">http://blog.i0gan.cn/2020/09/01/linux-compiler/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/dev/">dev</a></div><div class="post_share"><div class="social-share" data-image="/img/text_bg.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/09/01/wp-2020-qwb/"><img class="prev-cover" src="/img/text_bg.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">wp 2020强网杯</div></div></a></div><div class="next-post pull-right"><a href="/2020/06/18/wp-hfb-2020/"><img class="next-cover" src="/img/text_bg.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">wp-hfb-2020</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/header.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">i0gan</div><div class="author-info__description">Even if a man has reached the top, he still needs to improve himself</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">18</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">13</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/i0gan"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#GCC"><span class="toc-number">1.</span> <span class="toc-text">GCC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">编译过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GDB"><span class="toc-number">2.</span> <span class="toc-text">GDB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%BA%93"><span class="toc-number">2.1.</span> <span class="toc-text">静态库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%BA%93"><span class="toc-number">2.2.</span> <span class="toc-text">共享库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gdb%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">gdb调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Makefile"><span class="toc-number">4.</span> <span class="toc-text">Makefile</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Makefile%E8%A7%84%E5%88%99"><span class="toc-number">4.1.</span> <span class="toc-text">Makefile规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">匹配模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">4.3.</span> <span class="toc-text">函数:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8B%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E7%9B%AE%E5%BD%95%E4%B8%8B%E5%AD%98%E5%9C%A8%E4%B8%80%E4%B8%AA%E2%80%99clean%E2%80%99%E6%96%87%E4%BB%B6-%E5%88%99%E5%B0%B1%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8make-clean%E6%9D%A5%E5%AE%9E%E7%8E%B0%E6%B8%85%E9%99%A4%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="toc-number">4.4.</span> <span class="toc-text">若在当前目录下存在一个’clean’文件,则就无法使用make clean来实现清除的目的</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/02/01/wp-hws/" title="第六届上海大学生网络安全大赛 wp"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第六届上海大学生网络安全大赛 wp"/></a><div class="content"><a class="title" href="/2021/02/01/wp-hws/" title="第六届上海大学生网络安全大赛 wp">第六届上海大学生网络安全大赛 wp</a><time datetime="2021-01-31T16:22:49.000Z" title="Created 2021-02-01 00:22:49">2021-02-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/08/wp-huawei-xctf-2020/" title="HUAWEI XCTF 2020 PWN WRITE UP"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HUAWEI XCTF 2020 PWN WRITE UP"/></a><div class="content"><a class="title" href="/2021/01/08/wp-huawei-xctf-2020/" title="HUAWEI XCTF 2020 PWN WRITE UP">HUAWEI XCTF 2020 PWN WRITE UP</a><time datetime="2021-01-08T06:43:24.000Z" title="Created 2021-01-08 14:43:24">2021-01-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/06/axb2020/" title="Some small records of the I-SOON Cup Of CUIT CTF Competition final"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Some small records of the I-SOON Cup Of CUIT CTF Competition final"/></a><div class="content"><a class="title" href="/2020/12/06/axb2020/" title="Some small records of the I-SOON Cup Of CUIT CTF Competition final">Some small records of the I-SOON Cup Of CUIT CTF Competition final</a><time datetime="2020-12-06T10:42:47.000Z" title="Created 2020-12-06 18:42:47">2020-12-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/24/wp-xyb-2020/" title="祥云杯 2020 WP"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="祥云杯 2020 WP"/></a><div class="content"><a class="title" href="/2020/11/24/wp-xyb-2020/" title="祥云杯 2020 WP">祥云杯 2020 WP</a><time datetime="2020-11-24T14:47:47.000Z" title="Created 2020-11-24 22:47:47">2020-11-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/11/15/issues/" title="issues"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="issues"/></a><div class="content"><a class="title" href="/2020/11/15/issues/" title="issues">issues</a><time datetime="2020-11-15T13:36:30.000Z" title="Created 2020-11-15 21:36:30">2020-11-15</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/text_bg.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By i0gan</div><div class="framework-info"></div><div class="icp"><a target="_blank" rel="noopener" href="http://www.beian.gov.cn/"><img class="icp-icon" src="/img/icp.png" alt="ICP"/><span>黔ICP备20006037号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
