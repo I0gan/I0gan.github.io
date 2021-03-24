@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TryHackMe OWASP | I0gan</title><meta name="keywords" content="OWASP"><meta name="author" content="i0gan"><meta name="copyright" content="i0gan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="TryHackMe OWASPIntroductionThis room breaks each OWASP topic down and includes details on what the vulnerability is, how it occurs and how you can exploit it. You will put the theory into practise by">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TryHackMe OWASP">
+<meta property="og:url" content="http://blog.i0gan.cn/2021/03/24/tryhackme-owasp/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="TryHackMe OWASPIntroductionThis room breaks each OWASP topic down and includes details on what the vulnerability is, how it occurs and how you can exploit it. You will put the theory into practise by">
+<meta property="og:locale">
+<meta property="og:image" content="http://blog.i0gan.cn/img/text_bg.jpg">
+<meta property="article:published_time" content="2021-03-24T03:53:08.000Z">
+<meta property="article:modified_time" content="2021-03-24T03:54:19.371Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="OWASP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.i0gan.cn/img/text_bg.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.i0gan.cn/2021/03/24/tryhackme-owasp/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-03-24 11:54:19'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/header.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">46</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">23</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">18</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text_bg.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">TryHackMe OWASP</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-03-24T03:53:08.000Z" title="Created 2021-03-24 11:53:08">2021-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-03-24T03:54:19.371Z" title="Updated 2021-03-24 11:54:19">2021-03-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OWASP/">OWASP</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="TryHackMe-OWASP"><a href="#TryHackMe-OWASP" class="headerlink" title="TryHackMe OWASP"></a>TryHackMe OWASP</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>This room breaks each OWASP topic down and includes details on what the vulnerability is, how it occurs and how you can exploit it. You will put the theory into practise by completing supporting challenges.</p>
+<ul>
+<li>Injection</li>
+<li>Broken Authentication</li>
+<li>Sensitive Data Exposure</li>
+<li>XML External Entity</li>
+<li>Broken Access Control</li>
+<li>Security Misconfiguration</li>
+<li>Cross-site Scripting</li>
+<li><strong>I</strong>nsecure Deserialization</li>
+<li>Components with Known Vulnerabilities</li>
+<li>Insufficent Logging &amp; Monitoring</li>
+</ul>
+<p>The room has been designed for beginners and assume no previous knowledge of security.</p>
+<h2 id="Severity-1-Injection"><a href="#Severity-1-Injection" class="headerlink" title="[Severity 1] Injection"></a>[Severity 1] Injection</h2><p>Injection flaws are very common in applications today. These flaws occur because user controlled input is interpreted as actual commands or parameters by the application. Injection attacks depend on what technologies are being used and how exactly the input is interpreted by these technologies. Some common examples include:</p>
+<ul>
+<li>SQL Injection: This occurs when user controlled input is passed to SQL queries. As a result, an attacker can pass in SQL queries to manipulate the outcome of such queries. </li>
+<li>Command Injection: This occurs when user input is passed to system commands. As a result, an attacker is able to execute arbitrary system commands on application servers.</li>
+</ul>
+<p>If an attacker is able to successfully pass input that is interpreted correctly, they would be able to do the following:</p>
+<ul>
+<li>Access, Modify and Delete information in a database when this input is passed into database queries. This would mean that an attacker can steal sensitive information such as personal details and credentials.</li>
+<li>Execute Arbitrary system commands on a server that would allow an attacker to gain access to users’ systems. This would enable them to steal sensitive data and carry out more attacks against infrastructure linked to the server on which the command is executed.</li>
+</ul>
+<p>The main defence for preventing injection attacks is ensuring that user controlled input is not interpreted as queries or commands. There are different ways of doing this:</p>
+<ul>
+<li>Using an allow list: when input is sent to the server, this input is compared to a list of safe input or characters. If the input is marked as safe, then it is processed. Otherwise, it is rejected and the application throws an error.</li>
+<li>Stripping input: If the input contains dangerous characters, these characters are removed before they are processed.</li>
+</ul>
+<p>Dangerous characters or input is classified as any input that can change how the underlying data is processed. Instead of manually constructing allow lists or even just stripping input, there are various libraries that perform these actions for you.</p>
+<h2 id="Severity-1-OS-Command-Injection"><a href="#Severity-1-OS-Command-Injection" class="headerlink" title="[Severity 1] OS Command Injection"></a>[Severity 1] OS Command Injection</h2><p>Command Injection occurs when server-side code (like PHP) in a web application makes a system call on the hosting machine. It is a web vulnerability that allows an attacker to take advantage of that made system call to execute operating system commands on the server. Sometimes this won’t always end in something malicious, like a <code>whoami</code> or just reading of files. That isn’t too bad. But the thing about command injection is it opens up many options for the attacker. The worst thing they could do would be to spawn a reverse shell to become the user that the web server is running as. A simple <code>;nc -e /bin/bash</code> is all that’s needed and they own your server; <strong>some variants of netcat don’t support the -e option.</strong> You can use a list of [these](<a target="_blank" rel="noopener" href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology">https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology</a> and Resources/Reverse Shell Cheatsheet.md) reverse shells as an alternative. </p>
+<p>Once the attacker has a foothold on the web server, they can start the usual enumeration of your systems and start looking for ways to pivot around. Now that we know what command injection is, we’ll start going into the different types and how to test for them.</p>
+<h2 id="Severity-1-Command-Injection-Practical"><a href="#Severity-1-Command-Injection-Practical" class="headerlink" title="[Severity 1] Command Injection Practical"></a>[Severity 1] Command Injection Practical</h2><p><strong>What is Active Command Injection?</strong></p>
+<p>Blind command injection occurs when the system command made to the server does not return the response to the user in the HTML document. Active command injection will return the response to the user. It can be made visible through several HTML elements. </p>
+<p>Let’s consider a scenario: EvilCorp has started development on a web based shell but has accidentally left it exposed to the Internet. It’s nowhere near finished but contains the same command injection vulnerability as before! But this time, the response from the system call can be seen on the page! They’ll never learn!</p>
+<p>Just like before, let’s look at the sample code from evilshell.php and go over what it’s doing and why it makes it active command injection. See if you can figure it out. I’ll go over it below just as before.</p>
+<p><strong>EvilShell (evilshell.php) Code Example</strong></p>
+<p><img src="https://i.imgur.com/KcGizdo.png" alt="img"></p>
+<p>In pseudocode, the above snippet is doing the following:</p>
+<ol>
+<li><p>Checking if the parameter “commandString” is set</p>
+</li>
+<li><p>If it is, then the variable <code>$command_string</code> gets what was passed into the input field</p>
+</li>
+<li><p>The program then goes into a try block to execute the function <code>passthru($command_string)</code>. You can read the docs on <code>passthru()</code> on <a target="_blank" rel="noopener" href="https://www.php.net/manual/en/function.passthru.php">PHP’s website</a>, but in general, it is executing what gets entered into the input then passing the output directly back to the browser.</p>
+</li>
+<li><p>If the try does not succeed, output the error to page. Generally this won’t output anything because you can’t output stderr but PHP doesn’t let you have a try without a catch.</p>
+</li>
+</ol>
+<p><strong>Ways to Detect Active Command Injection</strong></p>
+<p>We know that active command injection occurs when you can see the response from the system call. In the above code, the function <code>passthru()</code> is actually what’s doing all of the work here. It’s passing the response directly to the document so you can see the fruits of your labor right there. Since we know that, we can go over some useful commands to try to enumerate the machine a bit further. The function call here to <code>passthru()</code> may not always be what’s happening behind the scenes, but I felt it was the easiest and least complicated way to demonstrate the vulnerability. </p>
+<p><strong>Commands to try</strong></p>
+<p><strong>Linux</strong></p>
+<ul>
+<li>whoami</li>
+<li>id</li>
+<li>ifconfig/ip addr</li>
+<li>uname -a</li>
+<li>ps -ef</li>
+<li></li>
+</ul>
+<p><strong>Windows</strong></p>
+<ul>
+<li>whoami</li>
+<li>ver</li>
+<li>ipconfig</li>
+<li>tasklist</li>
+<li>netstat -an</li>
+</ul>
+<h3 id="chall-1"><a href="#chall-1" class="headerlink" title="chall 1"></a>chall 1</h3><p>What strange text file is in the website root directory?</p>
+<p>input</p>
+<pre><code>ls</code></pre>
+<p>output</p>
+<pre><code>css drpepper.txt evilshell.php index.php js</code></pre>
+<p>so anwser is drpepper.txt</p>
+<h3 id="chall2"><a href="#chall2" class="headerlink" title="chall2"></a>chall2</h3><p>How many non-root/non-service/non-daemon users are there?</p>
+<h3 id="chall3"><a href="#chall3" class="headerlink" title="chall3"></a>chall3</h3><p>What user is this app running as?</p>
+<p>input</p>
+<pre><code>whoami</code></pre>
+<p>output</p>
+<pre><code>www-data</code></pre>
+<p>anwser: www-data</p>
+<h3 id="chall4"><a href="#chall4" class="headerlink" title="chall4"></a>chall4</h3><p>What is the user’s shell set as?</p>
+<p>input</p>
+<pre><code>cat /etc/passwd | grep www-data</code></pre>
+<p>output:</p>
+<pre><code>www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</code></pre>
+<p>anwser: /usr/sbin/nologin</p>
+<h3 id="chall5"><a href="#chall5" class="headerlink" title="chall5"></a>chall5</h3><p>What version of Ubuntu is running?</p>
+<p>input</p>
+<pre><code>lsb_release -a</code></pre>
+<p>output</p>
+<pre><code>Distributor ID: Ubuntu Description: Ubuntu 18.04.4 LTS Release: 18.04 Codename: bionic</code></pre>
+<p>anwser: 18.04.4</p>
+<h3 id="chall6"><a href="#chall6" class="headerlink" title="chall6"></a>chall6</h3><p>Print out the MOTD. What favorite beverage is shown?</p>
+<p>input</p>
+<pre><code>cat drpepper.txt</code></pre>
+<p>output</p>
+<pre><code>I love Dr Pepper</code></pre>
+<p>anwser: Dr Pepper</p>
+<h2 id="Severity-2-Broken-Authentication"><a href="#Severity-2-Broken-Authentication" class="headerlink" title="[Severity 2] Broken Authentication"></a>[Severity 2] Broken Authentication</h2><p>Authentication and session management constitute core components of modern web applications. Authentication allows users to gain access to web applications by verifying their identities. The most common form of authentication is using a username and password mechanism. A user would enter these credentials, the server would verify them. If they are correct, the server would then provide the users’ browser with a session cookie. A session cookie is needed because web servers use HTTP(S) to communicate which is stateless. Attaching session cookies means that the server will know who is sending what data. The server can then keep track of users’ actions. </p>
+<p>If an attacker is able to find flaws in an authentication mechanism, they would then successfully gain access to other users’ accounts. This would allow the attacker to access sensitive data (depending on the purpose of the application). Some common flaws in authentication mechanisms include:</p>
+<ul>
+<li>Brute force attacks: If a web application uses usernames and passwords, an attacker is able to launch brute force attacks that allow them to guess the username and passwords using multiple authentication attempts. </li>
+<li>Use of weak credentials: web applications should set strong password policies. If applications allow users to set passwords such as ‘password1’ or common passwords, then an attacker is able to easily guess them and access user accounts. They can do this without brute forcing and without multiple attempts.</li>
+<li>Weak Session Cookies: Session cookies are how the server keeps track of users. If session cookies contain predictable values, an attacker can set their own session cookies and access users’ accounts. </li>
+</ul>
+<p>There can be various mitigation for broken authentication mechanisms depending on the exact flaw:</p>
+<ul>
+<li>To avoid password guessing attacks, ensure the application enforces a strong password policy. </li>
+<li>To avoid brute force attacks, ensure that the application enforces an automatic lockout after a certain number of attempts. This would prevent an attacker from launching more brute force attacks.</li>
+<li>Implement Multi Factor Authentication - If a user has multiple methods of authentication, for example, using username and passwords and receiving a code on their mobile device, then it would be difficult for an attacker to get access to both credentials to get access to their account.</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">i0gan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://blog.i0gan.cn/2021/03/24/tryhackme-owasp/">http://blog.i0gan.cn/2021/03/24/tryhackme-owasp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OWASP/">OWASP</a></div><div class="post_share"><div class="social-share" data-image="/img/text_bg.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/03/21/buu-ctf-others/"><img class="next-cover" src="/img/text_bg.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">buu-ctf-others</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/header.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">i0gan</div><div class="author-info__description">Even if a man has reached the top, he still needs to improve himself</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">46</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">23</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">18</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/i0gan"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TryHackMe-OWASP"><span class="toc-number">1.</span> <span class="toc-text">TryHackMe OWASP</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Severity-1-Injection"><span class="toc-number">1.2.</span> <span class="toc-text">[Severity 1] Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Severity-1-OS-Command-Injection"><span class="toc-number">1.3.</span> <span class="toc-text">[Severity 1] OS Command Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Severity-1-Command-Injection-Practical"><span class="toc-number">1.4.</span> <span class="toc-text">[Severity 1] Command Injection Practical</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#chall-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">chall 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chall2"><span class="toc-number">1.4.2.</span> <span class="toc-text">chall2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chall3"><span class="toc-number">1.4.3.</span> <span class="toc-text">chall3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chall4"><span class="toc-number">1.4.4.</span> <span class="toc-text">chall4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chall5"><span class="toc-number">1.4.5.</span> <span class="toc-text">chall5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chall6"><span class="toc-number">1.4.6.</span> <span class="toc-text">chall6</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Severity-2-Broken-Authentication"><span class="toc-number">1.5.</span> <span class="toc-text">[Severity 2] Broken Authentication</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/03/24/tryhackme-owasp/" title="TryHackMe OWASP"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="TryHackMe OWASP"/></a><div class="content"><a class="title" href="/2021/03/24/tryhackme-owasp/" title="TryHackMe OWASP">TryHackMe OWASP</a><time datetime="2021-03-24T03:53:08.000Z" title="Created 2021-03-24 11:53:08">2021-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/21/buu-ctf-others/" title="buu-ctf-others"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="buu-ctf-others"/></a><div class="content"><a class="title" href="/2021/03/21/buu-ctf-others/" title="buu-ctf-others">buu-ctf-others</a><time datetime="2021-03-21T11:34:27.000Z" title="Created 2021-03-21 19:34:27">2021-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/21/freenet/" title="freenet"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="freenet"/></a><div class="content"><a class="title" href="/2021/03/21/freenet/" title="freenet">freenet</a><time datetime="2021-03-21T11:32:29.000Z" title="Created 2021-03-21 19:32:29">2021-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/21/buu-ctf-web/" title="buuctf web"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="buuctf web"/></a><div class="content"><a class="title" href="/2021/03/21/buu-ctf-web/" title="buuctf web">buuctf web</a><time datetime="2021-03-21T11:25:43.000Z" title="Created 2021-03-21 19:25:43">2021-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/21/dvwa/" title="DVWA"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DVWA"/></a><div class="content"><a class="title" href="/2021/03/21/dvwa/" title="DVWA">DVWA</a><time datetime="2021-03-21T11:16:42.000Z" title="Created 2021-03-21 19:16:42">2021-03-21</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/text_bg.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By i0gan</div><div class="framework-info"></div><div class="icp"><a target="_blank" rel="noopener" href="http://www.beian.gov.cn/"><img class="icp-icon" src="/img/icp.png" alt="ICP"/><span>黔ICP备20006037号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
