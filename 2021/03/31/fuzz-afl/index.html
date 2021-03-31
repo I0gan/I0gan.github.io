@@ -7,7 +7,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://blog.i0gan.cn/img/text_bg.jpg">
 <meta property="article:published_time" content="2021-03-31T02:00:43.000Z">
-<meta property="article:modified_time" content="2021-03-31T07:24:27.052Z">
+<meta property="article:modified_time" content="2021-03-31T07:38:48.633Z">
 <meta property="article:author" content="i0gan">
 <meta property="article:tag" content="fuzz">
 <meta name="twitter:card" content="summary">
@@ -79,7 +79,7 @@ var saveToLocal = {
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2021-03-31 15:24:27'
+  postUpdate: '2021-03-31 15:38:48'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -148,7 +148,7 @@ if (asideStatus !== undefined) {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/header.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">52</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">27</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">22</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text_bg.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">Binary fuzzing way of american fuzzy lop</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-03-31T02:00:43.000Z" title="Created 2021-03-31 10:00:43">2021-03-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-03-31T07:24:27.052Z" title="Updated 2021-03-31 15:24:27">2021-03-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/fuzz/">fuzz</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Binary-fuzzing-way-of-american-fuzzy-lop"><a href="#Binary-fuzzing-way-of-american-fuzzy-lop" class="headerlink" title="Binary fuzzing way of american fuzzy lop"></a>Binary fuzzing way of american fuzzy lop</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>The github project is here: <a target="_blank" rel="noopener" href="https://github.com/google/AFL">https://github.com/google/AFL</a></p>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/header.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">52</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">27</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">22</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text_bg.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">Binary fuzzing way of american fuzzy lop</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-03-31T02:00:43.000Z" title="Created 2021-03-31 10:00:43">2021-03-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-03-31T07:38:48.633Z" title="Updated 2021-03-31 15:38:48">2021-03-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/fuzz/">fuzz</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Binary-fuzzing-way-of-american-fuzzy-lop"><a href="#Binary-fuzzing-way-of-american-fuzzy-lop" class="headerlink" title="Binary fuzzing way of american fuzzy lop"></a>Binary fuzzing way of american fuzzy lop</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>The github project is here: <a target="_blank" rel="noopener" href="https://github.com/google/AFL">https://github.com/google/AFL</a></p>
 <p>This paper refer to the official document: <a target="_blank" rel="noopener" href="https://afl-1.readthedocs.io/">https://afl-1.readthedocs.io/</a></p>
 <h3 id="What-is-AFL-¶"><a href="#What-is-AFL-¶" class="headerlink" title="What is AFL?¶"></a>What is AFL?<a target="_blank" rel="noopener" href="https://afl-1.readthedocs.io/en/latest/index.html#what-is-afl">¶</a></h3><p>American fuzzy lop is a security-oriented fuzzer that employs a novel type of compile-time instrumentation and genetic algorithms to automatically discover clean, interesting test cases that trigger new internal states in the targeted binary. This substantially improves the functional coverage for the fuzzed code. The compact synthesized corpora produced by the tool are also useful for seeding other, more labor- or resource-intensive testing regimes down the road.</p>
 <h2 id="How-to-install-env"><a href="#How-to-install-env" class="headerlink" title="How to install env"></a>How to install env</h2><h3 id="Method-1"><a href="#Method-1" class="headerlink" title="Method 1"></a>Method 1</h3><pre><code>sudo pacman -S afl-utils
@@ -164,7 +164,7 @@ afl-clang-fast    afl-cron          afl-gotcpu        afl-plot          afl-tmin
 cd afl-master
 make -j
 sudo make install</code></pre>
-<h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works?"></a>How it works?</h2><p>Copy from doc: click <a target="_blank" rel="noopener" href="https://afl-1.readthedocs.io/en/latest/about_afl.html#how-afl-works">here</a> show details.</p>
+<h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works?"></a>How it works?</h2><p>Copy from official doc: click <a target="_blank" rel="noopener" href="https://afl-1.readthedocs.io/en/latest/about_afl.html#how-afl-works">here</a> to show details.</p>
 <h3 id="0x00-Technical"><a href="#0x00-Technical" class="headerlink" title="0x00 Technical"></a>0x00 Technical</h3><p>Technical “whitepaper” for afl-fuzz.</p>
 <h3 id="0x01-Coverage-measurements"><a href="#0x01-Coverage-measurements" class="headerlink" title="0x01 Coverage measurements"></a>0x01 Coverage measurements</h3><p>The instrumentation injected into complied programs captures branch (edge) coverage, along with coarse branch-taken (采取粗分枝) hit counts. The code injected at branch points is essentially equivalent to</p>
 <pre><code>cur_location = &lt;COMPILE_TIME_RANDOM&gt;;
@@ -549,10 +549,10 @@ Faaaaa
 <pre><code>echo core &gt;/proc/sys/kernel/core_pattern</code></pre>
 <p>Create a output dir</p>
 <pre><code>mkdir out</code></pre>
-<h4 id="Starting-fuzz"><a href="#Starting-fuzz" class="headerlink" title="Starting fuzz"></a>Starting fuzz</h4><p>fuzz cmd common format</p>
+<h4 id="Starting-fuzz"><a href="#Starting-fuzz" class="headerlink" title="Starting fuzz"></a>Starting fuzz</h4><p>For target binaries that accept input directly from stdin, the usual syntax is:</p>
 <pre><code>afl-fuzz -i testcase_dir -o findings_dir /path/to/program [params]</code></pre>
-<p>if you use @@, will make params as file content</p>
-<pre><code>afl-fuzz -i ./testcases/ -o out ./vul @@</code></pre>
+<p>So our fuzzing cmd is</p>
+<pre><code>afl-fuzz -i ./testcases/ -o out ./vul</code></pre>
 <p>The testcases dir is given by github afl project, you just copy that directory to here</p>
 <p>May be  comming some error</p>
 <p>Whoops, your system uses on-demand CPU frequency scaling, adjusted<br>   between 1367 and 2050 MHz. Unfortunately, the scaling algorithm in the<br>   kernel is imperfect and can miss the short-lived processes spawned by<br>   afl-fuzz. To keep things moving, run these commands as root: </p>
@@ -590,31 +590,44 @@ afl-fuzz 2.57b by &lt;lcamtuf@google.com&gt;
 [*] No -t option specified, so I&#39;ll use exec timeout of 20 ms.
 [+] All set and ready to roll!</code></pre>
 <p>MENU UI</p>
-<pre><code>
-                         american fuzzy lop 2.57b (vul)
+<pre><code>                         american fuzzy lop 2.57b (vul)
 
 ┌─ process timing ─────────────────────────────────────┬─ overall results ─────┐
-│        run time : 0 days, 0 hrs, 1 min, 12 sec       │  cycles done : 1628   │
-│   last new path : none yet (odd, check syntax!)      │  total paths : 1      │
-│ last uniq crash : none seen yet                      │ uniq crashes : 0      │
+│        run time : 0 days, 0 hrs, 1 min, 9 sec        │  cycles done : 172    │
+│   last new path : 0 days, 0 hrs, 1 min, 8 sec        │  total paths : 3      │
+│ last uniq crash : 0 days, 0 hrs, 0 min, 48 sec       │ uniq crashes : 4      │
 │  last uniq hang : none seen yet                      │   uniq hangs : 0      │
 ├─ cycle progress ────────────────────┬─ map coverage ─┴───────────────────────┤
-│  now processing : 0 (0.00%)         │    map density : 0.01% / 0.01%         │
+│  now processing : 1 (33.33%)        │    map density : 0.00% / 0.01%         │
 │ paths timed out : 0 (0.00%)         │ count coverage : 1.00 bits/tuple       │
 ├─ stage progress ────────────────────┼─ findings in depth ────────────────────┤
-│  now trying : havoc                 │ favored paths : 1 (100.00%)            │
-│ stage execs : 102/256 (39.84%)      │  new edges on : 1 (100.00%)            │
-│ total execs : 418k                  │ total crashes : 0 (0 unique)           │
-│  exec speed : 5799/sec              │  total tmouts : 0 (0 unique)           │
+│  now trying : splice 14             │ favored paths : 3 (100.00%)            │
+│ stage execs : 31/32 (96.88%)        │  new edges on : 3 (100.00%)            │
+│ total execs : 363k                  │ total crashes : 588 (4 unique)         │
+│  exec speed : 5736/sec              │  total tmouts : 2 (1 unique)           │
 ├─ fuzzing strategy yields ───────────┴───────────────┬─ path geometry ────────┤
-│   bit flips : 0/32, 0/31, 0/29                      │    levels : 1          │
-│  byte flips : 0/4, 0/3, 0/1                         │   pending : 0          │
-│ arithmetics : 0/224, 0/0, 0/0                       │  pend fav : 0          │
-│  known ints : 0/24, 0/84, 0/44                      │ own finds : 0          │
+│   bit flips : 0/128, 0/125, 0/119                   │    levels : 2          │
+│  byte flips : 0/16, 0/13, 0/7                       │   pending : 0          │
+│ arithmetics : 1/893, 0/220, 0/2                     │  pend fav : 0          │
+│  known ints : 0/82, 0/334, 0/308                    │ own finds : 2          │
 │  dictionary : 0/0, 0/0, 0/0                         │  imported : n/a        │
-│       havoc : 0/417k, 0/0                           │ stability : 100.00%    │
-│        trim : 99.52%/16, 0.00%                      ├────────────────────────┘
-└─────────────────────────────────────────────────────┘          [cpu000: 44%]</code></pre>
+│       havoc : 4/158k, 1/202k                        │ stability : 100.00%    │
+│        trim : 98.56%/17, 0.00%                      ├────────────────────────┘
+^C────────────────────────────────────────────────────┘          [cpu000: 40%]</code></pre>
+<p>We found 4 unique crashes just tack some seconds.</p>
+<pre><code>tree out/crashes
+out/crashes
+├── id:000000,sig:06,src:000000,op:havoc,rep:128
+├── id:000001,sig:06,src:000002,op:havoc,rep:64
+├── id:000002,sig:11,src:000000+000002,op:splice,rep:32
+├── id:000003,sig:06,src:000001,op:havoc,rep:32
+└── README.txt</code></pre>
+<pre><code>cat out/crashes/id:000002,sig:11,src:000000+000002,op:splice,rep:32
+F+�Ft</code></pre>
+<p>test crashes</p>
+<pre><code>cat out/crashes/id:000002,sig:11,src:000000+000002,op:splice,rep:32 | ./vul 
+[1]    1213401 done                              cat out/crashes/id:000002,sig:11,src:000000+000002,op:splice,rep:32 | 
+1213402 segmentation fault (core dumped)  ./vul</code></pre>
 <h3 id="Example-2-fuzzgat"><a href="#Example-2-fuzzgat" class="headerlink" title="Example 2 (fuzzgat)"></a>Example 2 (fuzzgat)</h3><h4 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h4><p>ref: <a target="_blank" rel="noopener" href="https://medium.com/@ayushpriya10/fuzzing-applications-with-american-fuzzy-lop-afl-54facc65d102">https://medium.com/@ayushpriya10/fuzzing-applications-with-american-fuzzy-lop-afl-54facc65d102</a></p>
 <p>modify CC as alf-gcc</p>
 <pre><code>git clone https://github.com/fuzzstati0n/fuzzgoat
