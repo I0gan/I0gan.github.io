@@ -1,0 +1,593 @@
+<!DOCTYPE html><html lang="zh" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C++ Smart Pointer | I0gan</title><meta name="keywords" content="c++"><meta name="author" content="i0gan"><meta name="copyright" content="i0gan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="智能指针目前c++ 的4种指针  auto_ptr  c++98 智能指针,使用了  shared_ptr &#x2F;&#x2F;共享指针  unique_ptr &#x2F;&#x2F;只能由一个使用者使用  weaked_ptr &#x2F;&#x2F;与share_ptr搭配使用   shared_patr实例代码 #include &lt;iostream&gt; #include &lt;memory&gt; static void interfaceOf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ Smart Pointer">
+<meta property="og:url" content="http://blog.i0gan.cn/2020/02/24/c++-smart-pointer/index.html">
+<meta property="og:site_name" content="I0gan">
+<meta property="og:description" content="智能指针目前c++ 的4种指针  auto_ptr  c++98 智能指针,使用了  shared_ptr &#x2F;&#x2F;共享指针  unique_ptr &#x2F;&#x2F;只能由一个使用者使用  weaked_ptr &#x2F;&#x2F;与share_ptr搭配使用   shared_patr实例代码 #include &lt;iostream&gt; #include &lt;memory&gt; static void interfaceOf">
+<meta property="og:locale">
+<meta property="og:image" content="http://blog.i0gan.cn/img/text_bg.jpg">
+<meta property="article:published_time" content="2020-02-24T11:09:00.000Z">
+<meta property="article:modified_time" content="2021-03-31T18:21:10.603Z">
+<meta property="article:author" content="i0gan">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.i0gan.cn/img/text_bg.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://blog.i0gan.cn/2020/02/24/c++-smart-pointer/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-01 02:21:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/header.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">60</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">23</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text_bg.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">I0gan</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">C++ Smart Pointer</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-02-24T11:09:00.000Z" title="Created 2020-02-24 19:09:00">2020-02-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-03-31T18:21:10.603Z" title="Updated 2021-04-01 02:21:10">2021-04-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c/">c++</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h1><p>目前c++ 的4种指针</p>
+<ol>
+<li><p>auto_ptr  c++98 智能指针,使用了</p>
+</li>
+<li><p>shared_ptr //共享指针</p>
+</li>
+<li><p>unique_ptr //只能由一个使用者使用</p>
+</li>
+<li><p>weaked_ptr //与share_ptr搭配使用</p>
+</li>
+</ol>
+<h2 id="shared-patr"><a href="#shared-patr" class="headerlink" title="shared_patr"></a>shared_patr</h2><p>实例代码</p>
+<pre class=" language-cpp"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;memory></span></span>
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">interfaceOfSharedPtr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">interfaceOfSharedPtr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Object</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span><span class="token operator">:</span>
+        <span class="token function">Object</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token function">m_id</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span> std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"init obj "</span> <span class="token operator">&lt;&lt;</span> m_id <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token operator">~</span><span class="token function">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"bye bye "</span> <span class="token operator">&lt;&lt;</span> m_id <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span> <span class="token punctuation">}</span>
+        <span class="token keyword">int</span> <span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> m_id<span class="token punctuation">;</span> <span class="token punctuation">}</span>
+    <span class="token keyword">private</span><span class="token operator">:</span>
+        <span class="token keyword">int</span> m_id <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+<span class="token comment" spellcheck="true">//使用智能指针</span>
+<span class="token keyword">using</span> ObjectPtr <span class="token operator">=</span> std<span class="token operator">::</span>shared_ptr<span class="token operator">&lt;</span>Object<span class="token operator">></span><span class="token punctuation">;</span>
+
+
+<span class="token comment" spellcheck="true">//作为参数的obj,相当于拷贝了一次,use_count 会+ 1,但当函数结束时候,智能指针析构,use_count会恢复原来的个数</span>
+<span class="token keyword">void</span> <span class="token function">print</span><span class="token punctuation">(</span>ObjectPtr obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//-------------------------智能指针的成员函数</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"count "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token string">" id "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token operator">-</span><span class="token operator">></span><span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//以引用方式,不会进行copy, use_count不变</span>
+<span class="token keyword">void</span> <span class="token function">printRef</span><span class="token punctuation">(</span><span class="token keyword">const</span> ObjectPtr <span class="token operator">&amp;</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ref count "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token string">"id "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token operator">-</span><span class="token operator">></span><span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">interfaceOfSharedPtr</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    ObjectPtr null<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ref count is "</span> <span class="token operator">&lt;&lt;</span> null<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">//使用智能指针来储存对象的指针</span>
+    ObjectPtr <span class="token function">obj</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token function">Object</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ref count is "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+
+    ObjectPtr <span class="token function">obj2</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ref count is "</span> <span class="token operator">&lt;&lt;</span> obj2<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+
+    ObjectPtr obj3 <span class="token operator">=</span> obj<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ref count is "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+
+    obj2<span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//What dose means of reset ?</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ref count is "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+
+    ObjectPtr obj4<span class="token punctuation">;</span>
+    obj3<span class="token punctuation">.</span><span class="token function">swap</span><span class="token punctuation">(</span>obj4<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//把obj3的管理资源相互交换</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"obj4 ref count is "</span> <span class="token operator">&lt;&lt;</span> obj4<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+    std<span class="token operator">::</span><span class="token function">swap</span><span class="token punctuation">(</span>obj3<span class="token punctuation">,</span> obj4<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//采用另一种方式交换 </span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"obj4 ref count is "</span> <span class="token operator">&lt;&lt;</span> obj4<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">//把智能指针存储的指针传出来</span>
+    <span class="token keyword">auto</span> p <span class="token operator">=</span> obj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"id is"</span> <span class="token operator">&lt;&lt;</span> p<span class="token operator">-</span><span class="token operator">></span><span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>    
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">//重载了 operator bool</span>
+        std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"p id is "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token operator">-</span><span class="token operator">></span><span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//重载: operator -></span>
+        std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"ref id is "</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span><span class="token operator">*</span>obj<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//重载了: operator *</span>
+    <span class="token punctuation">}</span>
+
+    obj4 <span class="token operator">=</span> <span class="token keyword">nullptr</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//----------------------------->obj.use_count() == 1 可能效率比较底一点</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"only one hold ptr "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">unique</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//判断是否是一个人在使用</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"judge differnt: "</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"use_count: "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+    <span class="token function">printRef</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"use_count: "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token punctuation">.</span><span class="token function">use_count</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> <span class="token function">deleterOfObject</span><span class="token punctuation">(</span>Object <span class="token operator">*</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
+        std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"delete obj "</span> <span class="token operator">&lt;&lt;</span> obj<span class="token operator">-</span><span class="token operator">></span><span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span>
+    <span class="token keyword">delete</span> obj<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> <span class="token function">useDeleter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//当智能指针出了作用域后,析构函数就被调用, 哪怕中途抛出异常</span>
+    ObjectPtr <span class="token function">obj</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token function">Object</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> deleterOfObject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    ObjectPtr obj2 <span class="token operator">=</span> obj<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h2><p>c++智能指针-shared_ptr的尴尬-诞生weak_ptr</p>
+<pre class=" language-c++"><code class="language-c++">#include <iostream>
+#include <memory>
+#include <cassert>
+
+//auto ptr
+//shared_ptr
+//unique_ptr
+//weak_ptr
+
+class Parent; //采用前置声明
+
+using ParentPtr = std::shared_ptr<Parent>;
+typedef std::weak_ptr<Parent> WeakParentPtr;
+
+class Child {
+    public:
+//        ParentPtr father; //内存泄露
+        WeakParentPtr father; //采用弱指针,则可以释放内存,不造成内存泄露
+        Child() { std::cout << "Child!!" << std::endl; }
+        ~Child();
+};
+
+typedef std::shared_ptr<Child> ChildPtr;
+typedef std::weak_ptr<Child> WeakChildPtr;
+
+class Parent {
+    public:
+        Parent() { std::cout << "Parent!!" << std::endl; }
+        ChildPtr son;
+//        WeakChildPtr son;
+
+        void print() const { std::cout << "use_count: " << this->son.use_count() << std::endl;}
+        ~Parent();
+};
+
+class Object {
+    public:
+        Object(int id) : m_id(id) { std::cout << "init obj " << m_id << std::endl; };
+        ~Object() { std::cout << "bye bye " << m_id << std::endl; }
+        int id() const { return m_id; }
+    private:
+        int m_id = 0;
+};
+using ObjectPtr = std::shared_ptr<Object>;
+
+Child::~Child() { std::cout << "bye child!" << std::endl; }
+Parent::~Parent() { std::cout << "bye parent!" << std::endl; }
+//----------------------------------------------
+void testParentAndChild() {
+    ParentPtr p(new Parent());
+    ChildPtr c(new Child());
+
+//采用这种方式,造成内存泄露
+    p->son = c; //智能指针拷贝, use_count + 1, c 的use_count 为 2
+    p->print();
+    c->father = p; //p 的 use_count 也为 2 了
+
+//智能指针析构之后use_count  -1
+//智能指针特性: 只有当use_count 变为0 时,才能释放掉管理的资源
+//所以智能指针析构后,use_count 不为0,则造成了内存泄露
+    ////////////
+//只要打破环状的引用,则share_ptr就会很好的管理内存
+}
+//----------------------------------------------
+//为了解决以上问题, 采用weak_ptr来解决
+void sharedPtrWithWeakPtr() {
+    ObjectPtr obj(new Object(1));
+    typedef std::weak_ptr<Object> WeakObjectPtr;
+    WeakObjectPtr weakObj(obj);//弱指针依赖于share_ptr,若share_ptr是有效的,则wake_ptr也是有效的.
+    WeakObjectPtr weakObj2(obj);
+    //而wake_ptr在进行赋值的操作运算的时候,并不影响use_count, 相当于只是作为监听者
+
+
+    std::cout << "obj use count is " << obj.use_count() << std::endl;
+    {
+        auto p = weakObj.lock(); //相当于返回了一个 ObjectPtr类型,
+        std::cout << "expired: " << weakObj.expired() << std::endl; //expierd() 查看监控的资源过期没有过期
+        if(p) {
+            std::cout << p.unique() << std::endl; //false, use_count >= 2, 因为auto p = ...,进行了一次指针拷贝, 
+            //所以use_count + 1, 而weakObj.lock()返回若是有效的话,则use_count >= 1, 否则返回nullptr
+            //则总体的就use_count >= 2
+            //do what you wanna do    
+        }else {
+
+
+        }
+    }
+    obj.reset(); //obj 放弃管理的资源
+    std::cout << "endl;";
+    auto p2 = weakObj.lock(); //返回空,因为,obj不管理资源了
+
+    obj.reset(new Object(2)); //重新管理另一个资源
+    {
+        auto p = weakObj.lock();
+        if(p) {
+            assert(false);
+        }else {
+            //要么资源已经释放,要么obj管理的资源跟换了.
+            std::cout << "changed!" << std::endl;
+        }
+
+    }
+    std::cout << "expired: " << weakObj.expired() << std::endl; //expierd() 查看监控的资源过期没有过期
+}
+int main(void) {
+    testParentAndChild();
+//    sharedPtrWithWeakPtr();
+    return 0;
+}</code></pre>
+<h2 id="shared-ptr储存this指针多次析构问题"><a href="#shared-ptr储存this指针多次析构问题" class="headerlink" title="shared_ptr储存this指针多次析构问题"></a>shared_ptr储存this指针多次析构问题</h2><h3 id="enable-shared-from-this解决方案"><a href="#enable-shared-from-this解决方案" class="headerlink" title="enable_shared_from_this解决方案"></a>enable_shared_from_this解决方案</h3><pre class=" language-c++"><code class="language-c++">#include <iostream>
+#include <memory>
+#include <cassert>
+/*
+        //this //调用了两次析构函数,
+        ParentPtr p(this);
+        //智能指针出了作用域后就delete this ,析构了
+        //所以错了,为了解决这个问题,就需要自身的类继承于　std::enable_shared_from_this<Type>
+        //将ParentPtr p(this) 换成, shared_from_this();
+
+ */
+class Parent;
+typedef std::shared_ptr<Parent> ParentPtr;
+typedef std::weak_ptr<Parent> WeakParentPtr;
+
+class Child : public std::enable_shared_from_this<Child> {
+    public:
+        WeakParentPtr father;
+//        ParentPtr father;
+        ~Child();
+        Child();
+        void checkRelation();
+};
+
+typedef std::shared_ptr<Child> ChildPtr;
+typedef std::weak_ptr<Child> WeakChildPtr;
+
+class Parent : public std::enable_shared_from_this<Parent> {
+    public:
+        WeakChildPtr son;
+//        ChildPtr son;
+        ~Parent();
+        Parent();
+        void checkRelation();
+};
+
+void handleChildAndParentRef(const Parent &p, const Child &c) {
+    if(c.father.lock().get() == &p && p.son.lock().get() == &c) {
+        std::cout << "right relation" << std::endl;    
+    }else {
+        std::cout << "oop!!!!!!" << std::endl;
+    }
+}
+void handleChildAndParent(const ParentPtr &p, const ChildPtr &c) {
+    assert(c);
+    assert(p);
+    if(c->father.lock() == p && p->son.lock() == c) {
+        std::cout << "right relation" << std::endl;    
+    }else {
+        std::cout << "oop!!!!!!" << std::endl;
+    }
+}
+Child::Child() { std::cout << "hello child" << std::endl; }
+Child::~Child() { std::cout << "bye child" << std::endl; }
+Parent::Parent() { std::cout << "hello parent" << std::endl; }
+Parent::~Parent() { std::cout << "bye parent" << std::endl; }
+
+void Parent::checkRelation() {
+    auto ps = son.lock();
+    if(ps) {
+        //this //调用了两次析构函数,
+//        ParentPtr p(this);
+        //handleChildAndParent(p, ps);    
+
+        //智能指针出了作用域后就delete this ,析构了
+        //所以错了,为了解决这个问题,就需要自身的类继承于　std::enable_shared_from_this<Type>
+        //将ParentPtr p(this) 这种错误形式换成, shared_from_this()
+        handleChildAndParent(shared_from_this(), ps);    
+    }
+        std::cout << "after call checkRelation" << std::endl;
+}
+
+void Child::checkRelation() {
+
+}
+void testParentAndChild() {
+    //若Parent 继承于 std::enable_shared_from_this<Type>
+    //则 Parent pp; 这种静态的就不推荐
+    ParentPtr p(new Parent());
+    ChildPtr c(new Child());
+    p->son = c;
+    c->father = p;
+    p->checkRelation();
+}
+
+static void interfaceOfSharedPtr();
+static void sharedPtrWithWeakPtr();
+static void uniquePtr();
+
+int main(void) {
+    testParentAndChild();    
+    return 0 ;
+}</code></pre>
+<h2 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h2><pre class=" language-c++"><code class="language-c++">#include <iostream>
+#include <memory>
+#include <cassert>
+
+class Object;
+
+typedef std::unique_ptr<Object> UniqueObjectPtr;
+using ObjectPtr = std::shared_ptr<Object>;
+
+void print(const UniqueObjectPtr& obj) {}
+
+class Object {
+    public:
+        Object(int x) : m_id(x) { std::cout << "Hello Obj" << std::endl; };
+        ~Object() { std::cout << "Bye Obj" << std::endl; };
+        int id() { return m_id; }
+    private:    
+        int m_id = 0;
+
+};
+void transfer(UniqueObjectPtr obj) {
+    std::cout << obj->id() << std::endl;
+}
+
+void uniquePtr() {
+    UniqueObjectPtr obj { new Object(1) };
+    auto p = obj.get(); //operator bool
+    if(p) {
+        //do some    
+    }
+    //better
+    if(obj) {
+
+    }
+
+    std::cout << p->id() << " " << obj->id() << " " << (*obj).id() << " " << std::endl;
+    print(obj);
+
+    p = obj.release(); //释放所管理的指针
+    std::cout << "release: unique_ptr" << std::endl;
+    delete p; //直接释放资源
+
+    obj.reset(new Object(2)); //reset 就是将以前所管理的指针释放掉, 管理一个新的指针
+    //UniqueObjectPtr (const UniqueObject&) = delete //这种拷贝构造函数不存在
+    //UniqueObjectPtr (const UniqueObject&&) = default //
+    transfer(std::move(obj)); //采用这种方式传入, 则自己的资源不在管理,而交给了这个参数
+    //传入之后, obj 值为null
+
+    assert(obj == nullptr);
+//    std::cout << obj->id() << std::endl;
+
+    obj.reset(new Object(3));
+    ObjectPtr sharedObj(std::move(obj));
+    assert(obj == nullptr);
+//boost库
+/*
+    c++ 智能指针来源于boost库.
+    shared_ptr
+    weak_ptr
+    enable_shared_from_this
+    scoped_ptr //与unique_ptr　很类似, 但局限性比较多, 所以c++11没有采用
+    unique_ptr
+ */
+}
+
+int main(void) {
+    uniquePtr();
+    return 0;
+}</code></pre>
+<h2 id="智能指针总结"><a href="#智能指针总结" class="headerlink" title="智能指针总结"></a>智能指针总结</h2><pre class=" language-c++"><code class="language-c++">#include <iostream>
+#include <memory>
+#include <cassert>
+void sharedPtrNotice();
+class Parent;
+typedef std::shared_ptr<Parent> ParentPtr;
+typedef std::weak_ptr<Parent> WeakParentPtr;
+class Child : public std::enable_shared_from_this<Child> {
+    public:    
+        WeakParentPtr father;
+        Child();
+        ~Child();
+};
+class Object {
+    public: 
+        Object(int x) : m_value(x) { }
+    private:
+        int m_value = 0;
+};
+using ObjectPtr = std::shared_ptr<Object>;
+
+void sharedPtrNotice() {
+    //1 : 绝对不要自己手动的管理资源 
+    //int* a = new int(10);
+    //delete a;
+    //int *b = malloc(sizeof(int));
+    //if(b) free(b);
+
+    //2 :一个裸的指针不要用两个shared_ptr管理, 对于unique_ptr也如此
+    //auto pObj = new Object(1);    
+    //ObjectPtr obj(pObj);
+    //ObjectPtr obj2(pObj);
+
+    //用weak_ptr打破循环引用,parent 和 child
+    //当需要在类的内部接口中, 如果需要将this 作为智能指针来使用的话,
+    //需要用该类派生自std::enable_shared_from_this
+    //
+    //使用share_ptr作为函数的接口,如果有可能有const shared_ptr& 的形式
+    //多线程模式下使用shared_ptr需注意的事项(....)
+
+    //shared_ptr weak_ptr 和裸指针相比, 会大很多, 并且效率上会有影响.
+    //尤其是在多线程模式下
+
+    //shared_ptr 和 weak_ptr彼此互存,智能指针,空间上消耗资源比较大,而且时间效率上也比较低
+
+    //一般情况下 ObejectPtr obj(new Object(2)),　相当于进行了两次new的过程.对于时间和空间上比较消耗
+    //官方发现了这个问题,做了如下改正,且实现的功能一样
+
+    //只实现了一次new,将new Object() 和 new 自身的指针归在一起
+    ObjectPtr obj5 = std::make_shared<Object>(3); //真正推荐使用...
+
+
+    //enable_shared_from_this 中shared_from_this()和构造析构函数一样
+    //不能在构造或者析构中使用,否则会出错的.
+
+    //某些情况下,会出现内存不会降问题.尤其是使用weak_ptr来处理循环引用问题
+    //那是可能因为weak_ptr给勾住了,也要需要weak_ptr释放了,才能解决.
+
+    //如果有可能,优先使用类的实例,其次万不得已 2 使用std::unique_ptr
+    //万不得已 3 使用 std::shared_ptr
+    Object obj6(4); //优先
+    std::unique_ptr<Object> puObj(new Object(1)); //其次
+    std::shared_ptr<Object> psObj = std::make_shared<Object>(3); //在其次
+
+}
+int main(void) {
+
+    return 0;
+}
+</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">i0gan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://blog.i0gan.cn/2020/02/24/c++-smart-pointer/">http://blog.i0gan.cn/2020/02/24/c++-smart-pointer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a></div><div class="post_share"><div class="social-share" data-image="/img/text_bg.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/02/25/c++-stl/"><img class="prev-cover" src="/img/text_bg.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">C++ STL</div></div></a></div><div class="next-post pull-right"><a href="/2020/02/24/c++-class/"><img class="next-cover" src="/img/text_bg.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">C++析构函数中抛出异常问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2020/02/24/c++-class/" title="C++析构函数中抛出异常问题"><img class="cover" src="/img/text_bg.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-24</div><div class="title">C++析构函数中抛出异常问题</div></div></a></div><div><a href="/2020/02/25/c++-stl/" title="C++ STL"><img class="cover" src="/img/text_bg.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-25</div><div class="title">C++ STL</div></div></a></div><div><a href="/2020/02/22/c++-keywords/" title="C++ Keywords"><img class="cover" src="/img/text_bg.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-22</div><div class="title">C++ Keywords</div></div></a></div><div><a href="/2020/02/23/c++-others/" title="C++ Others"><img class="cover" src="/img/text_bg.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-23</div><div class="title">C++ Others</div></div></a></div><div><a href="/2020/02/22/c++-principle/" title="C++ Principle"><img class="cover" src="/img/text_bg.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-22</div><div class="title">C++ Principle</div></div></a></div></div></div></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/header.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">i0gan</div><div class="author-info__description">Even if a man has reached the top, he still needs to improve himself</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">60</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">23</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/i0gan"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">1.</span> <span class="toc-text">智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-patr"><span class="toc-number">1.1.</span> <span class="toc-text">shared_patr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#weak-ptr"><span class="toc-number">1.2.</span> <span class="toc-text">weak_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr%E5%82%A8%E5%AD%98this%E6%8C%87%E9%92%88%E5%A4%9A%E6%AC%A1%E6%9E%90%E6%9E%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">shared_ptr储存this指针多次析构问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#enable-shared-from-this%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.3.1.</span> <span class="toc-text">enable_shared_from_this解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unique-ptr"><span class="toc-number">1.4.</span> <span class="toc-text">unique_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">智能指针总结</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/04/01/cve-2021-3156/" title="Heap-Based Buffer Overflow in Sudo"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Heap-Based Buffer Overflow in Sudo"/></a><div class="content"><a class="title" href="/2021/04/01/cve-2021-3156/" title="Heap-Based Buffer Overflow in Sudo">Heap-Based Buffer Overflow in Sudo</a><time datetime="2021-03-31T16:48:43.000Z" title="Created 2021-04-01 00:48:43">2021-04-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/31/auto-pwn/" title="AUTO PWN"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AUTO PWN"/></a><div class="content"><a class="title" href="/2021/03/31/auto-pwn/" title="AUTO PWN">AUTO PWN</a><time datetime="2021-03-31T07:58:43.000Z" title="Created 2021-03-31 15:58:43">2021-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/31/fuzz-afl/" title="Binary fuzzing way of american fuzzy lop"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Binary fuzzing way of american fuzzy lop"/></a><div class="content"><a class="title" href="/2021/03/31/fuzz-afl/" title="Binary fuzzing way of american fuzzy lop">Binary fuzzing way of american fuzzy lop</a><time datetime="2021-03-31T02:00:43.000Z" title="Created 2021-03-31 10:00:43">2021-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/30/v8-01/" title="V8 EXPLOIT ONE"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="V8 EXPLOIT ONE"/></a><div class="content"><a class="title" href="/2021/03/30/v8-01/" title="V8 EXPLOIT ONE">V8 EXPLOIT ONE</a><time datetime="2021-03-30T11:28:43.000Z" title="Created 2021-03-30 19:28:43">2021-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/03/26/buu-pwn/" title="BUU PWN"><img src="/img/text_bg.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUU PWN"/></a><div class="content"><a class="title" href="/2021/03/26/buu-pwn/" title="BUU PWN">BUU PWN</a><time datetime="2021-03-26T01:40:43.000Z" title="Created 2021-03-26 09:40:43">2021-03-26</time></div></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/text_bg.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By i0gan</div><div class="framework-info"></div><div class="icp"><a target="_blank" rel="noopener" href="http://www.beian.gov.cn/"><img class="icp-icon" src="/img/icp.png" alt="ICP"/><span>黔ICP备20006037号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
